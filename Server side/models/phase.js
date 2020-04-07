@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const roundSchema = new Schema({
+const phaseSchema = new Schema({
   name: {type: String, required: true},
   project: { type: Schema.Types.ObjectId, ref: 'Project',required: true},
   tasks: { type: Array},
@@ -13,6 +13,6 @@ const roundSchema = new Schema({
   },
 });
 
-const Round = mongoose.model('Round', roundSchema);
+const Phase = mongoose.model('Phase', phaseSchema);
 
-module.exports = Round;
+module.exports = Phase;

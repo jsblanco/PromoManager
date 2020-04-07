@@ -3,9 +3,10 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
   name: {type: String, required: true},
-  project: { type: Schema.Types.ObjectId, ref: 'Project',required: true},
-  assignedUser: [{ type: Schema.Types.ObjectId, ref: 'User', required: true}],
-  deadline: [{ type: Date, required: true}],
+  assignedUser: { type: String },
+    //Schema.Types.ObjectId, ref: 'User',   required: true},
+  deadline: { type: Date, required: false},
+  spentTime: {type: Date},
   isItOver: {type: Boolean, default: false},
   message: {type: String},
 }, {
