@@ -6,7 +6,9 @@ const projectSchema = new Schema({
   budgetnumber: {type: String, required: true},
   client: {type: String, required: true},
   version: {type: Number},
-  account: { type: Schema.Types.ObjectId, ref: 'User',required: true},
+  account: { type: Schema.Types.ObjectId, ref: 'User'
+//  ,required: true
+},
   scientific: { type: Schema.Types.ObjectId, ref: 'User' },
   design: { type: Schema.Types.ObjectId, ref: 'User' },
   developer: { type: Schema.Types.ObjectId, ref: 'User' },

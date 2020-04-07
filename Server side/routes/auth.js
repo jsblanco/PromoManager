@@ -17,7 +17,6 @@ router.post(
   isNotLoggedIn(),
  // validationLogin(),
   async (req, res, next) => {
-    console.log(req.body)
     const { name, password, email, role } = req.body;
     try {
       const emailExists = await User.findOne({ email }, "email");
