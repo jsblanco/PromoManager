@@ -7,7 +7,6 @@ const Phase = require("../models/phase");
 const Task = require("../models/task");
 const session = require("express-session");
 
-
 //crea un nuevo proyecto
 router.post("/new", async (req, res, next) => {
   const {
@@ -72,14 +71,19 @@ router.post("/:id/new-phase", async (req, res, next) => {
   }
 });
 
-
 //Crea una tarea y la añade a una fase
 router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
   const { projectId, phaseId } = req.params;
   const { name, assignedUser, deadline } = req.body;
   try {
-    const newTask = { name, assignedUser, deadline, project: projectId, message: "",
-    spentTime: "" };
+    const newTask = {
+      name,
+      assignedUser,
+      deadline,
+      project: projectId,
+      message: "",
+      spentTime: "",
+    };
     const newTaskInDb = await Task.create({
       name,
       assignedUser,
@@ -87,12 +91,11 @@ router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
       project: projectId,
       isItOver: false,
       message: "",
-      spentTime: ""
+      spentTime: "",
     });
-    console.log(newTaskInDb);
     const updatedPhase = await Phase.findByIdAndUpdate(
       phaseId,
-      { $push: {tasks: newTask, basicTasks: newTaskInDb._id } },
+      { $push: { tasks: newTask, basicTasks: newTaskInDb._id } },
       { new: true }
     );
     res.status(200).json(updatedPhase);
@@ -102,21 +105,23 @@ router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
 });
 
 //Tarea es OK: necesita el índice de la tarea que estamos marcando
-router.put("/:projectId/:phaseId/taskisok/:taskIndex", async (req, res, next) => {
+router.put(
+  "/:projectId/:phaseId/taskisok/:taskIndex",
+  async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
-    taskIndex=parseInt(taskIndex)
+    taskIndex = parseInt(taskIndex);
 
     try {
-    const currentPhase = await Phase.findById(phaseId)    
-    let newTasks = [...currentPhase.tasks];
-    newTasks[taskIndex].isItOver = true
-    newTasks[taskIndex].spentTime = spentTime;
-    if (message){
-    newTasks[taskIndex+1].message = message
-    }
+      const currentPhase = await Phase.findById(phaseId);
+      let newTasks = [...currentPhase.tasks];
+      newTasks[taskIndex].isItOver = true;
+      newTasks[taskIndex].spentTime = spentTime;
+      if (message) {
+        newTasks[taskIndex + 1].message = message;
+      }
 
-    let updatedPhase = await Phase.findByIdAndUpdate(
+      let updatedPhase = await Phase.findByIdAndUpdate(
         phaseId,
         { tasks: newTasks },
         { new: true }
@@ -125,23 +130,25 @@ router.put("/:projectId/:phaseId/taskisok/:taskIndex", async (req, res, next) =>
     } catch (error) {
       next(error);
     }
-
-})
+  }
+);
 
 //Tarea no es OK: necesita el índice de la tarea que estamos marcando
-router.put("/:projectId/:phaseId/taskisnotok/:taskIndex", async (req, res, next) => {
+router.put(
+  "/:projectId/:phaseId/taskisnotok/:taskIndex",
+  async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
-    taskIndex=parseInt(taskIndex)
+    taskIndex = parseInt(taskIndex);
 
     try {
-    const currentPhase = await Phase.findById(phaseId)    
-    let newTasks = [...currentPhase.tasks];
-    newTasks[taskIndex-1].isItOver= false;
-    newTasks[taskIndex-1].message= message;
-    newTasks[taskIndex].spentTime = spentTime
+      const currentPhase = await Phase.findById(phaseId);
+      let newTasks = [...currentPhase.tasks];
+      newTasks[taskIndex - 1].isItOver = false;
+      newTasks[taskIndex - 1].message = message;
+      newTasks[taskIndex].spentTime = spentTime;
 
-    let updatedPhase = await Phase.findByIdAndUpdate(
+      let updatedPhase = await Phase.findByIdAndUpdate(
         phaseId,
         { tasks: newTasks },
         { new: true }
@@ -150,8 +157,8 @@ router.put("/:projectId/:phaseId/taskisnotok/:taskIndex", async (req, res, next)
     } catch (error) {
       next(error);
     }
-})
-
+  }
+);
 
 //Reseteo de fase (cuando cliente tira atrás un proyecto)
 router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
@@ -159,25 +166,25 @@ router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
   const { spentTime, message } = req.body;
 
   try {
-    
-    const currentPhase = await Phase.findById(phaseId).populate("basicTasks");    
+    const currentPhase = await Phase.findById(phaseId).populate("basicTasks");
     let newTasks = [...currentPhase.tasks];
-    let previousTaskNumber = newTasks.length
-    
-    if (newTasks.length>0){
-        newTasks[previousTaskNumber].message = message
-        newTasks[previousTaskNumber-1].spentTime = spentTime
-        }
+    let previousTaskNumber = newTasks.length - 1;
 
-    
+    if (newTasks.length > 0) {
+      newTasks[previousTaskNumber].message = message;
+    }
+    if (newTasks.length > 1) {
+      newTasks[previousTaskNumber - 1].spentTime = spentTime;
+    }
+
     await currentPhase.basicTasks.map((task) =>
-    newTasks.push({
+      newTasks.push({
+        name: task.name,
+        assignedUser: task.assignedUser,
+        isItOver: false,
         spentTime: "",
         message: "",
-        isItOver: false,
-        assignedUser: task.assignedUser,
-        name: task.name,
-    })
+      })
     );
 
     let resetPhase = await Phase.findByIdAndUpdate(
@@ -190,5 +197,31 @@ router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
     next(error);
   }
 });
+
+//Eliminar una tarea de una fase
+router.put(
+  "/:projectId/:phaseId/deletetask/:taskIndex",
+  async (req, res, next) => {
+    let { projectId, phaseId, taskIndex } = req.params;
+    const { spentTime, message } = req.body;
+    taskIndex = parseInt(taskIndex);
+
+    try {
+      const currentPhase = await Phase.findById(phaseId);
+      let newTasks = [...currentPhase.tasks]
+      newTasks.splice(taskIndex, 1)
+      let updatedPhase = await Phase.findByIdAndUpdate(
+        phaseId,
+        { tasks: newTasks },
+        { new: true }
+      );
+      res.status(200).json(updatedPhase);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+//Eliminar una fase de un proyecto
 
 module.exports = router;
