@@ -6,7 +6,7 @@ const taskSchema = new Schema({
   assignedUser: { type: String },
     //Schema.Types.ObjectId, ref: 'User',   required: true},
   deadline: { type: Date, required: false},
-  spentTime: {type: Date},
+  spentTime: {type: String},
   isItOver: {type: Boolean, default: false},
   message: {type: String},
 }, {
