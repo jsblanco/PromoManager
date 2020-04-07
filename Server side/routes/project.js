@@ -62,7 +62,7 @@ router.post("/:id/new-phase", async (req, res, next) => {
 
     const newProject = await Project.findByIdAndUpdate(
       projectId,
-      { $push: { ongoingPhases: newPhase._id } },
+      { $push: { phases: newPhase._id } },
       { new: true }
     );
     res.status(200).json(newProject);
@@ -121,12 +121,21 @@ router.put(
         newTasks[taskIndex + 1].message = message;
       }
 
-      let updatedPhase = await Phase.findByIdAndUpdate(
-        phaseId,
-        { tasks: newTasks },
-        { new: true }
-      );
-      res.status(200).json(updatedPhase);
+      if ((taskIndex = newTasks.length - 1)) {
+        let updatedPhase = await Phase.findByIdAndUpdate(
+          phaseId,
+          { isItOver: true, tasks: newTasks },
+          { new: true }
+        );
+        res.status(200).json(updatedPhase);
+      } else {
+        let updatedPhase = await Phase.findByIdAndUpdate(
+          phaseId,
+          { tasks: newTasks },
+          { new: true }
+        );
+        res.status(200).json(updatedPhase);
+      }
     } catch (error) {
       next(error);
     }
@@ -208,8 +217,8 @@ router.put(
 
     try {
       const currentPhase = await Phase.findById(phaseId);
-      let newTasks = [...currentPhase.tasks]
-      newTasks.splice(taskIndex, 1)
+      let newTasks = [...currentPhase.tasks];
+      newTasks.splice(taskIndex, 1);
       let updatedPhase = await Phase.findByIdAndUpdate(
         phaseId,
         { tasks: newTasks },
@@ -223,5 +232,20 @@ router.put(
 );
 
 //Eliminar una fase de un proyecto
+
+router.put("/:projectId/deletephase/:phaseId/", async (req, res, next) => {
+  let { projectId, phaseId } = req.params;
+
+  try {
+    let updatedProject = await Project.findByIdAndUpdate(
+      projectId,
+      { $pull: { phases: phaseId } },
+      { new: true }
+    );
+    res.status(200).json(updatedProject);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;

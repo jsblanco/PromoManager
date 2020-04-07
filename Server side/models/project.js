@@ -17,8 +17,7 @@ const projectSchema = new Schema({
   av: { type: Schema.Types.ObjectId, ref: 'User' },
   type: {type: String, enum: [ "Leaflet", "Slidekit", "eDetailing", "Website", "Event", "Video"]},
   brief: { type: String },
-  ongoingPhases:  [{ type: Schema.Types.ObjectId, ref: 'Phase' }],
-  finishedPhases:  [{ type: Schema.Types.ObjectId, ref: 'Phase' }],
+  phases:  [{ type: Schema.Types.ObjectId, ref: 'Phase' }],
 }, {
   timestamps: {
     createdAt: 'created_at',

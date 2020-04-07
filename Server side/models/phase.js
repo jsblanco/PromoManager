@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const phaseSchema = new Schema({
   name: {type: String, required: true},
   project: { type: Schema.Types.ObjectId, ref: 'Project',required: true},
+  isItOver: {type: Boolean, default: false},
   tasks: { type: Array},
   basicTasks: [{ type: Schema.Types.ObjectId, ref: 'Task'}],
 }, {
