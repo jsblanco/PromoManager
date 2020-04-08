@@ -248,4 +248,29 @@ router.put("/:projectId/deletephase/:phaseId/", async (req, res, next) => {
   }
 });
 
+
+//Añadir o actualizar el deadline de una tarea 
+router.put(
+    "/:projectId/:phaseId/update/:taskIndex",
+    async (req, res, next) => {
+      let { projectId, phaseId, taskIndex } = req.params;
+      const { deadline } = req.body;
+      taskIndex = parseInt(taskIndex);
+  
+      try {
+        const currentPhase = await Phase.findById(phaseId);
+        let newTasks = [...currentPhase.tasks];
+        newTasks[taskIndex].deadline = deadline;
+        let updatedPhase = await Phase.findByIdAndUpdate(
+          phaseId,
+          { tasks: newTasks },
+          { new: true }
+        );
+        res.status(200).json(updatedPhase);
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
 module.exports = router;

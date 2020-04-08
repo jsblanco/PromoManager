@@ -1,13 +1,16 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
+import userService from "../lib/user-service";
 
 class NewProject extends Component {
-  state = { name: "", account: this.props.user._id, userList: this.props.userList, version: 0, type: "", client:"", scientific: "" };
+  state = { name: "", account: this.props.user._id, userList:[], version: 0, type: "", client:"", scientific: "" };
   
-  componentDidMount=()=>{
-    console.log(this.props)
-    console.log(this.props.userList)
+  componentDidMount= async ()=>{
+    let userList = await userService.getUsers()
+    this.setState({
+      userList: userList
+    })
   }
 
   handleFormSubmit = (event) => {
@@ -23,7 +26,7 @@ class NewProject extends Component {
   };
 
   render() {
-    const { name, budgetNumber, email, client, scientific, account } = this.state;
+    const { name, budgetNumber, client, scientific, account } = this.state;
     return (
       <div>
         <h1>Sign Up</h1>
@@ -69,48 +72,38 @@ class NewProject extends Component {
         <div className="row">
         <div className="col-6">
           <label>Account:</label>
-          <input
-            type="text"
-            name="account"
-            value={account}
-            onChange={this.handleChange}
-          />
+          <select name="account" onChange={this.handleChange} required>
+            <option value="">Select a project type:</option>
+             {this.state.userList.map(user=> {if (user.role==="Account") {return <option value={user._id}>{user.name}</option>}})} 
+          </select>
         </div>
         <div className="col-6">
           <label>Scientific:</label>
-          <input
-            type="text"
-            name="scientific"
-            value={scientific}
-            onChange={this.handleChange}
-          />
+          <select name="scientific" onChange={this.handleChange}>
+            <option value="">Select a project type:</option>
+             {this.state.userList.map(user=> {if (user.role==="Scientific") {return <option value={user._id}>{user.name}</option>}})} 
+          </select>
         </div>
         <div className="col-6">
         <label>Design:</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
+        <select name="design" onChange={this.handleChange}>
+            <option value="">Select a project type:</option>
+             {this.state.userList.map(user=> {if (user.role==="Design") {return <option value={user._id}>{user.name}</option>}})} 
+          </select>
         </div>
         <div className="col-6">
         <label>Developer:</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
+        <select name="developer" onChange={this.handleChange}>
+            <option value="">Select a project type:</option>
+             {this.state.userList.map(user=> {if (user.role==="Developer") {return <option value={user._id}>{user.name}</option>}})} 
+          </select>
         </div>
         <div className="col-6">
-        <label>AV:</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
+        <label>Audiovisual:</label>
+        <select name="av" onChange={this.handleChange}>
+            <option value="">Select a project type:</option>
+             {this.state.userList.map(user=> {if (user.role==="AV") {return <option value={user._id}>{user.name}</option>}})} 
+          </select>
         </div>
         </div>
 
