@@ -39,10 +39,10 @@ router.post("/new", async (req, res, next) => {
       teamMembers.map(async (user) => {
         if (user) {
           try {
-            const updatedUser = await User.findByIdAndUpdate(userId, {
-              $push: { ongoingProjects: newProject._id },
+            const updatedUser = await User.findByIdAndUpdate(user, {
+              $push: { ongoingprojects: newProject.id },
             });
-            res.status(200).json(updatedUser);
+            res.status(200);
           } catch (error) {
             next(error);
           }
