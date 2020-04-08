@@ -12,7 +12,6 @@ class User {
     return (
       this.user
         .get("/user/list")
-        //     .then(({ data }) => data)
         .then((data) => data.data)
     );
   }
@@ -36,7 +35,16 @@ class User {
       })
       .then(({ data }) => data);
   }
-}
+  
+  getProject(projectId) {
+    return (
+      this.user
+      .get(`/project/${projectId}`)
+      .then((data) => data.data)
+      );
+    }
+  }
+    
 
 const axiosRequestFunctions = new User();
 

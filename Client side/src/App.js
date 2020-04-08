@@ -12,18 +12,19 @@ import AnonRoute from "./components/AnonRoute";
 import PrivateRoute from "./components/PrivateRoute";
 import user from "./lib/user-service";
 import NewProject from "./pages/NewProject";
+import ProjectDetails from "./pages/ProjectDetails";
 
 class App extends Component {
   render() {
     return (
       <AuthProvider>
           <Navbar />
-
         <div className='container'>
           <Switch>
             <AnonRoute exact path='/signup' component={Signup} />
             <AnonRoute exact path='/login' component={Login} />
-            <PrivateRoute exact path='/private' component={NewProject} pepe="hola" userList={user.getUsers()} />
+            <PrivateRoute exact path='/project/new' component={NewProject}/>
+            <PrivateRoute exact path='/project/details' component={ProjectDetails} id=""/>
           </Switch>
         </div>
       </AuthProvider>
