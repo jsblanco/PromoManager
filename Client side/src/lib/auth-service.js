@@ -9,7 +9,6 @@ class Auth {
   }
 
   signup( { name, password, email, role }) {
-    console.log("En auth-service:", { name, password, email, role });
     return this.auth
       .post("/auth/signup", { name, password, email, role })
       .then(({ data }) => data);

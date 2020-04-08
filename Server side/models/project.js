@@ -5,18 +5,10 @@ const projectSchema = new Schema({
   name: {type: String, required: true},
   budgetNumber: {type: String, required: true},
   client: {type: String, required: true},
+  description: {type: String, required: true},
   version: {type: Number},
-  account: {type: String, 
-  //Schema.Types.ObjectId, ref: 'User',
-  required: true},
-  scientific: { type: String
-    //Schema.Types.ObjectId, ref: 'User' 
-  },
-  design: { type: Schema.Types.ObjectId, ref: 'User' },
-  developer: { type: Schema.Types.ObjectId, ref: 'User' },
-  av: { type: Schema.Types.ObjectId, ref: 'User' },
+  teamMembers: [{ type: Schema.Types.ObjectId, ref: 'User'}],
   type: {type: String, enum: [ "Leaflet", "Slidekit", "eDetailing", "Website", "Event", "Video"]},
-  brief: { type: String },
   phases:  [{ type: Schema.Types.ObjectId, ref: 'Phase' }],
 }, {
   timestamps: {

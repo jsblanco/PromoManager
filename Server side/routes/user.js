@@ -17,4 +17,15 @@ router.get("/list", async (req, res, next) => {
     }
   });
 
+
+  router.put(":userId/addnewproject/:projectId", async (req, res, next) => {
+    try {
+      const {userId, projectId}=req.params
+      const updatedUser = await User.findByIdAndUpdate(userId, {$push: {"ongoingProjects": projectId}})
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      next(error);
+    }
+  });
+
 module.exports = router;

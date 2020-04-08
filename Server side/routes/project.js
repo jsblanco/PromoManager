@@ -11,15 +11,11 @@ const session = require("express-session");
 router.post("/new", async (req, res, next) => {
   const {
     name,
-    client,
     budgetNumber,
-    account,
-    scientific,
-    design,
-    developer,
-    av,
+    client,
+    description,
     type,
-    brief,
+    teamMembers,
   } = req.body;
   try {
     const projectExists = await Project.findOne(
@@ -28,20 +24,30 @@ router.post("/new", async (req, res, next) => {
     );
     if (projectExists) return next(createError(400));
     else {
+      //creamos el proyecto nuevo
       const newProject = await Project.create({
         name,
-        client,
         budgetNumber,
-        version: 1,
-        account,
-        scientific,
-        design,
-        developer,
-        av,
+        client,
+        description,
         type,
-        brief,
+        teamMembers,
+        version: 1,
       });
       res.status(200).json(newProject);
+      //con el array que hemos hecho en cliente, añadimos el proyecto a su cuenta
+      teamMembers.map(async (user) => {
+        if (user) {
+          try {
+            const updatedUser = await User.findByIdAndUpdate(userId, {
+              $push: { ongoingProjects: newProject._id },
+            });
+            res.status(200).json(updatedUser);
+          } catch (error) {
+            next(error);
+          }
+        }
+      });
     }
   } catch (error) {
     next(error);
@@ -248,29 +254,25 @@ router.put("/:projectId/deletephase/:phaseId/", async (req, res, next) => {
   }
 });
 
+//Añadir o actualizar el deadline de una tarea
+router.put("/:projectId/:phaseId/update/:taskIndex", async (req, res, next) => {
+  let { projectId, phaseId, taskIndex } = req.params;
+  const { deadline } = req.body;
+  taskIndex = parseInt(taskIndex);
 
-//Añadir o actualizar el deadline de una tarea 
-router.put(
-    "/:projectId/:phaseId/update/:taskIndex",
-    async (req, res, next) => {
-      let { projectId, phaseId, taskIndex } = req.params;
-      const { deadline } = req.body;
-      taskIndex = parseInt(taskIndex);
-  
-      try {
-        const currentPhase = await Phase.findById(phaseId);
-        let newTasks = [...currentPhase.tasks];
-        newTasks[taskIndex].deadline = deadline;
-        let updatedPhase = await Phase.findByIdAndUpdate(
-          phaseId,
-          { tasks: newTasks },
-          { new: true }
-        );
-        res.status(200).json(updatedPhase);
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
+  try {
+    const currentPhase = await Phase.findById(phaseId);
+    let newTasks = [...currentPhase.tasks];
+    newTasks[taskIndex].deadline = deadline;
+    let updatedPhase = await Phase.findByIdAndUpdate(
+      phaseId,
+      { tasks: newTasks },
+      { new: true }
+    );
+    res.status(200).json(updatedPhase);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
