@@ -67,6 +67,60 @@ router.post("/new", async (req, res, next) => {
   }
 });
 
+//Edita un proyecto
+router.post("/edit", async (req, res, next) => {
+  const {
+    name,
+    client,
+    description,
+    type,
+    teamMembers,
+    originalMembers,
+    id,
+  } = req.body;
+  try {
+      //actualizamos el proyecto 
+      let updatedProject = await Project.findByIdAndUpdate(id, {
+        name,
+        client,
+        description,
+        type,
+        teamMembers,
+      });
+      res.status(200).json(updatedProject);
+    } catch (error) {
+        next(error);
+      }
+      //quitaremos el proyecto de los usuarios iniciales
+      originalMembers.map(async (user) => {
+        if (user) {
+          try {
+            const updatedUser = await User.findByIdAndUpdate(user, {
+              $pull: { ongoingprojects: updatedProject.id },
+            });
+            res.status(200);
+          } catch (error) {
+            next(error);
+          }
+        }
+      });
+      //y añadimos el proyecto a los usuarios que hemos asignado ahora
+      teamMembers.map(async (user) => {
+        if (user) {
+          try {
+            const updatedUser = await User.findByIdAndUpdate(user, {
+              $push: { ongoingprojects: updatedProject.id },
+            });
+            res.status(200);
+          } catch (error) {
+            next(error);
+          }
+        }
+      });
+    }
+);
+
+
 //Crea una fase sin tareas para un proyecto
 router.post("/:id/new-phase", async (req, res, next) => {
   const projectId = req.params.id;

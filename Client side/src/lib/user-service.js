@@ -43,8 +43,34 @@ class User {
       .then((data) => data.data)
       );
     }
+
+  updateProject({
+    name,
+    client,
+    description,
+    type,
+    teamMembers,
+    originalMembers,
+    id,
+  }) {
+    return this.user
+      .post("/project/edit", {
+        name,
+        client,
+        description,
+        type,
+        teamMembers,
+        originalMembers,
+        id,
+      })
+      .then(({ data }) => data);
   }
-    
+
+
+
+
+//fin
+}
 
 const axiosRequestFunctions = new User();
 

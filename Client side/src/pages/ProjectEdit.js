@@ -13,44 +13,52 @@ class NewProject extends Component {
     teamMembers: [],
     budgetNumber: "",
     id: "5e8e03ae22240853db5be3cc",
-    teamNames:[],
+    teamNames: [],
+    originalMembers: [],
   };
 
   componentDidMount = async () => {
     let userList = await userService.getUsers();
     // let id = this.props.projectId
     let project = await userService.getProject("5e8e03ae22240853db5be3cc");
-    let teamMembersInOrder= [];
-    let teamMembersNames= [];
-    project.teamMembers.map(member=> {
-        let index;
-        switch (member.role) {
-          case "Account":
-            teamMembersInOrder[0]=member._id;
-            teamMembersNames[0]=member.name;
-            break;
-          case "Scientific":
-            teamMembersInOrder[1]=member._id;
-            teamMembersNames[1]=member.name;
-            break;
-          case "Design":
-            teamMembersInOrder[2]=member._id;
-            teamMembersNames[2]=member.name;
-            break;
-          case "Developer":
-            teamMembersInOrder[3]=member._id;
-            teamMembersNames[3]=member.name;
-            break;
-          case "AV":
-            teamMembersInOrder[4]=member._id;
-            teamMembersNames[4]=member.name;
-            break;
-          case "Administration":
-            teamMembersInOrder[5]=member._id;
-            teamMembersNames[5]=member.name;
-            break;
-        }
-    })
+    let teamMembersInOrder = [];
+    let teamMembersNames = [];
+    let originalMembers = [];
+    project.teamMembers.map((member) => {
+      let index;
+      switch (member.role) {
+        case "Account":
+          teamMembersInOrder[0] = member._id;
+          originalMembers[0] = member._id;
+          teamMembersNames[0] = member.name;
+          break;
+        case "Scientific":
+          teamMembersInOrder[1] = member._id;
+          originalMembers[1] = member._id;
+          teamMembersNames[1] = member.name;
+          break;
+        case "Design":
+          teamMembersInOrder[2] = member._id;
+          originalMembers[2] = member._id;
+          teamMembersNames[2] = member.name;
+          break;
+        case "Developer":
+          teamMembersInOrder[3] = member._id;
+          originalMembers[3] = member._id;
+          teamMembersNames[3] = member.name;
+          break;
+        case "AV":
+          teamMembersInOrder[4] = member._id;
+          originalMembers[4] = member._id;
+          teamMembersNames[4] = member.name;
+          break;
+        case "Administration":
+          teamMembersInOrder[5] = member._id;
+          originalMembers[5] = member._id;
+          teamMembersNames[5] = member.name;
+          break;
+      }
+    });
     this.setState({
       userList: userList,
       name: project.name,
@@ -60,31 +68,29 @@ class NewProject extends Component {
       description: project.description,
       teamMembers: teamMembersInOrder,
       teamNames: teamMembersNames,
+      originalMembers: originalMembers,
     });
   };
-
-  
-
-
-
 
   handleFormSubmit = (event) => {
     event.preventDefault();
     const {
       name,
-      budgetNumber,
       client,
       description,
       type,
       teamMembers,
+      originalMembers,
+      id,
     } = this.state;
-    userService.newProject({
+    userService.updateProject({
       name,
-      budgetNumber,
       client,
       description,
       type,
       teamMembers,
+      originalMembers,
+      id,
     });
   };
 
@@ -315,8 +321,8 @@ class NewProject extends Component {
                 type="text"
                 name="description"
                 onChange={this.handleChange}
+                value={this.state.description}
               >
-                {description}
               </textarea>
             </div>
           </div>
