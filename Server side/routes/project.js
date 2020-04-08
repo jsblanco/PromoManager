@@ -13,7 +13,7 @@ router.get("/:id", async (req,res,next)=>{
   const {id} = req.params;
   console.log(id)
   try {
-  let project= await (await Project.findById(id)).populate("teamMembers");
+  let project= await Project.findById(id).populate("teamMembers");
   res.status(200).json(project);
 } catch (error) {
   next(error);
