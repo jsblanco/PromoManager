@@ -9,11 +9,10 @@ const session = require("express-session");
 
 
 //devuelve un proyecto existente
-router.get("/:id", async (req,res,next)=>{
-  const {id} = req.params;
-  console.log(id)
+router.get("/:budgetNumber", async (req,res,next)=>{
+  const {budgetNumber} = req.params;
   try {
-  let project= await Project.findById(id).populate("teamMembers");
+  let project= await Project.findOne({budgetNumber}).populate("teamMembers");
   res.status(200).json(project);
 } catch (error) {
   next(error);

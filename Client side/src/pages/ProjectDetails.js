@@ -4,19 +4,35 @@ import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 
 export default class ProjectDetails extends Component {
-state={
-    project: {teamMembers:[]}
+    constructor(props) {
+        super(props);
+        this.state = {
+            project: {teamMembers:[]},
+        };
+      }
+
+
+componentDidMount= async()=>{
+    let budgetNumber = this.props.match.params.budgetNumber
+    let project = await userService.getProject(budgetNumber);
+    this.setState({
+      project: project,
+      budgetNumber: budgetNumber,
+    });
 }
-    componentDidMount = async () => {
-       // let id = this.props.projectId
-        let project = await userService.getProject("5e8e03ae22240853db5be3cc");
+
+updateProject = async () => {
+    let budgetNumber = this.props.match.params.budgetNumber;
+        let project = await userService.getProject(budgetNumber);
         this.setState({
           project: project,
-        });
-      };
+          budgetNumber: budgetNumber,
+        });}
+      
 
 
     render() {
+        if (this.state.budgetNumber !== this.props.match.params.budgetNumber){this.updateProject()}
         return (
             <div>
                 <h1>{this.state.project.budgetNumber} - <b>{this.state.project.name}</b></h1>

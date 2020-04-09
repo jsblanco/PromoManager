@@ -46,10 +46,10 @@ class User {
       .then(({ data }) => data);
   }
   
-  getProject(projectId) {
+  getProject(budgetNumber) {
     return (
       this.user
-      .get(`/project/${projectId}`)
+      .get(`/project/${budgetNumber}`)
       .then((data) => data.data)
       );
     }
