@@ -9,13 +9,13 @@ const session = require("express-session");
 const {
   isLoggedIn,
   isNotLoggedIn,
-  //validationLogin,
+  validationLogin,
 } = require("../helpers/middlewares");
 
 router.post(
   "/signup",
   isNotLoggedIn(),
- // validationLogin(),
+  validationLogin(),
   async (req, res, next) => {
     const { name, password, email, role } = req.body;
     try {
@@ -44,11 +44,13 @@ router.post(
 router.post(
   "/login",
   isNotLoggedIn(),
- // validationLogin(),
+  validationLogin(),
   async (req, res, next) => {
     const { email, password } = req.body;
+    console.log(email, password)
     try {
       const user = await User.findOne({ email });
+      console.log("founduser:", user)
       if (!user) {
         next(createError(404));
       } else if (bcrypt.compareSync(password, user.password)) {
