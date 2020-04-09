@@ -12,7 +12,7 @@ const session = require("express-session");
 router.get("/:budgetNumber", async (req,res,next)=>{
   const {budgetNumber} = req.params;
   try {
-  let project= await Project.findOne({budgetNumber}).populate("teamMembers");
+  let project= await Project.findOne({budgetNumber}).populate("teamMembers").populate("phases");
   res.status(200).json(project);
 } catch (error) {
   next(error);

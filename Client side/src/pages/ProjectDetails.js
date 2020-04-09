@@ -42,7 +42,7 @@ export default class ProjectDetails extends Component {
           this.updateProject();
         }
     let phases, createPhaseForm, phaseCreatorToggler;
-    if (this.state.project.phases ===true){phases = <p>{this.state.project.phases[0].name}</p>}
+    if (this.state.project.phases){phases = this.state.project.phases.map(phase=> <p>{phase.name}</p>)}
     if (this.state.showPhaseCreator===true){createPhaseForm= <PhaseCreator projectId={this.state.project._id}/>; phaseCreatorToggler= "Discard new phase"} else {phaseCreatorToggler="Add new phase"}
 
     return (
