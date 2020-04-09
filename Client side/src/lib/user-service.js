@@ -76,7 +76,11 @@ class User {
       .then(({ data }) => data);
   }
 
-
+createPhase({projectId, name}){
+  return this.user
+    .post(`/project/${projectId}/new-phase`, {name})
+    .then((data) => data.data)
+}
 
 
 //fin

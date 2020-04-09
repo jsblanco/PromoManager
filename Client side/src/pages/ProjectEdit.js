@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 
-class NewProject extends Component {
+class EditProject extends Component {
   state = {
     name: "",
     userList: [],
@@ -11,16 +11,16 @@ class NewProject extends Component {
     client: "",
     description: "",
     teamMembers: [],
-    budgetNumber: "",
-    id: "5e8e03ae22240853db5be3cc",
+    budgetNumber: this.props.match.params.budgetNumber,
+    id: "",
     teamNames: [],
     originalMembers: [],
   };
 
   componentDidMount = async () => {
     let userList = await userService.getUsers();
-    // let id = this.props.projectId
-    let project = await userService.getProject("5e8e03ae22240853db5be3cc");
+    let budgetNumber = this.props.match.params.budgetNumber
+    let project = await userService.getProject(budgetNumber);
     let teamMembersInOrder = [];
     let teamMembersNames = [];
     let originalMembers = [];
@@ -65,6 +65,7 @@ class NewProject extends Component {
       budgetNumber: project.budgetNumber,
       type: project.type,
       client: project.client,
+      id: project._id,
       description: project.description,
       teamMembers: teamMembersInOrder,
       teamNames: teamMembersNames,
@@ -146,7 +147,7 @@ class NewProject extends Component {
 
     return (
       <div className="mt-5">
-        <h1>Create new project</h1>
+        <h1>Edit project {this.state.budgetNumber}</h1>
 
         <form onSubmit={this.handleFormSubmit} className="d-flex flex-column">
           <div className="row">
@@ -162,13 +163,8 @@ class NewProject extends Component {
             </div>
             <div className="col-4">
               <label>Budget number</label>
-              <input
-                className="w-100"
-                type="text"
-                name="budgetNumber"
-                value={budgetNumber}
-                onChange={this.handleChange}
-              />
+              <p className="w-100 text-secondary font-italic">{this.state.budgetNumber} - This value cannot be changed</p>
+  
             </div>
             <div className="col-4">
               <label>Client:</label>
@@ -338,4 +334,4 @@ class NewProject extends Component {
   }
 }
 
-export default withAuth(NewProject);
+export default withAuth(EditProject);

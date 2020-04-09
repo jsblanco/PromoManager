@@ -33,13 +33,19 @@ class App extends Component {
     });
   };
 
+
+populateProjectSidebar=()=>{
+  return this.state.userData.ongoingProjects.map((project) => (
+    <ProjectList project={project} key={project.budgetNumber} />
+  ));
+}
+
   render() {
     let projects, newProject;
     const { isLoggedin } = this.props;
     if (this.state.loaded === true && isLoggedin) {
-      projects = this.state.userData.ongoingProjects.map((project) => (
-        <ProjectList project={project} key={project.budgetNumber} />
-      ));
+      projects= this.populateProjectSidebar()
+      if (this.state.userData.ongoingProjects.length !== this.props.user.ongoingProjects.length){this.populateProjectSidebar()}
       if (this.state.userData.role === "Account") {
         newProject = (
           <NavLink
