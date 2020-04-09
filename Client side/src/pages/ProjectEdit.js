@@ -174,6 +174,7 @@ class EditProject extends Component {
                 name="client"
                 value={client}
                 onChange={this.handleChange}
+                required
               />
             </div>
             <div className="col-4">
@@ -318,6 +319,7 @@ class EditProject extends Component {
                 name="description"
                 onChange={this.handleChange}
                 value={this.state.description}
+                required
               >
               </textarea>
             </div>

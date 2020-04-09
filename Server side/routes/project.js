@@ -92,7 +92,7 @@ router.post("/edit", async (req, res, next) => {
       }
       //quitaremos el proyecto de los usuarios iniciales
       originalMembers.map(async (user) => {
-        if (user) {
+        if (user!=undefined) {
           try {
             const updatedUser = await User.findByIdAndUpdate(user, {
               $pull: { s: updatedProject.id },
@@ -121,7 +121,7 @@ router.post("/edit", async (req, res, next) => {
 
 
 //Crea una fase sin tareas para un proyecto
-router.post("/:id/new-phase", async (req, res, next) => {
+router.post("/:id/newphase", async (req, res, next) => {
   const projectId = req.params.id;
   const { name } = req.body;
   try {
@@ -146,21 +146,17 @@ router.post("/:id/new-phase", async (req, res, next) => {
 //Crea una tarea y la añade a una fase
 router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
   const { projectId, phaseId } = req.params;
-  const { name, assignedUser, deadline } = req.body;
+  const { name, assignedUser} = req.body;
   try {
     const newTask = {
       name,
       assignedUser,
-      deadline,
-      project: projectId,
       message: "",
       spentTime: "",
     };
     const newTaskInDb = await Task.create({
       name,
       assignedUser,
-      deadline,
-      project: projectId,
       isItOver: false,
       message: "",
       spentTime: "",

@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 import PhaseCreator from "../components/PhaseCreator";
+import PhaseCard from "../components/PhaseCard";
 
 export default class ProjectDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       project: { teamMembers: [] },
-      showPhaseCreator:false,
+      showPhaseCreator: false,
     };
   }
 
@@ -31,19 +32,28 @@ export default class ProjectDetails extends Component {
     });
   };
 
-  showPhaseCreator=()=>{
-      this.setState({
-        showPhaseCreator: !this.state.showPhaseCreator
-      })
-  }
+  showPhaseCreator = () => {
+    this.setState({
+      showPhaseCreator: !this.state.showPhaseCreator,
+    });
+  };
 
   render() {
-      if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
-          this.updateProject();
-        }
+    if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
+      this.updateProject();
+    }
     let phases, createPhaseForm, phaseCreatorToggler;
-    if (this.state.project.phases){phases = this.state.project.phases.map(phase=> <p>{phase.name}</p>)}
-    if (this.state.showPhaseCreator===true){createPhaseForm= <PhaseCreator projectId={this.state.project._id}/>; phaseCreatorToggler= "Discard new phase"} else {phaseCreatorToggler="Add new phase"}
+    if (this.state.project.phases) {
+      phases = this.state.project.phases.map((phase) => (
+        <PhaseCard phase={phase} teamMembers={this.state.project.teamMembers} projectId={this.state.project._id}/>
+      ));
+    }
+    if (this.state.showPhaseCreator === true) {
+      createPhaseForm = <PhaseCreator projectId={this.state.project._id} />;
+      phaseCreatorToggler = "Discard new phase";
+    } else {
+      phaseCreatorToggler = "Add new phase";
+    }
 
     return (
       <div>

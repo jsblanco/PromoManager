@@ -78,7 +78,13 @@ class User {
 
 createPhase({projectId, name}){
   return this.user
-    .post(`/project/${projectId}/new-phase`, {name})
+    .post(`/project/${projectId}/newphase`, {name})
+    .then((data) => data.data)
+}
+
+createTask({phaseId, name, assignedUser, projectId}){
+  return this.user
+    .post(`/project/${projectId}/addtask/${phaseId}`, {name, assignedUser})
     .then((data) => data.data)
 }
 

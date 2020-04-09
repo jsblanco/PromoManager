@@ -100,6 +100,7 @@ userService.newProject({
                 name="budgetNumber"
                 value={budgetNumber}
                 onChange={this.handleChange}
+                required
               />
             </div>
             <div className="col-4">
@@ -110,6 +111,7 @@ userService.newProject({
                 name="client"
                 value={client}
                 onChange={this.handleChange}
+                required
               />
             </div>
             <div className="col-4">
@@ -251,8 +253,9 @@ userService.newProject({
                 type="text"
                 name="description"
                 onChange={this.handleChange}
+                value={description}
+                required
               >
-                {description}
               </textarea>
             </div>
           </div>
