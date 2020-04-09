@@ -319,13 +319,14 @@ router.put("/:projectId/deletephase/:phaseId/", async (req, res, next) => {
 //Añadir o actualizar el deadline de una tarea
 router.put("/:projectId/:phaseId/update/:taskIndex", async (req, res, next) => {
   let { projectId, phaseId, taskIndex } = req.params;
-  const { deadline } = req.body;
+  const { assignedUser, deadline } = req.body;
   taskIndex = parseInt(taskIndex);
 
   try {
     const currentPhase = await Phase.findById(phaseId);
     let newTasks = [...currentPhase.tasks];
     newTasks[taskIndex].deadline = deadline;
+    newTasks[taskIndex].assignedUser = assignedUser;
     let updatedPhase = await Phase.findByIdAndUpdate(
       phaseId,
       { tasks: newTasks },

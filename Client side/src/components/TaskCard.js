@@ -20,9 +20,9 @@ export default class TaskCard extends Component {
     });
   };
 
-  createNewPhase = () => {
-    const {projectId, name}= this.state;  
-    userService.createPhase({projectId, name})
+  updateTask = () => {
+    const {phaseId, assignedUser, deadline, projectId, index}= this.state;  
+    userService.updateTask({phaseId, assignedUser, deadline, projectId, index})
 };
 
 
@@ -35,7 +35,7 @@ export default class TaskCard extends Component {
           <b>Task: </b>
           {this.state.task.name}
         </p>
-        <div className="row">
+        <form onSubmit={this.updateTask} className="row">
           <div className="col-5">
             <select
               className="w-100"
@@ -64,12 +64,12 @@ export default class TaskCard extends Component {
             </label>
             <input type="date" name="deadline" onChange={this.handleChange} value={this.state.deadline} required/>
           </div>
-          <div clasName="col-2 float-right">
+          <div className="col-2 float-right">
             <button className="btn btn-warning" type="submit">
               Update task
             </button>
           </div>
-        </div>
+        </form>
       </div>
     );
   }

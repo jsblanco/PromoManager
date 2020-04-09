@@ -46,7 +46,7 @@ export default class PhaseCard extends Component {
         return <TaskCard
           index={index}
           projectId={this.state.projectId}
-          phaseId={this.state.phaseId}
+          phaseId={this.state.phase._id}
           teamMembers={this.state.teamMembers}
           assignedUser={assignedUser}
           task={task}
