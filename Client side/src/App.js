@@ -11,22 +11,18 @@ import Private from "./pages/Private";
 import AnonRoute from "./components/AnonRoute";
 import PrivateRoute from "./components/PrivateRoute";
 import user from "./lib/user-service";
-import NewProject from "./pages/NewProject";
-import ProjectDetails from "./pages/ProjectDetails";
-import ProjectEdit from "./pages/ProjectEdit";
+import Home from "./pages/Home";
 
 class App extends Component {
   render() {
     return (
       <AuthProvider>
           <Navbar />
-        <div className='container'>
+        <div className=''>
           <Switch>
             <AnonRoute exact path='/signup' component={Signup} />
             <AnonRoute exact path='/login' component={Login} />
-            <PrivateRoute exact path='/project/new' component={NewProject}/>
-            <PrivateRoute exact path='/project/details' component={ProjectDetails} id=""/>
-            <PrivateRoute exact path='/project/edit' component={ProjectEdit} id=""/>
+            <PrivateRoute exact path='/' component={Home}/>
           </Switch>
         </div>
       </AuthProvider>

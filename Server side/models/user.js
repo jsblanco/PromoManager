@@ -6,8 +6,8 @@ const userSchema = new Schema({
   email: {type: String, required: true},
   password: {type: String, required: true},
   role: {type: String, enum: [ "Account", "Scientific", "Design", "Developer", "AV", "Administration"] },
-  ongoingprojects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
-  finishedprojects:  [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+  ongoingProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+  finishedProjects:  [{ type: Schema.Types.ObjectId, ref: 'Project' }],
 }, {
   timestamps: {
     createdAt: 'created_at',

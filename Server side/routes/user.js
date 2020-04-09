@@ -17,6 +17,17 @@ router.get("/list", async (req, res, next) => {
     }
   });
 
+router.get("/:id", async (req, res, next) => {
+  const {id}=req.params
+    try {
+      console.log("User ID: ",id)
+      const userList = await User.findById(id).populate("ongoingProjects");
+      res.status(200).json(userList);
+    } catch (error) {
+      next(error);
+    }
+  });
+
 
   router.put(":userId/addnewproject/:projectId", async (req, res, next) => {
     try {

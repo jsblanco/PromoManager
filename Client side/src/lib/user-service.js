@@ -16,6 +16,16 @@ class User {
     );
   }
 
+  getUserData(userId) {
+    return (
+      this.user
+      .get(`/user/${userId}`)
+      .then((data) => data.data)
+      );
+    }
+
+
+
   newProject({
     name,
     budgetNumber,

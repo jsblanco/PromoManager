@@ -53,7 +53,7 @@ router.post("/new", async (req, res, next) => {
         if (user) {
           try {
             const updatedUser = await User.findByIdAndUpdate(user, {
-              $push: { ongoingprojects: newProject.id },
+              $push: { ongoingProjects: newProject.id },
             });
             res.status(200);
           } catch (error) {
@@ -96,7 +96,7 @@ router.post("/edit", async (req, res, next) => {
         if (user) {
           try {
             const updatedUser = await User.findByIdAndUpdate(user, {
-              $pull: { ongoingprojects: updatedProject.id },
+              $pull: { s: updatedProject.id },
             });
             res.status(200);
           } catch (error) {
@@ -109,7 +109,7 @@ router.post("/edit", async (req, res, next) => {
         if (user) {
           try {
             const updatedUser = await User.findByIdAndUpdate(user, {
-              $push: { ongoingprojects: updatedProject.id },
+              $push: { ongoingProjects: updatedProject.id },
             });
             res.status(200);
           } catch (error) {
