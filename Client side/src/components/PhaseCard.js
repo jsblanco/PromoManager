@@ -35,12 +35,20 @@ export default class PhaseCard extends Component {
 
     if (this.state.phase.tasks) {
       let index = -1;
+      let assignedUser = ""
       tasks = this.state.phase.tasks.map((task) => {
+        this.state.teamMembers.map(teamMember=>{
+            if (teamMember._id === task.assignedUser){
+                assignedUser=`${teamMember.role}: ${teamMember.name}`
+            }
+        })
         index++;
         return <TaskCard
           index={index}
           projectId={this.state.projectId}
           phaseId={this.state.phaseId}
+          teamMembers={this.state.teamMembers}
+          assignedUser={assignedUser}
           task={task}
         />;
       });
