@@ -20,7 +20,7 @@ export default class PhaseCard extends Component {
     let createTaskForm, taskCreatorToggler, tasks;
     let isItOver = (
       <div>
-        <p className="d-inline rounded-pill bg-warning px-3 py-1 text-dark"></p>
+        <p className="d-inline rounded-pill bg-warning px-2 mr-3  text-dark"></p>
         <p className="d-inline">This phase is still ongoing</p>
       </div>
     );
