@@ -24,13 +24,14 @@ class App extends Component {
     userData: { ongoingProjects: [] },
     loaded: false,
   };
-
+ 
   componentDidMount = async () => {
+    if (this.props.user){
     let userData = await userService.getUserData(this.props.user._id);
     this.setState({
       userData: userData,
       loaded: true,
-    });
+    });}
   };
 
 

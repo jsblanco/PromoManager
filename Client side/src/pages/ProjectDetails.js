@@ -95,7 +95,7 @@ export default class ProjectDetails extends Component {
 
         <section id="phases">
           {phases}
-          <button onClick={this.showPhaseCreator}>{phaseCreatorToggler}</button>
+          <button className="btn btn-primary my-2 w-100" onClick={this.showPhaseCreator}>{phaseCreatorToggler}</button>
           {createPhaseForm}
         </section>
       </div>

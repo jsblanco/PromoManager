@@ -21,7 +21,7 @@ class NewProject extends Component {
   };
 
   handleFormSubmit = (event) => {
-    event.preventDefault();
+//    event.preventDefault();
     const {
       name,
       budgetNumber,

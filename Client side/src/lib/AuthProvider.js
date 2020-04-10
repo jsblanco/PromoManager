@@ -42,7 +42,6 @@ class AuthProvider extends React.Component {
 
   signup = (user) => {
     const { name, password, email, role } = user;
-    console.log("en authProvider", user)
     auth
       .signup({ name, password, email, role })
       .then((user) => this.setState({ isLoggedin: true, user }))
