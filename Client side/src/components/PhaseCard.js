@@ -38,6 +38,16 @@ import { withAuth } from "../lib/AuthProvider";
     if (this.state.phase.tasks) {
       let index = -1;
       let assignedUser = ""
+
+      
+      let projectPhase = this.state.phase;
+      if (projectPhase.activePhase && projectPhase.tasks){
+      let activeTaskIndex = projectPhase.tasks.findIndex(task=>(!task.isItOver))
+      if (activeTaskIndex >-1){
+          projectPhase.tasks[activeTaskIndex].activeTask = true;
+        }}
+
+      console.log(projectPhase.tasks)
       tasks = this.state.phase.tasks.map((task) => {
         this.state.teamMembers.map(teamMember=>{
             if (teamMember._id === task.assignedUser){
