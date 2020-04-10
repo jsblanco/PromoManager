@@ -142,7 +142,7 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.props.user._id === this.state.task.assignedUser) {
+    if (this.props.user._id === this.state.task.assignedUser && this.state.task.activeTask) {
       completeTaskButtons = (
         <div className="row justify-content-center mb-2">
           <button
