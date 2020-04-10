@@ -43,9 +43,14 @@ class ProjectDetails extends Component {
       this.updateProject();
     }
     let phases, createPhaseForm, phaseCreatorToggler, createPhaseButton, editProjectButton;
-    if (this.state.project.phases) {
-      phases = this.state.project.phases.map((phase) => (
-        <PhaseCard key={phase._id} phase={phase} teamMembers={this.state.project.teamMembers} projectId={this.state.project._id}/>
+    let projectData = this.state.project;
+    if (projectData.phases) {
+      let activePhase = projectData.phases.findIndex(phase=>(phase.isItOver === false))
+      if (activePhase >-1){
+        projectData.phases[activePhase].activePhase = true;
+      }
+      phases = projectData.phases.map((phase) => (
+        <PhaseCard key={phase._id} phase={phase} teamMembers={projectData.teamMembers} projectId={projectData._id}/>
       ));
     }
     if (this.state.showPhaseCreator === true) {
@@ -61,7 +66,7 @@ class ProjectDetails extends Component {
     }
 
     return (
-      <div>
+      <div className="m-4">
         <h1>
           {this.state.project.budgetNumber} - <b>{this.state.project.name}</b>
         </h1>

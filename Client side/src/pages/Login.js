@@ -30,6 +30,7 @@ class Login extends Component {
             name='email'
             value={email}
             onChange={this.handleChange}
+            required
           />
 
           <label>Password:</label>
@@ -38,6 +39,7 @@ class Login extends Component {
             name='password'
             value={password}
             onChange={this.handleChange}
+            required
           />
 
           <input type='submit' value='Login' />

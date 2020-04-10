@@ -39,9 +39,8 @@ userService.newProject({
   description,
   type,
   teamMembers,
-})
-//<Redirect to='/' />
-  };
+});
+};
 
   handleChange = (event) => {
     const { name, value } = event.target;
