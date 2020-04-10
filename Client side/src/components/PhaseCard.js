@@ -20,20 +20,29 @@ import { withAuth } from "../lib/AuthProvider";
 
   render() {
     let createTaskForm, createTaskButton, taskCreatorToggler, tasks;
-    let isItOver = (
+    let isItOver;
+
+    if (this.state.phase.activePhase) {
+    isItOver = (
       <div className="mb-2">
         <p className="d-inline rounded-pill bg-warning px-2 mr-3  text-dark"></p>
         <p className="d-inline">This phase is still ongoing</p>
       </div>
-    );
-
-    if (this.state.phase.isItOver) {
+      )
+    } else if (this.state.phase.isItOver) {
       isItOver = (
-        <p className="rounded-pill bg-success p-3 text-light">
-          This phase is over!
-        </p>
+        <div className="mb-2">
+        <p className="d-inline rounded-pill bg-success px-2 mr-3  text-dark"></p>
+        <p className="d-inline">This phase is over!</p>
+        </div>
       );
-    }
+    } else {
+      isItOver = (
+        <div className="mb-2">
+          <p className="d-inline">This phase has not started yet</p>
+        </div>
+      )
+    };
 
     if (this.state.phase.tasks) {
       let index = -1;
