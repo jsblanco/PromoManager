@@ -49,7 +49,7 @@ router.post(
     const { email, password } = req.body;
     console.log(email, password)
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).populate("ongoingProjects");
       console.log("founduser:", user)
       if (!user) {
         next(createError(404));

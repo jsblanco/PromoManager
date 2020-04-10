@@ -12,7 +12,7 @@ const session = require("express-session");
 router.get("/:budgetNumber", async (req,res,next)=>{
   const {budgetNumber} = req.params;
   try {
-  let project= await (await Project.findOne({budgetNumber}).populate("teamMembers").populate("phases")).populate("phases.tasks.assignedUser")
+  let project= await (await Project.findOne({budgetNumber}).populate("teamMembers").populate("phases"))
   res.status(200).json(project);
 } catch (error) {
   next(error);
@@ -95,7 +95,7 @@ router.post("/edit", async (req, res, next) => {
         if (user!=undefined) {
           try {
             const updatedUser = await User.findByIdAndUpdate(user, {
-              $pull: { s: updatedProject.id },
+              $pull: { ongoingProjects: id },
             });
             res.status(200);
           } catch (error) {
@@ -108,7 +108,7 @@ router.post("/edit", async (req, res, next) => {
         if (user) {
           try {
             const updatedUser = await User.findByIdAndUpdate(user, {
-              $push: { ongoingProjects: updatedProject.id },
+              $push: { ongoingProjects: id },
             });
             res.status(200);
           } catch (error) {

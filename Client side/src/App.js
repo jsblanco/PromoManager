@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import "./App.css";
 import { Switch, BrowserRouter, NavLink } from "react-router-dom";
 
@@ -8,7 +8,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "./components/Navbar";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import Private from "./pages/Private";
 import AnonRoute from "./components/AnonRoute";
 import PrivateRoute from "./components/PrivateRoute";
 import user from "./lib/user-service";
@@ -25,18 +24,24 @@ class App extends Component {
     loaded: false,
   };
  
+  
+
   componentDidMount = async () => {
     if (this.props.user){
     let userData = await userService.getUserData(this.props.user._id);
     this.setState({
       userData: userData,
       loaded: true,
-    });}
+    });} 
   };
+
+  
+componentDidUpdate=()=> this.populateProjectSidebar
+  
 
 
 populateProjectSidebar=()=>{
-  return this.state.userData.ongoingProjects.map((project) => (
+  return this.props.user.ongoingProjects.map((project) => (
     <ProjectList project={project} key={project.budgetNumber} />
   ));
 }
@@ -47,7 +52,7 @@ populateProjectSidebar=()=>{
     if (this.state.loaded === true && isLoggedin) {
       projects= this.populateProjectSidebar()
       if (this.state.userData.ongoingProjects.length !== this.props.user.ongoingProjects.length){this.populateProjectSidebar()}
-      if (this.state.userData.role === "Account") {
+      if (this.props.user.role === "Account") {
         newProject = (
           <NavLink
             className="list-group-item list-group-item-action bg-success text-light"

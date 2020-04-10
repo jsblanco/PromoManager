@@ -5,7 +5,7 @@ import userService from "../lib/user-service";
 import PhaseCreator from "../components/PhaseCreator";
 import PhaseCard from "../components/PhaseCard";
 
-export default class ProjectDetails extends Component {
+class ProjectDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,10 +42,10 @@ export default class ProjectDetails extends Component {
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
       this.updateProject();
     }
-    let phases, createPhaseForm, phaseCreatorToggler;
+    let phases, createPhaseForm, phaseCreatorToggler, createPhaseButton, editProjectButton;
     if (this.state.project.phases) {
       phases = this.state.project.phases.map((phase) => (
-        <PhaseCard phase={phase} teamMembers={this.state.project.teamMembers} projectId={this.state.project._id}/>
+        <PhaseCard key={phase._id} phase={phase} teamMembers={this.state.project.teamMembers} projectId={this.state.project._id}/>
       ));
     }
     if (this.state.showPhaseCreator === true) {
@@ -53,6 +53,11 @@ export default class ProjectDetails extends Component {
       phaseCreatorToggler = "Discard new phase";
     } else {
       phaseCreatorToggler = "Add new phase";
+    }
+
+    if (this.props.user.role ==="Account"){
+      createPhaseButton = <button className="btn btn-primary my-2 w-100" onClick={this.showPhaseCreator}>{phaseCreatorToggler}</button>
+      editProjectButton = <Link className="btn btn-info" to={`/project/${this.state.project.budgetNumber}/edit`} >  Edit project  </Link>
     }
 
     return (
@@ -72,12 +77,7 @@ export default class ProjectDetails extends Component {
             <p>{this.state.project.description}</p>
           </div>
           <div className="d-inline ml-5">
-            <Link
-              className="btn btn-info"
-              to={`/project/${this.state.project.budgetNumber}/edit`}
-            >
-              Edit project
-            </Link>
+            {editProjectButton}
           </div>
         </div>
         <section>
@@ -95,10 +95,14 @@ export default class ProjectDetails extends Component {
 
         <section id="phases">
           {phases}
-          <button className="btn btn-primary my-2 w-100" onClick={this.showPhaseCreator}>{phaseCreatorToggler}</button>
+          {createPhaseButton}
           {createPhaseForm}
         </section>
       </div>
     );
   }
 }
+
+
+
+export default withAuth(ProjectDetails) 

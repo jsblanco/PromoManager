@@ -29,10 +29,10 @@ export default class TaskCreator extends Component {
     render() {
         return (
             <form onSubmit={this.createNewTask} className="row mt-3">
-            <div className="col-2">
+            <div className="col-1">
 
-              <label>Name:</label>
-            <label>Assigned to:</label>
+              <p>Name:</p>
+            <p>Assigned to:</p>
             </div>
             <div className="col-8">
               <input
@@ -44,7 +44,7 @@ export default class TaskCreator extends Component {
               />
 
               <select
-                className="w-100"
+                className="w-100 pt-1 pb-2"
                 name="assignedUser"
                 onChange={this.handleChange}
               >

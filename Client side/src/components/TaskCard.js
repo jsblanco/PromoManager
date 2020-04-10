@@ -14,6 +14,7 @@ class TaskCard extends Component {
     deadline: this.props.task.deadline,
     showButton: false,
     taskNotOk: false,
+
   };
 
   handleChange = (event) => {
@@ -98,7 +99,7 @@ class TaskCard extends Component {
             <label htmlFor="assignedUser" className="pr-3">
               Assigned to:
             </label>
-            <select name="assignedUser" onChange={this.handleChange}>
+            <select name="assignedUser"  className="pt-1 pb-2" onChange={this.handleChange}>
               <option
                 value={this.state.task.assignedUser}
                 className="font-weight-bold"
@@ -144,13 +145,13 @@ class TaskCard extends Component {
     if (this.props.user._id === this.state.task.assignedUser) {
       completeTaskButtons = (
         <div className="row justify-content-center mb-2">
-          <button className="btn btn-success mx-2">Task completed</button>
           <button
             onClick={this.showMessageInput}
             className="btn btn-danger mx-2"
           >
             Issue detected
           </button>
+          <button className="btn btn-success mx-2">Task completed</button>
 
         </div>
       );

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 
@@ -40,7 +40,7 @@ userService.newProject({
   type,
   teamMembers,
 })
-  
+//<Redirect to='/' />
   };
 
   handleChange = (event) => {
@@ -83,7 +83,7 @@ userService.newProject({
         <form onSubmit={this.handleFormSubmit} className="d-flex flex-column">
           <div className="row">
             <div className="col-12">
-              <label>Name:</label>
+              <label className="mt-1 mb-0">Name:</label>
               <input
                 className="w-100"
                 type="text"
@@ -93,7 +93,7 @@ userService.newProject({
               />
             </div>
             <div className="col-4">
-              <label>Budget number</label>
+              <label className="mt-1 mb-0">Budget number</label>
               <input
                 className="w-100"
                 type="text"
@@ -104,7 +104,7 @@ userService.newProject({
               />
             </div>
             <div className="col-4">
-              <label>Client:</label>
+              <label className="mt-1 mb-0">Client:</label>
               <input
                 className="w-100"
                 type="text"
@@ -115,7 +115,7 @@ userService.newProject({
               />
             </div>
             <div className="col-4">
-              <label>Project type</label>
+              <label className="mt-1 mb-0">Project type</label>
               <select
                 className="w-100"
                 name="type"
@@ -133,10 +133,10 @@ userService.newProject({
             </div>
           </div>
 
-          <h3>Project team members:</h3>
+          <h3 className="mt-3">Project team members:</h3>
           <div className="row">
             <div className="col-4">
-              <label>Account:</label>
+              <label className="mt-1 mb-0">Account:</label>
               <select
                 className="w-100"
                 name="account"
@@ -156,7 +156,7 @@ userService.newProject({
               </select>
             </div>
             <div className="col-4">
-              <label>Scientific:</label>
+              <label className="mt-1 mb-0">Scientific:</label>
               <select
                 className="w-100"
                 name="scientific"
@@ -175,7 +175,7 @@ userService.newProject({
               </select>
             </div>
             <div className="col-4">
-              <label>Design:</label>
+              <label className="mt-1 mb-0">Design:</label>
               <select
                 className="w-100"
                 name="design"
@@ -194,7 +194,7 @@ userService.newProject({
               </select>
             </div>
             <div className="col-4">
-              <label>Developer:</label>
+              <label className="mt-1 mb-0">Developer:</label>
               <select
                 className="w-100"
                 name="developer"
@@ -213,7 +213,7 @@ userService.newProject({
               </select>
             </div>
             <div className="col-4">
-              <label>Audiovisual:</label>
+              <label className="mt-1 mb-0">Audiovisual:</label>
               <select className="w-100" name="av" onChange={this.handleChange}>
                 <option value="">Select a person</option>
                 {this.state.userList.map((user) => {
@@ -228,7 +228,7 @@ userService.newProject({
               </select>
             </div>
             <div className="col-4">
-              <label>Administration:</label>
+              <label className="mt-1 mb-0">Administration:</label>
               <select
                 className="w-100"
                 name="administration"
@@ -246,7 +246,7 @@ userService.newProject({
                 })}
               </select>
             </div>
-            <div className="col-12">
+            <div className="col-12 mt-3">
               <h3>Description:</h3>
               <textarea
                 className="w-100"
@@ -259,12 +259,13 @@ userService.newProject({
               </textarea>
             </div>
           </div>
-
+          
           <input
             type="submit"
             className="my-5 btn btn-success p-2 font-weight-bold"
             value="Create the project"
           />
+          
         </form>
       </div>
     );

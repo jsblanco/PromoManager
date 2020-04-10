@@ -96,6 +96,7 @@ updateTask({phaseId, assignedUser, deadline, projectId, index}){
     .then((data) => data.data)
 }
 
+removeUserFromProject(){}
 
 
 //fin

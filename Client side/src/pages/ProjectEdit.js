@@ -4,6 +4,7 @@ import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 
 class EditProject extends Component {
+
   state = {
     name: "",
     userList: [],
@@ -96,9 +97,10 @@ class EditProject extends Component {
   };
 
   handleChange = (event) => {
-    const { name, value } = event.target;
+    let { name, value } = event.target;
     let teamMembers = this.state.teamMembers;
     let index;
+    if (value === ""){value = null}
     switch (name) {
       case "Account":
         index = 0;
@@ -129,19 +131,21 @@ class EditProject extends Component {
   render() {
     const { name, budgetNumber, client, description } = this.state;
     let member = [];
+    console.log(this.state.teamMembers)
 
     for (let i = 0; i < 6; i++) {
       if (this.state.teamMembers[i]) {
-        member.push(
+        member[i] =
           <option
             value={this.state.teamMembers[i]}
             className="font-weight-bold"
+            selected
           >
             Currently: {this.state.teamNames[i]}
           </option>
-        );
+        
       } else {
-        member.push(<option value="">Select a person</option>);
+        member.push( );
       }
     }
 
@@ -152,7 +156,7 @@ class EditProject extends Component {
         <form onSubmit={this.handleFormSubmit} className="d-flex flex-column">
           <div className="row">
             <div className="col-12">
-              <label>Name:</label>
+              <label className="mt-2 mb-0">Name:</label>
               <input
                 className="w-100"
                 type="text"
@@ -162,12 +166,12 @@ class EditProject extends Component {
               />
             </div>
             <div className="col-4">
-              <label>Budget number</label>
+              <label className="mt-2 mb-0">Budget number</label>
               <p className="w-100 text-secondary font-italic">{this.state.budgetNumber} - This value cannot be changed</p>
   
             </div>
             <div className="col-4">
-              <label>Client:</label>
+              <label className="mt-2 mb-0">Client:</label>
               <input
                 className="w-100"
                 type="text"
@@ -178,9 +182,9 @@ class EditProject extends Component {
               />
             </div>
             <div className="col-4">
-              <label>Project type</label>
+              <label className="mt-2 mb-0">Project type</label>
               <select
-                className="w-100"
+                className="w-100 py-1"
                 name="type"
                 onChange={this.handleChange}
                 required
@@ -198,12 +202,12 @@ class EditProject extends Component {
             </div>
           </div>
 
-          <h3>Project team members:</h3>
+          <h3 className="mt-3">Project team members:</h3>
           <div className="row">
             <div className="col-4">
-              <label>Account:</label>
+              <label className="mt-2 mb-0">Account:</label>
               <select
-                className="w-100"
+                className="w-100 py-1"
                 name="Account"
                 onChange={this.handleChange}
                 required
@@ -218,12 +222,13 @@ class EditProject extends Component {
                     );
                   }
                 })}
+                <option value="">Nobody from this department</option>
               </select>
             </div>
             <div className="col-4">
-              <label>Scientific:</label>
+              <label className="mt-2 mb-0">Scientific:</label>
               <select
-                className="w-100"
+                className="w-100 py-1"
                 name="Scientific"
                 onChange={this.handleChange}
               >
@@ -237,12 +242,13 @@ class EditProject extends Component {
                     );
                   }
                 })}
+                <option value="">Nobody from this department</option>
               </select>
             </div>
             <div className="col-4">
-              <label>Design:</label>
+              <label className="mt-2 mb-0">Design:</label>
               <select
-                className="w-100"
+                className="w-100 py-1"
                 name="Design"
                 onChange={this.handleChange}
               >
@@ -256,12 +262,13 @@ class EditProject extends Component {
                     );
                   }
                 })}
+                <option value="">Nobody from this department</option>
               </select>
             </div>
             <div className="col-4">
-              <label>Developer:</label>
+              <label  className="mt-2 mb-0">Developer:</label>
               <select
-                className="w-100"
+                className="w-100 py-1"
                 name="Developer"
                 onChange={this.handleChange}
               >
@@ -275,11 +282,12 @@ class EditProject extends Component {
                     );
                   }
                 })}
+                <option value="">Nobody from this department</option>
               </select>
             </div>
             <div className="col-4">
-              <label>Audiovisual:</label>
-              <select className="w-100" name="AV" onChange={this.handleChange}>
+              <label className="mt-2 mb-0">Audiovisual:</label>
+              <select className="w-100 py-1" name="AV" onChange={this.handleChange}>
                 {member[4]}
                 {this.state.userList.map((user) => {
                   if (user.role === "AV") {
@@ -290,12 +298,13 @@ class EditProject extends Component {
                     );
                   }
                 })}
+                <option value="">Nobody from this department</option>
               </select>
             </div>
             <div className="col-4">
-              <label>Administration:</label>
+              <label className="mt-2 mb-0">Administration:</label>
               <select
-                className="w-100"
+                className="w-100 py-1"
                 name="Administration"
                 onChange={this.handleChange}
               >
@@ -309,9 +318,10 @@ class EditProject extends Component {
                     );
                   }
                 })}
+                <option value="">Nobody from this department</option>
               </select>
             </div>
-            <div className="col-12">
+            <div className="col-12 mt-4">
               <h3>Description:</h3>
               <textarea
                 className="w-100"

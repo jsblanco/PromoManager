@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import TaskCreator from "./TaskCreator";
 import TaskCard from "./TaskCard";
+import { withAuth } from "../lib/AuthProvider";
 
-export default class PhaseCard extends Component {
+ class PhaseCard extends Component {
+
   state = {
     teamMembers: this.props.teamMembers,
     phase: this.props.phase,
@@ -17,9 +19,9 @@ export default class PhaseCard extends Component {
   };
 
   render() {
-    let createTaskForm, taskCreatorToggler, tasks;
+    let createTaskForm, createTaskButton, taskCreatorToggler, tasks;
     let isItOver = (
-      <div>
+      <div className="mb-2">
         <p className="d-inline rounded-pill bg-warning px-2 mr-3  text-dark"></p>
         <p className="d-inline">This phase is still ongoing</p>
       </div>
@@ -54,6 +56,10 @@ export default class PhaseCard extends Component {
       });
     }
 
+    if (this.props.user.role==="Account"){
+      createTaskButton= <button className="btn btn-info py-1" onClick={this.showTaskCreator}>Add a new task</button>
+    }
+
     if (this.state.addTaskToggler === true) {
       createTaskForm = (
         <TaskCreator
@@ -68,15 +74,16 @@ export default class PhaseCard extends Component {
     }
 
     return (
-      <div className="card p-4">
+      <div className="card p-4 my-2">
         <h4 className="d-inline">{this.state.phase.name}</h4>
         {isItOver}
         {tasks}
-        <button className="btn btn-info py-1" onClick={this.showTaskCreator}>
-          {taskCreatorToggler}
-        </button>
+        {createTaskButton}
         {createTaskForm}
       </div>
     );
   }
 }
+
+
+export default withAuth(PhaseCard) 
