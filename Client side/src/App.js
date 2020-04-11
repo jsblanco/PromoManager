@@ -1,6 +1,6 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import "./App.css";
-import { Switch, BrowserRouter, NavLink } from "react-router-dom";
+import { Switch, NavLink } from "react-router-dom";
 
 import { withAuth } from "./lib/AuthProvider";
 import "bootstrap/dist/css/bootstrap.css";
@@ -10,8 +10,6 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import AnonRoute from "./components/AnonRoute";
 import PrivateRoute from "./components/PrivateRoute";
-import user from "./lib/user-service";
-import Home from "./pages/Home";
 import userService from "./lib/user-service";
 import ProjectList from "./components/ProjectList";
 import NewProject from "./pages/NewProject";
@@ -36,12 +34,14 @@ class App extends Component {
   };
 
   
-componentDidUpdate=()=> this.populateProjectSidebar
+componentDidUpdate=async ()=> {
+  return this.populateProjectSidebar
+}
   
 
 
 populateProjectSidebar=()=>{
-  return this.props.user.ongoingProjects.map((project) => (
+  return this.state.userData.ongoingProjects.map((project) => (
     <ProjectList project={project} key={project.budgetNumber} />
   ));
 }
@@ -72,7 +72,6 @@ populateProjectSidebar=()=>{
           <div className="col-xl-2 col-lg-3 col-sm-4 list-group pr-0">
             {newProject}
             {projects}
-            {console.log(this.state.isLoggedIn)}
           </div>
 
           <div className="col-xl-8 col-lg-7 col-sm-6">

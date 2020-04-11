@@ -5,7 +5,7 @@ const User = require("../models/user");
 const Project = require("../models/project");
 const Phase = require("../models/phase");
 const Task = require("../models/task");
-const session = require("express-session");
+//const session = require("express-session");
 
 
 //devuelve un proyecto existente
@@ -67,7 +67,7 @@ router.post("/new", async (req, res, next) => {
 });
 
 //Edita un proyecto
-router.post("/edit", async (req, res, next) => {
+router.put("/edit", async (req, res, next) => {
   const {
     name,
     client,

@@ -56,7 +56,6 @@ import { withAuth } from "../lib/AuthProvider";
         }}
 
       let index = this.state.phase.tasks.length - (this.state.phase.basicTasks.length+1);
-      console.log(projectPhase.tasks)
       tasks = this.state.phase.tasks.slice(-(this.state.phase.basicTasks.length)).map((task) => {
         this.state.teamMembers.map(teamMember=>{
             if (teamMember._id === task.assignedUser){
@@ -70,8 +69,9 @@ import { withAuth } from "../lib/AuthProvider";
         if (index === (this.state.phase.tasks.length - this.state.phase.basicTasks.length)){
           task.firstTask=true
         }
-        
+
         return <TaskCard
+          key={index}
           index={index}
           projectId={this.state.projectId}
           phaseId={this.state.phase._id}

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Route, Redirect } from "react-router-dom";
+//import { Route, Redirect } from "react-router-dom";
 
 
 
@@ -68,7 +68,7 @@ class User {
     id,
   }) {
     return this.user
-      .post("/project/edit", {
+      .put("/project/edit", {
         name,
         client,
         description,

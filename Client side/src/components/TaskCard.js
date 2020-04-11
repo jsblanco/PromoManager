@@ -329,7 +329,7 @@ class TaskCard extends Component {
 
     if (this.props.task.message) {
       message = (
-        <div clasName="col-12">
+        <div className="col-12">
           <p className="font-italics d-inline">Comments: </p>
           <p className="d-inline">{this.props.task.message}</p>
         </div>
@@ -341,7 +341,8 @@ class TaskCard extends Component {
 
     ////////////////////////////
     return (
-      <form onSubmit={this.updateTask} className={` card ${active} p-2`}>
+      <div className={` card ${active} p-2`}>
+        <form onSubmit={this.updateTask}>
         <h5>
           <b>{taskName}</b>
           {activeMarker}
@@ -352,9 +353,10 @@ class TaskCard extends Component {
           {button}
         </div>
         {message}
+      </form>
         {completeTaskButtons}
         {messageInput}
-      </form>
+        </div>
     );
   }
 }
