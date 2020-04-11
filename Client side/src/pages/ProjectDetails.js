@@ -66,11 +66,14 @@ class ProjectDetails extends Component {
     }
 
     return (
-      <div className="m-4">
-        <h1>
+      <div className="my-4 row">
+      <div className="col-lg-8 pr-0">
+
+      <header className="px-2">
+        <h1 className="px-2">
           {this.state.project.budgetNumber} - <b>{this.state.project.name}</b>
         </h1>
-        <div className="row">
+        <div className="row mx-2">
           <div className="d-inline">
             <p className="d-inline mb-0 mr-3">
               <b>Cliente: </b>
@@ -97,12 +100,17 @@ class ProjectDetails extends Component {
             }
           })}
         </section>
+      </header>
 
-        <section id="phases">
+        <section id="phases" className="mx-0">
           {phases}
           {createPhaseButton}
           {createPhaseForm}
         </section>
+      </div>
+      <div className="col-lg-4">
+        <h4>Project comments</h4>
+      </div>
       </div>
     );
   }

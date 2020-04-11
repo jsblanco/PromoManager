@@ -57,7 +57,7 @@ import { withAuth } from "../lib/AuthProvider";
         }}
 
       console.log(projectPhase.tasks)
-      tasks = this.state.phase.tasks.map((task) => {
+      tasks = this.state.phase.tasks.slice(-(this.state.phase.basicTasks.length-1)).map((task) => {
         this.state.teamMembers.map(teamMember=>{
             if (teamMember._id === task.assignedUser){
                 assignedUser=`${teamMember.role}: ${teamMember.name}`
@@ -94,8 +94,10 @@ import { withAuth } from "../lib/AuthProvider";
 
     return (
       <div className="card p-4 my-2">
-        <h4 className="d-inline">{this.state.phase.name}</h4>
-        {isItOver}
+      <div className="row">
+        <div className="col-md-8"><h4 className="d-inline">{this.state.phase.name}</h4></div>
+        <div className="col-md-4">{isItOver}</div>
+      </div>        
         {tasks}
         {createTaskButton}
         {createTaskForm}

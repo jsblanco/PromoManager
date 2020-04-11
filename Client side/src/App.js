@@ -66,10 +66,10 @@ populateProjectSidebar=()=>{
     }
 
     return (
-      <div>
+     <div>
         <Navbar />
-        <div className="row w-100">
-          <div className="col-xl-2 col-lg-3 col-sm-4 list-group">
+        <div className="row">
+          <div className="col-xl-2 col-lg-3 col-sm-4 list-group pr-0">
             {newProject}
             {projects}
             {console.log(this.state.isLoggedIn)}

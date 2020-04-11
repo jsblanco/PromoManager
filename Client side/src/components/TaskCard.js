@@ -14,7 +14,6 @@ class TaskCard extends Component {
     deadline: this.props.task.deadline,
     showButton: false,
     taskNotOk: false,
-
   };
 
   handleChange = (event) => {
@@ -47,19 +46,36 @@ class TaskCard extends Component {
     });
   };
 
+  showInput=()=>{
+    this.setState({
+      showButton: !this.state.showButton
+    })
+  }
+
   render() {
     let button,
+      taskName,
       deadlineInput,
       taskInformation,
       completeTaskButtons,
-      messageInput;
-    if (this.state.showButton) {
+      messageInput,
+      message;
+
+    if (!this.state.showButton && this.props.user.role === "Account"){
+      button =
+      <button className="btn btn-info" onClick={this.showInput}>
+      Edit task
+    </button>;
+    taskName= <p className="d-inline">{this.state.task.name}</p>
+    } else if (this.state.showButton) {
       button = (
         <button className="btn btn-warning" type="submit">
           Update task
         </button>
       );
+      taskName= <input name="name" type="text" onChange="changeHandler" value={this.state.task.name}/>
     }
+
     if (this.state.deadline) {
       deadlineInput = (
         <div className="col-5">
@@ -92,7 +108,7 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.props.user.role === "Account") {
+    if (this.props.user.role === "Account" && this.state.showButton=== true) {
       taskInformation = (
         <form onSubmit={this.updateTask} className="row py-2">
           <div className="col-5">
@@ -136,8 +152,8 @@ class TaskCard extends Component {
               {this.state.task.deadline}
             </p>
           </div>
-
-          <div className="col-2 float-right">{button}</div>
+          {button}
+          {message}
         </form>
       );
     }
@@ -172,12 +188,17 @@ class TaskCard extends Component {
       );
     }
 
+    if (this.state.task.message){
+      message= <div clasName="col-12"><p className="font-italics d-inline">Comments: </p>
+      <p className="d-inline">{this.state.task.message}</p></div>
+    }
+
     ////////////////////////////
     return (
       <div className="my-1 card px-2">
         <h5 className="pt-3">
           <b>Task: </b>
-          {this.state.task.name}
+          {taskName}
         </h5>
         {taskInformation}
         {completeTaskButtons}
