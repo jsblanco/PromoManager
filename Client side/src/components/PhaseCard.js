@@ -64,6 +64,9 @@ import { withAuth } from "../lib/AuthProvider";
             }
         })
         index++;
+        if (index=== this.state.phase.tasks.length-1){
+          task.lastTask = true
+        }
         return <TaskCard
           index={index}
           projectId={this.state.projectId}

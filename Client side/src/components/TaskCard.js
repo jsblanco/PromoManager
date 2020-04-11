@@ -10,10 +10,12 @@ class TaskCard extends Component {
     index: this.props.index,
     task: this.props.task,
     name: this.props.task.name,
+    spentTime: this.props.task.spentTime,
     assignedUserName: this.props.assignedUser,
     assignedUser: this.props.task.assignedUser,
     deadline: this.props.task.deadline,
     showButton: false,
+    taskIsOk: false,
     taskNotOk: false,
   };
 
@@ -43,9 +45,19 @@ class TaskCard extends Component {
   showMessageInput = (event) => {
     event.preventDefault();
     this.setState({
+      taskIsOk: false,
       taskNotOk: !this.state.taskNotOk,
     });
   };
+
+  showSpentTimeInput = (event) => {
+    event.preventDefault();
+    this.setState({
+      taskIsOk: !this.state.taskIsOk,
+      taskNotOk: false,
+    });
+  };
+
 
   showInput=(event)=>{
     event.preventDefault();
@@ -63,6 +75,7 @@ class TaskCard extends Component {
       completeTaskButtons,
       messageInput,
       activeMarker,
+      spentTime,
       message;
 
       taskName = <p className="d-inline">{this.state.task.name}</p>
@@ -88,7 +101,7 @@ class TaskCard extends Component {
       completeTaskButtons = (
         <div className="row justify-content-center mb-2">
           <button onClick={this.showMessageInput} className="btn btn-danger mx-2">Issue detected</button>
-          <button className="btn btn-success mx-2">Task completed</button>
+          <button onClick={this.showSpentTimeInput} className="btn btn-success mx-2">Task completed</button>
         </div>
       );
     }
@@ -101,16 +114,31 @@ class TaskCard extends Component {
   } 
 
     if (this.state.taskNotOk === true) {
+    
       messageInput = (
-        <div className="row mb-2">
-          <div className="col-8">
-            <input type="text" name="message" className="w-100 pt-1 pb-2" placeholder="Describe the problem to your colleague" required />
+       <div className="text-center">
+       <div className="row mb-2 d-flex justify-content-around align-items-center">
+          <div className="w-100 d-flex justify-content-center align-items-center">
+          <label htmlFor="spentTime" className="pr-3">Time spent:</label>
+            <input type="time" name="spentTime" className="pt-1 pb-2 text-center" required />
+            <label htmlFor="message" className="pl-5 pr-3">Reason:</label>
+            <input type="text" name="message" className="pt-1 pb-2 w-50" placeholder="Describe the problem to your colleague" required />
           </div>
-          <div className="col-4">
-            <button className="btn btn-danger">
-              Return to previous user
+        </div>
+            <button className="btn btn-danger">Return to previous user</button>
+        </div>
+      );
+    }
+
+
+    if (this.state.taskIsOk === true) {
+      messageInput = (
+        <div className="my-2 d-flex justify-content-center align-items-center">
+          <label htmlFor="spentTime" className="pr-4">Time spent:</label>
+            <input type="time" name="spentTime" className="pt-1 pb-2  mr-5 text-center" required />
+            <button className="btn btn-success">
+             Complete task
             </button>
-          </div>
         </div>
       );
     }
@@ -120,6 +148,7 @@ class TaskCard extends Component {
       <p className="d-inline">{this.state.task.message}</p></div>
     }
 
+    if (this.state.task.lastTask){}
 
     ////////////////////////////
     return (
