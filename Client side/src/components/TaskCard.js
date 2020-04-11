@@ -40,7 +40,8 @@ class TaskCard extends Component {
     });
   };
 
-  showMessageInput = () => {
+  showMessageInput = (event) => {
+    event.preventDefault();
     this.setState({
       taskNotOk: !this.state.taskNotOk,
     });
@@ -58,36 +59,46 @@ class TaskCard extends Component {
       taskName,
       assignedTo,
       deadline,
-      taskInformation,
+      active,
       completeTaskButtons,
       messageInput,
+      activeMarker,
       message;
 
       taskName = <p className="d-inline">{this.state.task.name}</p>
       assignedTo = <div className="col-5"><label className="pr-3">Assigned to:</label><p className="font-weight-bold d-inline">{this.state.assignedUserName}</p></div>
       deadline =<div className="col-5"><label className="pr-3">Deadline:</label><p className="font-weight-bold d-inline">{this.state.task.deadline}</p></div>
+      if (this.props.user.role ==="Account"){
+      button = <div className="col-2"><button className="btn btn-info" onClick={this.showInput}>Edit task</button></div>}
 
       if (this.state.showButton){
       taskName = <input name="name" type="text" onChange={this.handleChange} value={this.state.name}/>
       assignedTo = <div className="col-5"><label htmlFor="assignedUser" className="pr-3">Assigned to:</label><select name="assignedUser"  className="pt-1 pb-2" onChange={this.handleChange}><option value={this.state.task.assignedUser}className="font-weight-bold">Currently: {this.state.assignedUserName}</option>{this.state.teamMembers.map((user) => {return (<option key={user._id} value={user._id}>{user.role}: {user.name}</option>);})}</select></div>;
-      deadline = <div className="col-5"><label htmlFor="deadline" className="pr-3 text-danger"> Assign a deadline: </label> <input type="date" name="deadline" onChange={this.handleChange} value={this.state.deadline} required/> </div>
+      deadline = <div className="col-5"><label htmlFor="deadline" className="pr-3">Deadline: </label> <input type="date" name="deadline" onChange={this.handleChange} value={this.state.deadline} required/> </div>
+      button = <div className="col-2"><button className="btn btn-warning" type="submit"> Update task </button></div>
     } else if (!this.state.task.deadline && this.props.user.role==="Account"){
       deadline = <div className="col-5"><label htmlFor="deadline" className="pr-3 text-danger"> Assign a deadline: </label> <input type="date" name="deadline" onChange={this.handleChange} value={this.state.deadline} required/> </div>
-      button = ""
-    }
-
-    if (this.props.user.role==="Account"){
-      switch (this.state.showButton){
-        case true:
-          button = <button className="btn btn-warning" type="submit"> Update task </button>
-          break;
-        case false:
-          button = <button className="btn btn-info" onClick={this.showInput}>Edit task</button>;
-          break;
-      }
+      button = <div className="col-2"><button className="btn btn-warning" type="submit"> Update task </button></div>
+    } else if (!this.state.task.deadline) {
+      deadline = <div className="col-5"><label className="pr-3">Deadline:</label><p className="font-weight-bold font-italic d-inline">As soon as possible</p></div>
     }
 
 
+    if (this.props.user._id === this.state.task.assignedUser && this.state.task.activeTask) {
+      completeTaskButtons = (
+        <div className="row justify-content-center mb-2">
+          <button onClick={this.showMessageInput} className="btn btn-danger mx-2">Issue detected</button>
+          <button className="btn btn-success mx-2">Task completed</button>
+        </div>
+      );
+    }
+
+  if (this.state.task.activeTask){
+    activeMarker = <p className="d-inline font-italic text-primary"> - Active task</p>
+    active="shadow p-3 mb-3 bg-white rounded";
+  } else {
+    active="border border-light text-secondary"
+  } 
 
     if (this.state.taskNotOk === true) {
       messageInput = (
@@ -97,7 +108,7 @@ class TaskCard extends Component {
           </div>
           <div className="col-4">
             <button className="btn btn-danger">
-              Return to previous team member
+              Return to previous user
             </button>
           </div>
         </div>
@@ -109,16 +120,22 @@ class TaskCard extends Component {
       <p className="d-inline">{this.state.task.message}</p></div>
     }
 
+
     ////////////////////////////
     return (
-      <form onSubmit={this.updateTask} className="my-1 card px-2">
-        <h5 className="pt-3">
-          <b>Task: </b>
+      <form onSubmit={this.updateTask} className={` card ${active} p-2`}>
+        <h5>
+          <b>
           {taskName}
+          </b>
+          {activeMarker}
         </h5>
-        {assignedTo}
+        <div className="row pt-1">
         {deadline}
+        {assignedTo}
         {button}
+        </div>
+        {message}
         {completeTaskButtons}
         {messageInput}
       </form>

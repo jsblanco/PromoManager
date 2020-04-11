@@ -74,7 +74,7 @@ class ProjectDetails extends Component {
           {this.state.project.budgetNumber} - <b>{this.state.project.name}</b>
         </h1>
         <div className="row mx-2">
-          <div className="d-inline">
+          <div className="col-8">
             <p className="d-inline mb-0 mr-3">
               <b>Cliente: </b>
               {this.state.project.client}
@@ -84,16 +84,16 @@ class ProjectDetails extends Component {
             </p>
             <p>{this.state.project.description}</p>
           </div>
-          <div className="d-inline ml-5">
+          <div className="col-2 ml-5">
             {editProjectButton}
           </div>
         </div>
-        <section>
+        <section className="mx-2 px-3 mb-4">
           <h3>Project team:</h3>
           {this.state.project.teamMembers.map((user) => {
             if (user) {
               return (
-                <p key={user._id}>
+                <p className="d-inline mt-1 mb-3 mr-4" key={user._id}>
                   <b>{user.role}:</b> {user.name}
                 </p>
               );
@@ -102,7 +102,8 @@ class ProjectDetails extends Component {
         </section>
       </header>
 
-        <section id="phases" className="mx-0">
+        <section id="phases" className="mx-2">
+        <h3 className="px-4 ">Development phases:</h3>
           {phases}
           {createPhaseButton}
           {createPhaseForm}
