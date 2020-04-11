@@ -68,7 +68,7 @@ populateProjectSidebar=()=>{
     return (
      <div>
         <Navbar />
-        <div className="row">
+        <div className="row ">
           <div className="col-xl-2 col-lg-3 col-sm-4 list-group pr-0">
             {newProject}
             {projects}
