@@ -8,7 +8,6 @@ class TaskCard extends Component {
     teamMembers: this.props.teamMembers,
     phaseId: this.props.phaseId,
     index: this.props.index,
-    task: this.props.task,
     name: this.props.task.name,
     spentTime: this.props.task.spentTime,
     assignedUserName: this.props.assignedUser,
@@ -18,6 +17,7 @@ class TaskCard extends Component {
     taskIsOk: false,
     taskNotOk: false,
     inputSpentTime: "",
+    message: this.props.task.message,
   };
 
   handleChange = (event) => {
@@ -115,7 +115,7 @@ class TaskCard extends Component {
       issueDetected,
       message;
 
-    taskName = <p className="d-inline">{this.state.task.name}</p>;
+    taskName = <p className="d-inline">{this.props.task.name}</p>;
     assignedTo = (
       <div className="col-5">
         <label className="pr-3">Assigned to:</label>
@@ -127,7 +127,7 @@ class TaskCard extends Component {
     deadline = (
       <div className="col-5">
         <label className="pr-3">Deadline:</label>
-        <p className="font-weight-bold d-inline">{this.state.task.deadline}</p>
+        <p className="font-weight-bold d-inline">{this.props.task.deadline}</p>
       </div>
     );
     if (this.props.user.role === "Account") {
@@ -160,7 +160,7 @@ class TaskCard extends Component {
             onChange={this.handleChange}
           >
             <option
-              value={this.state.task.assignedUser}
+              value={this.props.task.assignedUser}
               className="font-weight-bold"
             >
               Currently: {this.state.assignedUserName}
@@ -198,7 +198,7 @@ class TaskCard extends Component {
         </div>
       );
     } else if (
-      !this.state.task.deadline &&
+      !this.props.task.deadline &&
       this.props.user.role === "Account"
     ) {
       deadline = (
@@ -224,7 +224,7 @@ class TaskCard extends Component {
           </button>
         </div>
       );
-    } else if (!this.state.task.deadline) {
+    } else if (!this.props.task.deadline) {
       deadline = (
         <div className="col-5">
           <label className="pr-3">Deadline:</label>
@@ -235,7 +235,7 @@ class TaskCard extends Component {
       );
     }
 
-    if (!this.state.task.firstTask) {
+    if (!this.props.task.firstTask) {
       issueDetected = (
         <button onClick={this.showMessageInput} className="btn btn-danger mx-2">
           Issue detected
@@ -244,8 +244,8 @@ class TaskCard extends Component {
     }
 
     if (
-      this.props.user._id === this.state.task.assignedUser &&
-      this.state.task.activeTask
+      this.props.user._id === this.props.task.assignedUser &&
+      this.props.task.activeTask
     ) {
       completeTaskButtons = (
         <div className="row justify-content-center mb-2">
@@ -260,7 +260,7 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.state.task.activeTask) {
+    if (this.props.task.activeTask) {
       activeMarker = (
         <p className="d-inline font-italic text-primary"> - Active task</p>
       );
@@ -288,6 +288,7 @@ class TaskCard extends Component {
                 Reason:
               </label>
               <input
+                onChange={this.handleChange}
                 type="text"
                 name="message"
                 className="pt-1 pb-2 w-50"
@@ -326,16 +327,16 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.state.task.message) {
+    if (this.props.task.message) {
       message = (
         <div clasName="col-12">
           <p className="font-italics d-inline">Comments: </p>
-          <p className="d-inline">{this.state.task.message}</p>
+          <p className="d-inline">{this.props.task.message}</p>
         </div>
       );
     }
 
-    if (this.state.task.lastTask) {
+    if (this.props.task.lastTask) {
     }
 
     ////////////////////////////
