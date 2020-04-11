@@ -67,6 +67,10 @@ import { withAuth } from "../lib/AuthProvider";
         if (index=== this.state.phase.tasks.length-1){
           task.lastTask = true
         }
+        if (index === (this.state.phase.tasks.length - this.state.phase.basicTasks.length)){
+          task.firstTask=true
+        }
+        
         return <TaskCard
           index={index}
           projectId={this.state.projectId}

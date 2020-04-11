@@ -189,7 +189,7 @@ router.put(
         newTasks[taskIndex + 1].message = message;
       }
 
-      if ((taskIndex = newTasks.length - 1)) {
+      if (taskIndex === newTasks.length - 1) {
         let updatedPhase = await Phase.findByIdAndUpdate(
           phaseId,
           { isItOver: true, tasks: newTasks },

@@ -107,7 +107,39 @@ updateTask({
     .then((data) => data.data)
 }
 
-removeUserFromProject(){}
+taskIsOk({
+  phaseId,
+  projectId,
+  index,
+  spentTime, 
+  message,
+}){
+  return this.user
+    .put(`/project/${projectId}/${phaseId}/taskIsOk/${index}`, {spentTime, message,})
+    .then((data) => data.data)
+}
+
+taskIsNotOk({
+  phaseId,
+  projectId,
+  index,
+  spentTime, 
+  message,
+}){
+  return this.user
+    .put(`/project/${projectId}/${phaseId}/taskIsNotOk/${index}`, {spentTime, message,})
+    .then((data) => data.data)
+}
+
+/*
+router.put(
+  "/:projectId/:phaseId/taskisnotok/:taskIndex",
+  async (req, res, next) => {
+    let { projectId, phaseId, taskIndex } = req.params;
+    const { spentTime, message } = req.body;
+
+*/
+
 
 
 //fin
