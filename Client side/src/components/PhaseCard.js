@@ -45,7 +45,6 @@ import { withAuth } from "../lib/AuthProvider";
     };
 
     if (this.state.phase.tasks) {
-      let index = -1;
       let assignedUser = ""
 
       
@@ -56,8 +55,9 @@ import { withAuth } from "../lib/AuthProvider";
           projectPhase.tasks[activeTaskIndex].activeTask = true;
         }}
 
+      let index = this.state.phase.tasks.length - (this.state.phase.basicTasks.length+1);
       console.log(projectPhase.tasks)
-      tasks = this.state.phase.tasks.slice(-(this.state.phase.basicTasks.length-1)).map((task) => {
+      tasks = this.state.phase.tasks.slice(-(this.state.phase.basicTasks.length)).map((task) => {
         this.state.teamMembers.map(teamMember=>{
             if (teamMember._id === task.assignedUser){
                 assignedUser=`${teamMember.role}: ${teamMember.name}`

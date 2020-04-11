@@ -94,9 +94,16 @@ createTask({phaseId, name, assignedUser, projectId}){
 
 
 
-updateTask({phaseId, assignedUser, deadline, projectId, index}){
+updateTask({
+  phaseId,
+  name,
+  assignedUser,
+  deadline,
+  projectId,
+  index,
+}){
   return this.user
-    .put(`/project/${projectId}/${phaseId}/update/${index}`, {deadline, assignedUser})
+    .put(`/project/${projectId}/${phaseId}/update/${index}`, {name, assignedUser, deadline})
     .then((data) => data.data)
 }
 
