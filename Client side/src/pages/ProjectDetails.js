@@ -61,7 +61,8 @@ class ProjectDetails extends Component {
       phaseCreatorToggler,
       createPhaseButton,
       editProjectButton,
-      comments;
+      comments,
+      addComment;
     let projectData = this.state.project;
     if (projectData.phases) {
       let activePhase = projectData.phases.findIndex(
@@ -112,13 +113,30 @@ class ProjectDetails extends Component {
       if (this.props.user._id === comment.user){userName = "you"; userOrNot = "ml-5 bg-success your-comment"}  else {userOrNot = "other-comment mr-5 bg-info"
             this.state.project.teamMembers.map(member =>{if (member._id === comment.user){userName = `${member.name} (${member.role})` }})}
 
-      return  <div class={`my-1 text-white px-4 py-3 my-4 ${userOrNot} p-2`}>
-      <p class="font-weight-bold mt-2">{comment.comments}</p>
-      <p class="font-italic mb-1">By {userName}</p>
+      return  <div key={Math.random()} className={`my-1 text-white px-4 py-3 my-4 ${userOrNot} p-2`}>
+      <p className="font-weight-bold mt-2">{comment.comments}</p>
+      <p className="font-italic mb-1">By {userName}</p>
     </div>
       })
     }
     
+    let isUserATeamMember = this.state.project.teamMembers.findIndex(i => i._id === this.props.user._id);
+
+    if (isUserATeamMember!==-1){
+    addComment = <div>
+    <h4 className="mt-4">Add a comment</h4>
+    <form className="w-100" onSubmit={this.addComment}>              
+      <textarea
+        onChange={this.handleChange}
+        className="d-block w-100"
+        type="text"
+        name="comments"
+        placeholder="What's on your mind?"
+      ></textarea>
+      <button className="btn btn-success mt-0 w-100" type="submit">
+        <i className="fas fa-comment text-light m-1"></i>Comment    </button>
+    </form>
+  </div>}
 
     return (
       <div className="my-4 row">
@@ -166,26 +184,7 @@ class ProjectDetails extends Component {
           <h3>Project comments</h3>
           <div className="h-50"></div>
           {comments}
-          <div>
-            <h4 className="mt-4">Add a comment</h4>
-            <form
-              action="/events/{{id}}/add-comment"
-              className="justify-content-center d-flex flex-column align-items-end"
-              method="post"
-            >
-            <form className="w-100" onSubmit={this.addComment}>              
-              <textarea
-                onChange={this.handleChange}
-                className="d-block w-100"
-                type="text"
-                name="comments"
-                placeholder="What's on your mind?"
-              ></textarea>
-              <button className="btn btn-success mt-0 w-100" type="submit">
-                <i className="fas fa-comment text-light m-1"></i>Comment    </button>
-            </form>
-            </form>
-          </div>
+          {addComment}
         </div>
       </div>
     );

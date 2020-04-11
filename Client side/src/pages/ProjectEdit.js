@@ -338,7 +338,7 @@ class EditProject extends Component {
           <input
             type="submit"
             className="my-5 btn btn-success p-2 font-weight-bold"
-            value="Create the project"
+            value="Edit this project"
           />
         </form>
       </div>
