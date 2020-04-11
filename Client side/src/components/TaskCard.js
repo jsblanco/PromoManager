@@ -65,6 +65,9 @@ class TaskCard extends Component {
       showButton: !this.state.showButton
     })
   }
+  
+  submitTaskAsOk=()=>{}
+  submitTaskAsNotOk=()=>{}
 
   render() {
     let button,
@@ -116,7 +119,7 @@ class TaskCard extends Component {
     if (this.state.taskNotOk === true) {
     
       messageInput = (
-       <div className="text-center">
+       <form onSubmit={this.submitTaskAsNotOk}  className="text-center">
        <div className="row mb-2 d-flex justify-content-around align-items-center">
           <div className="w-100 d-flex justify-content-center align-items-center">
           <label htmlFor="spentTime" className="pr-3">Time spent:</label>
@@ -125,21 +128,21 @@ class TaskCard extends Component {
             <input type="text" name="message" className="pt-1 pb-2 w-50" placeholder="Describe the problem to your colleague" required />
           </div>
         </div>
-            <button className="btn btn-danger">Return to previous user</button>
-        </div>
+            <button type="submit" className="btn btn-danger">Return to previous user</button>
+        </form>
       );
     }
 
 
     if (this.state.taskIsOk === true) {
       messageInput = (
-        <div className="my-2 d-flex justify-content-center align-items-center">
+        <form onSubmit={this.submitTaskAsOk}  className="my-2 d-flex justify-content-center align-items-center">
           <label htmlFor="spentTime" className="pr-4">Time spent:</label>
             <input type="time" name="spentTime" className="pt-1 pb-2  mr-5 text-center" required />
-            <button className="btn btn-success">
+            <button type="submit" className="btn btn-success">
              Complete task
             </button>
-        </div>
+        </form>
       );
     }
 
