@@ -266,7 +266,7 @@ class TaskCard extends Component {
       );
       active = "shadow p-3 mb-3 bg-white rounded";
     } else {
-      active = "border border-light text-secondary";
+      active = "border border-white text-secondary";
     }
 
     if (this.state.taskNotOk === true) {

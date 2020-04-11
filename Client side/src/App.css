@@ -4,3 +4,10 @@
 }
 
 
+.your-comment{
+  border-radius:   30px 30px 1px;
+}  
+
+.other-comment{
+  border-radius:   30px 30px 30px 1px;
+} 

@@ -339,4 +339,30 @@ router.put("/:projectId/:phaseId/update/:taskIndex", async (req, res, next) => {
   }
 });
 
+
+//Añadir comentarios a un proyecto
+router.put('/:projectId/addcomment', (req, res, next) => {
+  const user = req.session.currentUser._id
+  const {
+    comments
+  } = req.body;
+  Project.findByIdAndUpdate(
+      req.params.projectId, {
+        $push: {
+          comments: {
+            $each: [{
+              user,
+              comments
+            }],
+            $position: 0
+          }
+        }
+      })
+    .catch(error => {
+      console.log(error);
+    });
+});
+
+
+
 module.exports = router;
