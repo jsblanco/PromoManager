@@ -55,6 +55,11 @@ populateProjectSidebar=()=>{
         if (activeTaskIndex > -1) {
           project.currentRole = project.phases[activePhase].tasks[activeTaskIndex].assignedUser[0];
           project.phases[activePhase].tasks[activeTaskIndex].activeTask = true;
+          if (project.phases[activePhase].tasks[activeTaskIndex].deadline.length){
+            project.deadline = project.phases[activePhase].tasks[activeTaskIndex].deadline;
+          } else {
+            project.deadline = "As soon as possible"
+          }
         } else {
           project.currentRole = "Account"
         }
