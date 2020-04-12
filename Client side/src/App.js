@@ -65,7 +65,9 @@ populateProjectSidebar=()=>{
         }
       }
     }
+    return project
   })
+
   return this.state.userData.ongoingProjects.map((project) => (
     <ProjectList project={project} key={project.budgetNumber} />
   ));

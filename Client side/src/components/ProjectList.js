@@ -1,9 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { withAuth } from "../lib/AuthProvider";
 
 const ProjectList = props => {
 
-let deadline
+let deadline, activeRole
 
 if (props.project.deadline){
   deadline = <p className="mt-0">Deadline for the current task: {props.project.deadline}</p>
@@ -11,9 +12,15 @@ if (props.project.deadline){
   deadline = <p className="mt-0">Awaiting project task distribution</p>
 }
 
+if (props.project.currentRole === props.user.role ){
+  activeRole=""
+} else {
+  activeRole="text-muted bg-light font-italic"
+}
+
     return (
         <NavLink
-        className="list-group-item list-group-item-action country-menu"
+        className={`list-group-item list-group-item-action country-menu ${activeRole}`}
         to={`/project/${props.project.budgetNumber}/details`}
         activeClassName="active"
       >
@@ -29,5 +36,5 @@ if (props.project.deadline){
   );
 };
 
-export default ProjectList;
+export default withAuth(ProjectList);
 
