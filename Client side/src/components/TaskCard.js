@@ -10,7 +10,7 @@ class TaskCard extends Component {
     index: this.props.index,
     name: this.props.task.name,
     spentTime: this.props.task.spentTime,
-    assignedUserName: this.props.assignedUser,
+    assignedUserName: this.props.assignedUserName,
     assignedUser: this.props.task.assignedUser,
     deadline: this.props.task.deadline,
     showButton: false,
@@ -167,7 +167,7 @@ class TaskCard extends Component {
             </option>
             {this.state.teamMembers.map((user) => {
               return (
-                <option key={user._id} value={user._id}>
+                <option key={user._id} value={[user.role, user._id]}>
                   {user.role}: {user.name}
                 </option>
               );
@@ -244,7 +244,7 @@ class TaskCard extends Component {
     }
 
     if (
-      this.props.user._id === this.props.task.assignedUser &&
+      this.props.user.role === this.props.task.assignedUser[0] &&
       this.props.task.activeTask
     ) {
       completeTaskButtons = (

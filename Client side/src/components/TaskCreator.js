@@ -8,7 +8,7 @@ export default class TaskCreator extends Component {
         phaseId: this.props.phaseId,
         teamMembers: this.props.teamMembers,
         name:"",
-        assignedUser: "",
+        assignedUser: [""],
     }
 
 
@@ -25,6 +25,14 @@ export default class TaskCreator extends Component {
           });
         };
 
+        handleUserChange = (event) => {
+          const { value } = event.target;
+          let assignedUser = [value]
+          this.setState({
+              assignedUser: assignedUser,          
+            });
+          };
+  
 
     render() {
         return (
@@ -46,11 +54,11 @@ export default class TaskCreator extends Component {
               <select
                 className="w-100 pt-1 pb-2"
                 name="assignedUser"
-                onChange={this.handleChange}
+                onChange={this.handleUserChange}
               >
-                <option value="">Select a person</option>
+                <option value="">Select a role</option>
                 {this.state.teamMembers.map((user) => {
-                    return <option key={user._id} value={user._id}>{user.role}: {user.name}</option>})}
+                    return <option key={user.role} value={[user.role]}>{user.role}</option>})}
               </select>
             </div>
             <div className="col-2 d-flex align-items-center">

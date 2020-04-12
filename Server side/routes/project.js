@@ -159,7 +159,7 @@ router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
       assignedUser,
       isItOver: false,
       message: "",
-      spentTime: "",
+      spentTime: "00:00",
     });
     const updatedPhase = await Phase.findByIdAndUpdate(
       phaseId,

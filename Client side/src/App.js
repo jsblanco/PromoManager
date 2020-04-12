@@ -74,7 +74,7 @@ populateProjectSidebar=()=>{
             {projects}
           </div>
 
-          <div className="col-xl-8 col-lg-7 col-sm-6">
+          <div className="col-xl-10 col-lg-11 col-sm-8">
             <Switch>
               <AnonRoute exact path="/signup" component={Signup} />
               <AnonRoute exact path="/login" component={Login} />
