@@ -20,8 +20,8 @@ export default class PhaseCreator extends Component {
     return (
       <div className="card py-4 px-2">
         <form onSubmit={this.createNewPhase} className="d-flex flex-column">
-          <div className="row align-items-center">
-            <div className="col-8">
+          <div className="row d-flex align-items-center justify-content-center">
+            <div className="col-8 d-flex align-items-center justify-content-center">
               <label>Name:</label>
               <input
                 className="w-75 mx-2"

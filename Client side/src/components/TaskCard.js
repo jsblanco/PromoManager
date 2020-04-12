@@ -27,6 +27,18 @@ class TaskCard extends Component {
     });
   };
 
+  handleAssignedUser=(event)=>{
+    let {name, value } =event.target
+    console.log(value)
+    let assignedUser = value
+    this.setState({
+      assignedUser: [assignedUser],
+    });
+  }
+
+  calculateTotalSpentTime=()=>{
+  }
+
   updateTask = (event) => {
     //   event.preventDefault();
     const {
@@ -74,7 +86,7 @@ class TaskCard extends Component {
   };
 
   submitSpentTime = () => {
-    let totalTime = this.state.spentTime + this.state.inputSpentTime;
+    let totalTime = new Date(this.state.spentTime) + new Date(this.state.inputSpentTime);
     this.setState({
       spentTime: totalTime,
     });
@@ -157,7 +169,7 @@ class TaskCard extends Component {
           <select
             name="assignedUser"
             className="pt-1 pb-2"
-            onChange={this.handleChange}
+            onChange={this.handleAssignedUser}
           >
             <option
               value={this.props.task.assignedUser}
@@ -167,7 +179,7 @@ class TaskCard extends Component {
             </option>
             {this.state.teamMembers.map((user) => {
               return (
-                <option key={user._id} value={[user.role, user._id]}>
+                <option key={user._id} value={user.role}>
                   {user.role}: {user.name}
                 </option>
               );

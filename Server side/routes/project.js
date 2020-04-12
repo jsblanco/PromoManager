@@ -178,12 +178,14 @@ router.put(
   async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
+    let assignedUser = [req.session.currentUser.role, req.session.currentUser._id]
     taskIndex = parseInt(taskIndex);
 
     try {
       const currentPhase = await Phase.findById(phaseId);
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex].isItOver = true;
+      newTasks[taskIndex].assignedUser = assignedUser;
       newTasks[taskIndex].spentTime = spentTime;
       if (message) {
         newTasks[taskIndex + 1].message = message;
@@ -216,6 +218,7 @@ router.put(
   async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
+    let assignedUser = [req.session.currentUser.role, req.session.currentUser._id]
     taskIndex = parseInt(taskIndex);
 
     try {
@@ -223,6 +226,7 @@ router.put(
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex - 1].isItOver = false;
       newTasks[taskIndex - 1].message = message;
+      newTasks[taskIndex].assignedUser = assignedUser;
       newTasks[taskIndex].spentTime = spentTime;
 
       let updatedPhase = await Phase.findByIdAndUpdate(

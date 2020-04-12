@@ -41,6 +41,26 @@ componentDidUpdate=async ()=> {
 
 
 populateProjectSidebar=()=>{
+
+  let sortedProjects = this.state.userData.ongoingProjects.map(project=>{
+    let activePhase = project.phases.findIndex(
+      (phase) => !phase.isItOver
+    );
+    if (activePhase > -1) {
+      project.phases[activePhase].activePhase = true;
+      if (project.phases[activePhase].tasks) {
+        let activeTaskIndex = project.phases[activePhase].tasks.findIndex(
+          (task) => !task.isItOver
+        );
+        if (activeTaskIndex > -1) {
+          project.currentRole = project.phases[activePhase].tasks[activeTaskIndex].assignedUser[0];
+          project.phases[activePhase].tasks[activeTaskIndex].activeTask = true;
+        } else {
+          project.currentRole = "Account"
+        }
+      }
+    }
+  })
   return this.state.userData.ongoingProjects.map((project) => (
     <ProjectList project={project} key={project.budgetNumber} />
   ));

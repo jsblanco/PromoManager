@@ -177,7 +177,7 @@ class ProjectDetails extends Component {
 
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
-        <div className="col-lg-6 pr-0" id="project-details">
+        <div className="col-lg-7 pr-0" id="project-details">
           <header className="px-2">
             <h1 className="px-2">
               {this.state.project.budgetNumber} -{" "}

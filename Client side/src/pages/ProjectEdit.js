@@ -137,7 +137,7 @@ class EditProject extends Component {
       if (this.state.teamMembers[i]) {
         member[i] =
           <option
-            value={this.state.teamMembers[i]}
+            defaultValue={this.state.teamMembers[i]}
             className="font-weight-bold"
             selected
           >
@@ -150,7 +150,7 @@ class EditProject extends Component {
     }
 
     return (
-      <div className="mt-5">
+      <div className="mt-5 col-lg-6">
         <h1>Edit project {this.state.budgetNumber}</h1>
 
         <form onSubmit={this.handleFormSubmit} className="d-flex flex-column">

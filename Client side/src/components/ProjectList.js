@@ -8,7 +8,13 @@ const ProjectList = props => {
         to={`/project/${props.project.budgetNumber}/details`}
         activeClassName="active"
       >
-        {props.project.budgetNumber} {props.project.name}
+        <h5>
+        {props.project.budgetNumber} 
+        </h5>
+      <h4>
+        {props.project.name}
+      </h4>
+      <p>Currently awaiting: {props.project.currentRole}</p>
       </NavLink>
   );
 };

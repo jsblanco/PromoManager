@@ -21,7 +21,13 @@ router.get("/:id", async (req, res, next) => {
   const {id}=req.params
     try {
       console.log("User ID: ",id)
-      const userList = await User.findById(id).populate("ongoingProjects");
+      const userList = await User.findById(id).populate({
+        path : 'ongoingProjects',
+        populate : {
+          path : 'phases'
+        }
+      })
+    //    "ongoingProjects").populate("phases");
       res.status(200).json(userList);
     } catch (error) {
       next(error);

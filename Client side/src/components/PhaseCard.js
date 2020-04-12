@@ -44,7 +44,6 @@ class PhaseCard extends Component {
     }
 
     if (this.state.phase.tasks) {
-      console.log(this.state.phase.tasks[0]);
       let assignedUserName = "";
 
       let projectPhase = this.state.phase;
@@ -67,7 +66,6 @@ class PhaseCard extends Component {
             (member) => member.role == task.assignedUser[0]
           );
           assignedUserName = `${this.state.teamMembers[assignedUserIndex].role}: ${this.state.teamMembers[assignedUserIndex].name}`;
-          console.log("assignedUserName :", assignedUserName);
           index++;
           if (index === this.state.phase.tasks.length - 1) {
             task.lastTask = true;

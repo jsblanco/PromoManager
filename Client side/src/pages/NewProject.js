@@ -76,7 +76,7 @@ userService.newProject({
   render() {
     const { name, budgetNumber, client, description } = this.state;
     return (
-      <div className="mt-5">
+      <div className="mt-5 col-lg-6">
         <h1>Create new project</h1>
 
         <form onSubmit={this.handleFormSubmit} className="d-flex flex-column">

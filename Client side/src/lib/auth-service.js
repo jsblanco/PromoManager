@@ -1,4 +1,6 @@
 import axios from "axios";
+// import React from "react";
+// import { Redirect } from "react-router-dom";
 
 class Auth {
   constructor() {
@@ -17,7 +19,8 @@ class Auth {
   login({ email, password }) {
     return this.auth
       .post("/auth/login", { email, password })
-      .then(({ data }) => data);
+      .then(({ data }) => data)
+ //     .then(()=> <Redirect to = {{ pathname: "/" }} />);
   }
 
   logout() {
