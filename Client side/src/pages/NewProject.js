@@ -39,7 +39,9 @@ userService.newProject({
   description,
   type,
   teamMembers,
-});
+})
+.then(()=>this.props.history.push(`/project/${this.state.budgetNumber}/details`))
+this.props.updateApp();
 };
 
   handleChange = (event) => {

@@ -18,23 +18,47 @@ class TaskCard extends Component {
     taskNotOk: false,
     inputSpentTime: "",
     message: this.props.task.message,
+    resetPhaseVerification: false,
+    phaseCompleteVerification: false,
   };
 
-  calculateTotalSpentTime=(event)=>{
-    let {name, value} = event.target;
-    let totalHours = "0"+(parseFloat(this.props.task.spentTime)+ parseFloat(value))
-    let totalMinutes= "0"+(parseFloat(parseFloat(this.props.task.spentTime.slice(-2))+ parseFloat(value.slice(-2))))
-    if (totalMinutes>60){
-      totalHours++;
-      totalMinutes-=60
-    }
-    if (totalHours.length>2){totalHours=totalHours.toString().slice(1)}
-    let spentTime = (`${totalHours}:${totalMinutes.toString().slice(-2)}`)
-  this.setState({
-    spentTime: spentTime,
-  })
-  } 
+  showResetPhaseVerification = () => {
+    this.setState({
+      phaseCompleteVerification: false,
+      resetPhaseVerification: !this.state.resetPhaseVerification,
+    });
+  };
 
+  showPhaseCompleteVerification = (event) => {
+    this.setState({
+      resetPhaseVerification: false,
+      phaseCompleteVerification: !this.state.phaseCompleteVerification,
+    });
+    this.showSpentTimeInput(event);
+  };
+
+  calculateTotalSpentTime = (event) => {
+    let { name, value } = event.target;
+    let totalHours =
+      "0" + (parseFloat(this.props.task.spentTime) + parseFloat(value));
+    let totalMinutes =
+      "0" +
+      parseFloat(
+        parseFloat(this.props.task.spentTime.slice(-2)) +
+          parseFloat(value.slice(-2))
+      );
+    if (totalMinutes > 60) {
+      totalHours++;
+      totalMinutes -= 60;
+    }
+    if (totalHours.length > 2) {
+      totalHours = totalHours.toString().slice(1);
+    }
+    let spentTime = `${totalHours}:${totalMinutes.toString().slice(-2)}`;
+    this.setState({
+      spentTime: spentTime,
+    });
+  };
 
   handleChange = (event) => {
     let { name, value } = event.target;
@@ -43,19 +67,18 @@ class TaskCard extends Component {
     });
   };
 
-  handleAssignedUser=(event)=>{
-    let {name, value } =event.target
-    console.log(value)
-    let assignedUser = value
+  handleAssignedUser = (event) => {
+    let { name, value } = event.target;
+    console.log(value);
+    let assignedUser = value;
     this.setState({
       assignedUser: [assignedUser],
     });
-  }
-
+  };
 
   updateTask = (event) => {
-   event.preventDefault();
-   const {
+    event.preventDefault();
+    const {
       phaseId,
       name,
       assignedUser,
@@ -76,6 +99,15 @@ class TaskCard extends Component {
     this.setState({
       showButton: false,
       taskUpdated: true,
+    });
+  };
+
+  resetPhase = (event) => {
+    event.preventDefault();
+    const { projectId, phaseId, spentTime, message } = this.state;
+    userService.resetPhase({ projectId, phaseId, spentTime, message });
+    this.setState({
+      resetPhaseVerification: false,
     });
   };
 
@@ -103,7 +135,8 @@ class TaskCard extends Component {
   };
 
   submitSpentTime = () => {
-    let totalTime = new Date(this.state.spentTime) + new Date(this.state.inputSpentTime);
+    let totalTime =
+      new Date(this.state.spentTime) + new Date(this.state.inputSpentTime);
     this.setState({
       spentTime: totalTime,
     });
@@ -142,34 +175,27 @@ class TaskCard extends Component {
       messageInput,
       activeMarker,
       issueDetected,
-      columnSize,
+      warningMessage,
       message;
-
-    
-    this.props.user.role == "Account"?   columnSize = "col-4  d-flex align-content-center" : columnSize= "col-5 d-flex align-content-center";
 
     taskName = <p className="d-inline">{this.state.name}</p>;
     assignedTo = (
-      <div className={columnSize}>
-        <label className="pr-3">Assigned to:</label>
-        <p className="font-weight-bold d-inline">
-          {this.state.assignedUserName}
-        </p>
-      </div>
+      <p className="font-weight-bold d-inline">{this.state.assignedUserName}</p>
     );
     deadline = (
-      <div className={columnSize}>
-        <label className="pr-3">Deadline:</label>
+      <div className="d-flex align-content-center">
+        <label htmlFor="deadline" className="pr-3">
+          Deadline:
+        </label>
         <p className="font-weight-bold d-inline">{this.state.deadline}</p>
       </div>
     );
+
     if (this.props.user.role === "Account") {
       button = (
-        <div className="col-2">
-          <button className="btn btn-info w-100" onClick={this.showInput}>
-            Edit task
-          </button>
-        </div>
+        <button className="btn btn-info" onClick={this.showInput}>
+          Edit task
+        </button>
       );
     }
 
@@ -183,83 +209,70 @@ class TaskCard extends Component {
         />
       );
       assignedTo = (
-        <div className={columnSize}>
-          <label htmlFor="assignedUser" className="pr-3">
-            Assigned to:
-          </label>
-          <select
-            name="assignedUser"
-            className="pt-1 pb-2"
-            onChange={this.handleAssignedUser}
+        <select
+          name="assignedUser"
+          className="pt-1 pb-2"
+          onChange={this.handleAssignedUser}
+        >
+          <option
+            value={this.props.task.assignedUser}
+            className="font-weight-bold"
           >
-            <option
-              value={this.props.task.assignedUser}
-              className="font-weight-bold"
-            >
-              Currently: {this.state.assignedUserName}
-            </option>
-            {this.state.teamMembers.map((user) => {
-              return (
-                <option key={user._id} value={user.role}>
-                  {user.role}: {user.name}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+            Currently: {this.state.assignedUserName}
+          </option>
+          {this.state.teamMembers.map((user) => {
+            return (
+              <option key={user._id} value={user.role}>
+                {user.role}: {user.name}
+              </option>
+            );
+          })}
+        </select>
       );
       deadline = (
-        <div className={columnSize}>
+        <div className="d-flex align-content-center">
           <label htmlFor="deadline" className="pr-3">
-            Deadline:{" "}
-          </label>{" "}
+            Deadline:
+          </label>
           <input
             type="date"
             name="deadline"
             onChange={this.handleChange}
             value={this.state.deadline}
             required
-          />{" "}
+          />
         </div>
       );
-      button = (
-        <div className="col-2 w-100">
-          <button className="btn btn-warning" type="submit">
-            {" "}
-            Update task{" "}
-          </button>
-        </div>
-      );
+      button =
+        <button className="btn btn-warning" type="submit">
+          Update task
+        </button>
     } else if (
       this.props.user.role === "Account" &&
       !this.props.task.deadline &&
       !this.state.taskUpdated
     ) {
       deadline = (
-        <div className={columnSize}>
+        <div className="d-flex align-items-center">
           <label htmlFor="deadline" className="pr-3 text-danger">
-            {" "}
-            Assign a deadline:{" "}
-          </label>{" "}
+            Assign a deadline:
+          </label>
           <input
             type="date"
             name="deadline"
             onChange={this.handleChange}
             value={this.state.deadline}
             required
-          />{" "}
+          />
         </div>
       );
-      button = (
-        <div className="col-2 w-100">
-          <button className="btn btn-warning" type="submit">
-            Update task
-          </button>
-        </div>
-      );
+      button =
+        <button className="btn btn-warning" type="submit">
+          Update task
+        </button>
     } else if (!this.state.deadline) {
       deadline = (
-        <div className={columnSize}>
+        <div className="d-flex align-items-center">
           <label className="pr-3">Deadline:</label>
           <p className="font-weight-bold font-italic d-inline">
             As soon as possible
@@ -277,6 +290,28 @@ class TaskCard extends Component {
     }
 
     if (
+      this.props.user.role === this.props.task.assignedUser[0] &&
+      this.props.task.activeTask &&
+      this.props.task.lastTask
+    ) {
+      completeTaskButtons = (
+        <div className="row justify-content-center mb-2">
+          {issueDetected}
+          <button
+            onClick={this.showResetPhaseVerification}
+            className="btn btn-warning mx-2"
+          >
+            Reset phase
+          </button>
+          <button
+            onClick={this.showPhaseCompleteVerification}
+            className="btn btn-success mx-2"
+          >
+            Phase completed
+          </button>
+        </div>
+      );
+    } else if (
       this.props.user.role === this.props.task.assignedUser[0] &&
       this.props.task.activeTask
     ) {
@@ -297,7 +332,7 @@ class TaskCard extends Component {
       activeMarker = (
         <p className="d-inline font-italic text-primary"> - Active task</p>
       );
-      active = "shadow p-3 mb-3 bg-white rounded";
+      active = "shadow p-3 mb-3 mt-2 bg-white rounded";
     } else {
       active = "border border-white text-secondary";
     }
@@ -343,24 +378,30 @@ class TaskCard extends Component {
           onSubmit={this.submitTaskAsOk}
           className="my-2 d-flex justify-content-center align-items-center"
         >
-          <label htmlFor="spentTime" className="pr-4">
-            Time spent:
-          </label>
-          <input
-            onChange={this.calculateTotalSpentTime}
-            type="time"
-            name="inputSpentTime"
-            className="pt-1 pb-2  mr-5 text-center"
-            required
-          />
-          <button type="submit" className="btn btn-success">
-            Complete task
-          </button>
+          {warningMessage}
+          <div className="row d-flex justify-content-center align-items-center">
+            <label htmlFor="spentTime" className="pr-4">
+              Time spent:
+            </label>
+            <input
+              onChange={this.calculateTotalSpentTime}
+              type="time"
+              name="inputSpentTime"
+              className="pt-1 pb-2  mr-5 text-center"
+              required
+            />
+            <button type="submit" className="btn btn-success">
+              Complete task
+            </button>
+          </div>
         </form>
       );
     }
 
-    if (this.props.task.message && this.props.user.role === this.props.task.role) {
+    if (
+      this.props.task.message &&
+      this.props.user.role === this.props.task.role
+    ) {
       message = (
         <div className="col-12">
           <p className="font-italics d-inline">Comments: </p>
@@ -369,28 +410,101 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.props.task.lastTask) {
+    if (this.state.resetPhaseVerification) {
+      messageInput = (
+        <form onSubmit={this.resetPhase} className="text-center">
+          <div className="row mb-2 d-flex justify-content-around align-items-center">
+            <div className="w-100 d-flex justify-content-center align-items-center">
+              <label htmlFor="spentTime" className="pr-3">
+                Time spent:
+              </label>
+              <input
+                onChange={this.calculateTotalSpentTime}
+                type="time"
+                name="inputSpentTime"
+                className="pt-1 pb-2 text-center"
+                required
+              />
+              <label htmlFor="message" className="pl-5 pr-3">
+                Reason:
+              </label>
+              <input
+                onChange={this.handleChange}
+                type="text"
+                name="message"
+                className="pt-1 pb-2 w-50"
+                placeholder="Describe the problem to your colleague"
+                required
+              />
+            </div>
+          </div>
+          <button type="submit" className="btn btn-danger">
+            Return to previous task
+          </button>
+        </form>
+      );
+    }
+
+    if (this.state.phaseCompleteVerification) {
+      messageInput = (
+        <form onSubmit={this.submitTaskAsOk} className="my-2">
+          <div className="row w-100 text-center">
+            <h5 className="text-success w-100">
+              You are completing this phase
+            </h5>
+            <p className="w-100">
+              This step entails you have gotten <b>client approval</b> to
+              continue to the next phase.
+            </p>
+          </div>
+          <div className="row d-flex justify-content-center align-items-center">
+            <label htmlFor="spentTime" className="pr-4">
+              Time spent:
+            </label>
+            <input
+              onChange={this.calculateTotalSpentTime}
+              type="time"
+              name="inputSpentTime"
+              className="pt-1 pb-2  mr-5 text-center"
+              required
+            />
+            <button type="submit" className="btn btn-success">
+              Complete task
+            </button>
+          </div>
+        </form>
+      );
     }
 
     ////////////////////////////
     return (
       <div className={` card ${active} p-2`}>
         <form onSubmit={this.updateTask}>
-        <h5>
-          <b>{taskName}</b>
-          {activeMarker}
-        </h5>
-        <div className="row pt-1 d-flex justify-content-between">
-          {deadline}
-          {assignedTo}
-          {this.state.spentTime}
+          <h5>
+            <b>{taskName}</b>
+            {activeMarker}
+          </h5>
+          <div className="pt-1 d-flex justify-content-around">
+            <div className="d-flex align-content-center mx-0">
+              <label className="pr-3">Assigned to:</label>
+              {assignedTo}
+            </div>
+            {deadline}
+            <div className="d-flex align-content-center">
+              <label className="pr-3">Time spent:</label>
+              <p className="font-weight-bold d-inline">
+                {this.state.spentTime} hours
+              </p>
+            </div>
           {button}
+          </div>
+          {message}
+        </form>
+        <div className="row d-flex justify-content-center">
+          {completeTaskButtons}
         </div>
-        {message}
-      </form>
-        {completeTaskButtons}
         {messageInput}
-        </div>
+      </div>
     );
   }
 }

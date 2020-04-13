@@ -177,11 +177,11 @@ class ProjectDetails extends Component {
 
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
-        <div className="col-lg-7 pr-0" id="project-details">
+        <div className="col-xl-8 col-lg-8 pr-0" id="project-details">
           <header className="px-2">
             <h1 className="px-2">
-              {this.state.project.budgetNumber} -{" "}
-              <b>{this.state.project.name}</b>
+              {this.state.project.budgetNumber} -
+              {this.state.project.name}
             </h1>
             <div className="row mx-2">
               <div className="col-8">
@@ -217,7 +217,7 @@ class ProjectDetails extends Component {
             {createPhaseButton}
           </section>
         </div>
-        <div className="col-lg-3">
+        <div className=" col-xl-3 col-lg-2">
           <h3>Project comments</h3>
           {comments}
           {addComment}

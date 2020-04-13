@@ -22,99 +22,101 @@ class App extends Component {
     loaded: false,
     booleanForUpdate: true,
   };
- 
-  
 
   componentDidMount = async () => {
-    if (this.props.user){
-    let userData = await userService.getUserData(this.props.user._id);
-    this.setState({
-      userData: userData,
-      loaded: true,
-      booleanForUpdate: false,
-    });} 
+    if (this.props.user) {
+      let userData = await userService.getUserData(this.props.user._id);
+      this.setState({
+        userData: userData,
+        loaded: true,
+        booleanForUpdate: false,
+      });
+    }
+    this.populateProjectSidebar();
+  };  
+
+
+  shouldComponentUpdate = async () => {
+    return this.state.booleanForUpdate;
   };
 
-
-shouldComponentUpdate=()=>{
-  return this.state.booleanForUpdate
-}
-
-componentWillUpdate=async ()=> {
-
-if (this.state.booleanForUpdate){
-  if (this.props.user){
-    let userData = await userService.getUserData(this.props.user._id);
+  updateApp = () => {
     this.setState({
-      userData: userData,
-      loaded: true,
-      booleanForUpdate: false,
-    });} 
-}
+      booleanForUpdate: true,
+    });
+  };
 
-
-  this.populateProjectSidebar()
-}
-
-updateApp=()=>{
-  this.setState({
-    booleanForUpdate: true
-  })
-}
-
-
-populateProjectSidebar=()=>{
-
- const sortedProject = [...this.state.userData.ongoingProjects].map(project=>{
-    let activePhase = project.phases.findIndex(
-      (phase) => !phase.isItOver
-    );
-    if (activePhase > -1) {
-      project.phases[activePhase].activePhase = true;
-      if (project.phases[activePhase].tasks) {
-        let activeTaskIndex = project.phases[activePhase].tasks.findIndex(
-          (task) => !task.isItOver
-        );
-        if (activeTaskIndex > -1) {
-          project.currentRole = project.phases[activePhase].tasks[activeTaskIndex].assignedUser[0];
-          project.phases[activePhase].tasks[activeTaskIndex].activeTask = true;
-          if (project.phases[activePhase].tasks[activeTaskIndex].deadline!= undefined){
-            project.deadline = project.phases[activePhase].tasks[activeTaskIndex].deadline;
-          } else {
-            project.deadline = "As soon as possible"
+  populateProjectSidebar = () => {
+    const sortedProject = [...this.state.userData.ongoingProjects]
+      .map((project) => {
+        let activePhase = project.phases.findIndex((phase) => !phase.isItOver);
+        if (activePhase > -1) {
+          project.phases[activePhase].activePhase = true;
+          if (project.phases[activePhase].tasks) {
+            let activeTaskIndex = project.phases[activePhase].tasks.findIndex(
+              (task) => !task.isItOver
+            );
+            if (activeTaskIndex > -1) {
+              project.currentRole =
+                project.phases[activePhase].tasks[
+                  activeTaskIndex
+                ].assignedUser[0];
+              project.phases[activePhase].tasks[
+                activeTaskIndex
+              ].activeTask = true;
+              if (
+                project.phases[activePhase].tasks[activeTaskIndex].deadline !=
+                undefined
+              ) {
+                project.deadline =
+                  project.phases[activePhase].tasks[activeTaskIndex].deadline;
+              } else {
+                project.deadline = "As soon as possible";
+              }
+            } else {
+              project.currentRole = "Account";
+            }
           }
-        } else {
-          project.currentRole = "Account"
         }
-      }
-    }
-    return project
-  }).sort((a,b)=>{
-    if ((a.currentRole == this.props.user.role) && (b.currentRole != this.props.user.role) ){
-      return -1
-    } 
-    if ((a.currentRole != this.props.user.role) && (b.currentRole == this.props.user.role) ){
-      return 1
-    }
-    if ((new Date(a.deadline)).getTime()< (new Date(b.deadline)).getTime){
-      return -1
-    }
-    if ((new Date(a.deadline)).getTime()> (new Date(b.deadline)).getTime){
-      return 1
-    }
-  })
+        return project;
+      })
+      .sort((a, b) => {
+        if (
+          a.currentRole == this.props.user.role &&
+          b.currentRole != this.props.user.role
+        ) {
+          return -1;
+        }
+        if (
+          a.currentRole != this.props.user.role &&
+          b.currentRole == this.props.user.role
+        ) {
+          return 1;
+        }
+        if (new Date(a.deadline).getTime() < new Date(b.deadline).getTime) {
+          return -1;
+        }
+        if (new Date(a.deadline).getTime() > new Date(b.deadline).getTime) {
+          return 1;
+        }
+      });
 
-  return sortedProject.map((project) => (
-    <ProjectList project={project} key={project.budgetNumber} />
-  ));
-}
+    return sortedProject.map((project) => (
+      <ProjectList project={project} key={project.budgetNumber} />
+    ));
+  };
 
   render() {
     let projects, newProject;
     const { isLoggedin } = this.props;
     if (this.state.loaded === true && isLoggedin) {
-      projects= this.populateProjectSidebar()
-      if (this.state.userData.ongoingProjects.length !== this.props.user.ongoingProjects.length){this.populateProjectSidebar()}
+      projects = this.populateProjectSidebar();
+      if (
+        this.state.userData.ongoingProjects.length !==
+        this.props.user.ongoingProjects.length
+      ) {
+        this.populateProjectSidebar();
+      }
       if (this.props.user.role === "Account") {
         newProject = (
           <NavLink
@@ -129,19 +131,26 @@ populateProjectSidebar=()=>{
     }
 
     return (
-     <div>
+      <div className="overflow-hidden">
         <Navbar />
         <div className="row ">
-          <div className="col-xl-2 col-lg-3 col-sm-4 list-group pr-0">
+          <div className="col-xl-2 col-lg-3 col-sm-4 list-group project-list pr-0 overflow-auto">
+          <div>
             {newProject}
             {projects}
+          </div>
           </div>
 
           <div className="col-xl-10 col-lg-9 col-sm-8">
             <Switch>
               <AnonRoute exact path="/signup" component={Signup} />
               <AnonRoute exact path="/login" component={Login} />
-              <PrivateRoute exact path="/project/new" component={NewProject} />
+              <PrivateRoute
+                exact
+                path="/project/new"
+                component={NewProject}
+                updateApp={this.updateApp}
+              />
               <PrivateRoute
                 exact
                 path="/project/:budgetNumber/details"

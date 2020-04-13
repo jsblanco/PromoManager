@@ -98,8 +98,6 @@ createTask({phaseId, name, assignedUser, projectId}){
     .then((data) => data.data)
 }
 
-
-
 updateTask({
   phaseId,
   name,
@@ -137,6 +135,11 @@ taskIsNotOk({
     .then((data) => data.data)
 }
 
+resetPhase({ projectId, phaseId, spentTime, message }){
+  return this.user
+  .put(`/${projectId}/resetphase/${phaseId}`, { spentTime, message })
+  .then((data) => data.data)
+}
 
 
 //fin

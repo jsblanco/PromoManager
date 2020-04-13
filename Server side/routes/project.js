@@ -177,7 +177,6 @@ router.put(
   "/:projectId/:phaseId/taskisok/:taskIndex",
   async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
-    console.log('req.body :', req.body);
     const { spentTime, message } = req.body;
     let assignedUser = [req.session.currentUser.role, req.session.currentUser._id]
     taskIndex = parseInt(taskIndex);
