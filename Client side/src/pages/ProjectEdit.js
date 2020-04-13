@@ -93,7 +93,9 @@ class EditProject extends Component {
       teamMembers,
       originalMembers,
       id,
-    });
+    })
+    .then(()=>this.props.history.push(`/project/${this.state.budgetNumber}/details`))
+    this.props.updateApp();
   };
 
   handleChange = (event) => {
@@ -131,7 +133,6 @@ class EditProject extends Component {
   render() {
     const { name, budgetNumber, client, description } = this.state;
     let member = [];
-    console.log(this.state.teamMembers)
 
     for (let i = 0; i < 6; i++) {
       if (this.state.teamMembers[i]) {

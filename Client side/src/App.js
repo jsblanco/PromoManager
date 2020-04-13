@@ -20,6 +20,7 @@ class App extends Component {
   state = {
     userData: { ongoingProjects: [] },
     loaded: false,
+    booleanForUpdate: true,
   };
  
   
@@ -30,14 +31,36 @@ class App extends Component {
     this.setState({
       userData: userData,
       loaded: true,
+      booleanForUpdate: false,
     });} 
   };
 
-  
-componentDidUpdate=async ()=> {
-  return this.populateProjectSidebar
+
+shouldComponentUpdate=()=>{
+  return this.state.booleanForUpdate
 }
-  
+
+componentWillUpdate=async ()=> {
+
+if (this.state.booleanForUpdate){
+  if (this.props.user){
+    let userData = await userService.getUserData(this.props.user._id);
+    this.setState({
+      userData: userData,
+      loaded: true,
+      booleanForUpdate: false,
+    });} 
+}
+
+
+  this.populateProjectSidebar()
+}
+
+updateApp=()=>{
+  this.setState({
+    booleanForUpdate: true
+  })
+}
 
 
 populateProjectSidebar=()=>{
@@ -71,6 +94,12 @@ populateProjectSidebar=()=>{
       return -1
     } 
     if ((a.currentRole != this.props.user.role) && (b.currentRole == this.props.user.role) ){
+      return 1
+    }
+    if ((new Date(a.deadline)).getTime()< (new Date(b.deadline)).getTime){
+      return -1
+    }
+    if ((new Date(a.deadline)).getTime()> (new Date(b.deadline)).getTime){
       return 1
     }
   })
@@ -122,6 +151,7 @@ populateProjectSidebar=()=>{
                 exact
                 path="/project/:budgetNumber/edit"
                 component={ProjectEdit}
+                updateApp={this.updateApp}
               />
             </Switch>
           </div>

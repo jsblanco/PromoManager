@@ -121,7 +121,7 @@ switch (true){
     deadline = <p className="mt-0">Next deadline: <b className="deadline-tomorrow font-weight-bold">tomorrow</b></p>
     break;
   case (deadlineDate.getTime()>today.getTime()):
-    deadline = <p className="mt-0">Next deadline: <b className="text-success">{readableDate(deadlineDate)}</b></p>;
+    deadline = <p className="mt-0">Next deadline: <b className="deadline-far">{readableDate(deadlineDate)}</b></p>;
     break;
   default:
     deadline = <p className="mt-0">Awaiting project task distribution</p>;
@@ -136,7 +136,7 @@ switch (true){
 
   return (
     <NavLink
-      className={`list-group-item list-group-item-action country-menu ${activeRole}`}
+      className={`list-group-item list-group-item-action pl-5 country-menu ${activeRole}`}
       to={`/project/${props.project.budgetNumber}/details`}
       activeClassName="active"
     >
