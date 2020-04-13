@@ -161,14 +161,14 @@ class ProjectDetails extends Component {
           <form className="w-100" onSubmit={this.addComment}>
             <textarea
               onChange={this.handleChange}
-              className="d-block w-100 border rounded-lg py-3 bg-light"
+              className="d-block w-100 border rounded-lg p-2 bg-light"
               type="text"
               name="comments"
               placeholder="What's on your mind?"
               required
             ></textarea>
-            <button className="btn btn-success mt-0 w-100" type="submit">
-              <i className="fas fa-comment text-light m-1"></i>Comment{" "}
+            <button className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center" type="submit">
+              <i className="fas fa-comment text-light m-1 pr-3"></i>Comment{" "}
             </button>
           </form>
         </div>
@@ -186,7 +186,7 @@ class ProjectDetails extends Component {
             <div className="row mx-2">
               <div className="col-8">
                 <p className="d-inline mb-0 mr-3">
-                  <b>Cliente: </b>
+                  <b>Client: </b>
                   {this.state.project.client}
                 </p>
                 <p className="d-inline text-muted font-italic mb-0">

@@ -104,7 +104,7 @@ class PhaseCard extends Component {
       taskCreatorToggler = "Add new task";
     }
 
-    if (this.props.user.role === "Account") {
+    if (this.props.user.role === "Account" && !this.state.phase.isItOver) {
       createTaskButton = (
         <button className="btn btn-info py-1" onClick={this.showTaskCreator}>
           {taskCreatorToggler}

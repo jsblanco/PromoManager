@@ -8,69 +8,57 @@ import NewProject from "../pages/NewProject";
 import ProjectDetails from "../pages/ProjectDetails";
 import ProjectEdit from "../pages/ProjectEdit";
 
-export default class Home extends Component {
+class Home extends Component {
   state = {
     userData: { ongoingProjects: [] },
     loaded: false,
   };
 
-  fetchProjects = async () => {
-    let userData = await userService.getUserData(this.props.user._id);
-    this.setState({
-      userData: userData,
-      loaded: true,
-    });
-  };
-
   render() {
-    let projects, newProject;
-
-    if (this.state.user){
-       this.fetchProjects()
+    let greeting
+    let now = new Date();
+    switch (true){
+      case (now.getHours() >=0 && now.getHours() <7):
+        greeting = "It's very late. You should be asleep"
+        break;
+      case (now.getHours()>=7 && now.getHours() <12):
+        greeting = "Good morning"
+        break;
+      case (now.getHours()>=12 && now.getHours() <19):
+        greeting = "Good afternoon"
+        break;
+      case (now.getHours()>=19):
+          greeting = "Good evening"
+          break;
+      default:
+        greeting = "Hello"
+        break;
     }
 
-    if (this.state.loaded === true && this.props.user===true) {
-      projects = this.state.userData.ongoingProjects.map((project) => (
-        <ProjectList project={project} key={project.budgetNumber} />
-      ));
-    }
-
-
-    if (this.props.user.role === "Account") {
-      newProject = (
-        <NavLink
-          className="list-group-item list-group-item-action bg-success text-light"
-          to={`/project/new`}
-          activeClassName="active"
-        >
-          Create a new project
-        </NavLink>
-      );
-    }
 
     return (
-      <div className="row w-100">
-        <div className="col-xl-2 col-lg-3 col-sm-4 list-group">
-          {newProject}
-          {projects}
-        </div>
+      <div className="h-100 d-flex flex-column justify-content-start align-items-center mt-5 pt-5">
+        <h1>{greeting}, {this.props.user.name}</h1>
+        <h5>
+          Today is{" "}
+          {now.toLocaleString("en-UK", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </h5>
+        <div className="row">
 
-        <div className="col-xl-8 col-lg-7 col-sm-6">
-          <Switch>
-            <PrivateRoute exact path="/project/new" component={NewProject} />
-            <PrivateRoute
-              exact
-              path="/project/:budgetNumber/details"
-              component={ProjectDetails}
-            />
-            <PrivateRoute
-              exact
-              path="/project/:budgetNumber/edit"
-              component={ProjectEdit}
-            />
-          </Switch>
+        <h4 className="d-inline pr-2">
+          You currently have</h4> <h4 className="d-inline font-weight-bold">{this.props.user.ongoingProjects.length} ongoing
+          projects
+        </h4>
         </div>
+        <p className="font-italic"> Let's get some work done today!</p>
       </div>
     );
   }
 }
+
+export default withAuth(Home);

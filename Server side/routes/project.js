@@ -252,6 +252,7 @@ router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
     let previousTaskNumber = newTasks.length - 1;
 
     if (newTasks.length > 0) {
+      newTasks[previousTaskNumber].isItOver = true;
       newTasks[previousTaskNumber].message = message;
     }
     if (newTasks.length > 1) {

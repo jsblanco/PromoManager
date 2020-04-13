@@ -11,11 +11,11 @@ class Navbar extends Component {
         <Link to={"/"} id='home-btn'>
           <h4 className="text-light">Home</h4>
         </Link>
-        <h2 className="text-white font-weight-bold">PromoManager</h2>
+        <h2 className="text-white font-weight-bold">PromoManager<sup>®</sup></h2>
         {isLoggedin ? (
           <><div className="row d-flex align-items-center">
             <p className='navbar-user text-light m-3'>Welcome, <b>{user.name}</b> <i>({user.role})</i></p>
-            <button className='btn btn-light navbar-button px-3 mx-3' onClick={logout}>
+            <button className='btn btn-light navbar-button px-3 mx-3 text-info font-weight-bold' onClick={logout}>
               Logout
             </button>
           </div>
@@ -24,7 +24,7 @@ class Navbar extends Component {
           <>
           <div className="row">
             <Link to='/login'>
-              <button className='navbar-button btn btn-light px-3 mx-3'>Login</button>
+              <button className='navbar-button btn btn-light px-3 mx-3 text-info font-weight-bold'>Login</button>
             </Link>
             <br />
             <Link to='/signup'>

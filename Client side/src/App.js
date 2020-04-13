@@ -15,6 +15,7 @@ import ProjectList from "./components/ProjectList";
 import NewProject from "./pages/NewProject";
 import ProjectDetails from "./pages/ProjectDetails";
 import ProjectEdit from "./pages/ProjectEdit";
+import Home from "./pages/Home";
 
 class App extends Component {
   state = {
@@ -93,14 +94,20 @@ class App extends Component {
         ) {
           return 1;
         }
-        if (new Date(a.deadline).getTime() < new Date(b.deadline).getTime) {
-          return -1;
-        }
-        if (new Date(a.deadline).getTime() > new Date(b.deadline).getTime) {
+        if ((new Date(a.deadline).getTime()) < (new Date(b.deadline).getTime)) {
           return 1;
         }
+        if ((new Date(a.deadline).getTime()) > (new Date(b.deadline).getTime)) {
+          return -1;
+        }
       });
-
+    
+      if (sortedProject.phases){
+        if (sortedProject.phases[sortedProject.phases.length-1].tasks){
+          sortedProject.phases[sortedProject.phases.length-1].tasks[sortedProject.phases[sortedProject.phases.length-1].tasks.length-1].lastTaskInTheProject= true;
+        }
+      }
+    
     return sortedProject.map((project) => (
       <ProjectList project={project} key={project.budgetNumber} />
     ));
@@ -161,6 +168,11 @@ class App extends Component {
                 path="/project/:budgetNumber/edit"
                 component={ProjectEdit}
                 updateApp={this.updateApp}
+              />
+            <PrivateRoute
+                exact
+                path="/"
+                component={Home}
               />
             </Switch>
           </div>
