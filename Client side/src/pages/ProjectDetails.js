@@ -161,7 +161,7 @@ class ProjectDetails extends Component {
           <form className="w-100" onSubmit={this.addComment}>
             <textarea
               onChange={this.handleChange}
-              className="d-block w-100"
+              className="d-block w-100 border rounded-lg py-3 bg-light"
               type="text"
               name="comments"
               placeholder="What's on your mind?"
@@ -213,8 +213,8 @@ class ProjectDetails extends Component {
           <section id="phases" className="mx-2">
             <h3 className="px-4 ">Development phases:</h3>
             {phases}
-            {createPhaseButton}
             {createPhaseForm}
+            {createPhaseButton}
           </section>
         </div>
         <div className="col-lg-3">

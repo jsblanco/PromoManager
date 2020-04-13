@@ -91,15 +91,7 @@ class PhaseCard extends Component {
         });
     }
 
-    if (this.props.user.role === "Account") {
-      createTaskButton = (
-        <button className="btn btn-info py-1" onClick={this.showTaskCreator}>
-          Add a new task
-        </button>
-      );
-    }
-
-    if (this.state.addTaskToggler === true) {
+    if (this.state.addTaskToggler) {
       createTaskForm = (
         <TaskCreator
           phaseId={this.state.phase._id}
@@ -112,6 +104,15 @@ class PhaseCard extends Component {
       taskCreatorToggler = "Add new task";
     }
 
+    if (this.props.user.role === "Account") {
+      createTaskButton = (
+        <button className="btn btn-info py-1" onClick={this.showTaskCreator}>
+          {taskCreatorToggler}
+        </button>
+      );
+    }
+
+
     return (
       <div className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
         <div className="row pb-2">
@@ -121,8 +122,8 @@ class PhaseCard extends Component {
           <div className="col-md-4">{isItOver}</div>
         </div>
         {tasks}
-        {createTaskButton}
         {createTaskForm}
+        {createTaskButton}
       </div>
     );
   }

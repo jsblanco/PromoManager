@@ -142,11 +142,15 @@ class TaskCard extends Component {
       messageInput,
       activeMarker,
       issueDetected,
+      columnSize,
       message;
+
+    
+    this.props.user.role == "Account"?   columnSize = "col-4  d-flex align-content-center" : columnSize= "col-5 d-flex align-content-center";
 
     taskName = <p className="d-inline">{this.state.name}</p>;
     assignedTo = (
-      <div className="col-5">
+      <div className={columnSize}>
         <label className="pr-3">Assigned to:</label>
         <p className="font-weight-bold d-inline">
           {this.state.assignedUserName}
@@ -154,7 +158,7 @@ class TaskCard extends Component {
       </div>
     );
     deadline = (
-      <div className="col-5">
+      <div className={columnSize}>
         <label className="pr-3">Deadline:</label>
         <p className="font-weight-bold d-inline">{this.state.deadline}</p>
       </div>
@@ -162,7 +166,7 @@ class TaskCard extends Component {
     if (this.props.user.role === "Account") {
       button = (
         <div className="col-2">
-          <button className="btn btn-info" onClick={this.showInput}>
+          <button className="btn btn-info w-100" onClick={this.showInput}>
             Edit task
           </button>
         </div>
@@ -179,7 +183,7 @@ class TaskCard extends Component {
         />
       );
       assignedTo = (
-        <div className="col-5">
+        <div className={columnSize}>
           <label htmlFor="assignedUser" className="pr-3">
             Assigned to:
           </label>
@@ -205,7 +209,7 @@ class TaskCard extends Component {
         </div>
       );
       deadline = (
-        <div className="col-5">
+        <div className={columnSize}>
           <label htmlFor="deadline" className="pr-3">
             Deadline:{" "}
           </label>{" "}
@@ -219,7 +223,7 @@ class TaskCard extends Component {
         </div>
       );
       button = (
-        <div className="col-2">
+        <div className="col-2 w-100">
           <button className="btn btn-warning" type="submit">
             {" "}
             Update task{" "}
@@ -232,7 +236,7 @@ class TaskCard extends Component {
       !this.state.taskUpdated
     ) {
       deadline = (
-        <div className="col-5">
+        <div className={columnSize}>
           <label htmlFor="deadline" className="pr-3 text-danger">
             {" "}
             Assign a deadline:{" "}
@@ -247,16 +251,15 @@ class TaskCard extends Component {
         </div>
       );
       button = (
-        <div className="col-2">
+        <div className="col-2 w-100">
           <button className="btn btn-warning" type="submit">
-            {" "}
-            Update task{" "}
+            Update task
           </button>
         </div>
       );
     } else if (!this.state.deadline) {
       deadline = (
-        <div className="col-5">
+        <div className={columnSize}>
           <label className="pr-3">Deadline:</label>
           <p className="font-weight-bold font-italic d-inline">
             As soon as possible
@@ -357,7 +360,7 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.props.task.message) {
+    if (this.props.task.message && this.props.user.role === this.props.task.role) {
       message = (
         <div className="col-12">
           <p className="font-italics d-inline">Comments: </p>
@@ -377,7 +380,7 @@ class TaskCard extends Component {
           <b>{taskName}</b>
           {activeMarker}
         </h5>
-        <div className="row pt-1">
+        <div className="row pt-1 d-flex justify-content-between">
           {deadline}
           {assignedTo}
           {this.state.spentTime}

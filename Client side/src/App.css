@@ -69,3 +69,8 @@
 .active.active-role b.deadline-far{
   color:  rgb(129, 211, 129);
 }
+
+
+.inactive-role {
+  background-color: rgb(240, 240, 240) !important;
+}

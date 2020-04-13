@@ -131,7 +131,7 @@ switch (true){
   if (props.project.currentRole === props.user.role) {
     activeRole = "active-role";
   } else {
-    activeRole = "text-muted bg-light font-italic";
+    activeRole = "text-muted inactive-role font-italic";
   }
 
   return (
