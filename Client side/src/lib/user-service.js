@@ -137,7 +137,7 @@ taskIsNotOk({
 
 resetPhase({ projectId, phaseId, spentTime, message }){
   return this.user
-  .put(`/${projectId}/resetphase/${phaseId}`, { spentTime, message })
+  .put(`/project/${projectId}/resetphase/${phaseId}`, { spentTime, message })
   .then((data) => data.data)
 }
 

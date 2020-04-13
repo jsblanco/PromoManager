@@ -102,8 +102,7 @@ class TaskCard extends Component {
     });
   };
 
-  resetPhase = (event) => {
-    event.preventDefault();
+  resetPhase = () => {
     const { projectId, phaseId, spentTime, message } = this.state;
     userService.resetPhase({ projectId, phaseId, spentTime, message });
     this.setState({
@@ -412,9 +411,14 @@ class TaskCard extends Component {
 
     if (this.state.resetPhaseVerification) {
       messageInput = (
-        <form onSubmit={this.resetPhase} className="text-center">
-          <div className="row mb-2 d-flex justify-content-around align-items-center">
-            <div className="w-100 d-flex justify-content-center align-items-center">
+        <form onSubmit={this.resetPhase} className="text-center my-2">
+                  <div className="row w-100 text-center">
+            <h5 className="text-danger font-weight-bold w-100">
+              You are about to reset this phase
+            </h5>
+            <p className="w-100">This step restarts <b>all tasks</b> in this phase, and should be taken when <b>client feedback</b> has been received.</p>
+          </div>
+          <div className="row mb-2 w-100 d-flex justify-content-center align-items-center">
               <label htmlFor="spentTime" className="pr-3">
                 Time spent:
               </label>
@@ -426,20 +430,18 @@ class TaskCard extends Component {
                 required
               />
               <label htmlFor="message" className="pl-5 pr-3">
-                Reason:
+                Client feedback:
               </label>
-              <input
+              <textarea
                 onChange={this.handleChange}
-                type="text"
                 name="message"
                 className="pt-1 pb-2 w-50"
-                placeholder="Describe the problem to your colleague"
+                placeholder="Describe the feedback from the client to the team"
                 required
               />
             </div>
-          </div>
           <button type="submit" className="btn btn-danger">
-            Return to previous task
+            Reset phase
           </button>
         </form>
       );
@@ -449,11 +451,11 @@ class TaskCard extends Component {
       messageInput = (
         <form onSubmit={this.submitTaskAsOk} className="my-2">
           <div className="row w-100 text-center">
-            <h5 className="text-success w-100">
+            <h5 className="text-success font-weight-bold w-100">
               You are completing this phase
             </h5>
             <p className="w-100">
-              This step entails you have gotten <b>client approval</b> to
+              This step requires you to have gotten <b>client approval</b> to
               continue to the next phase.
             </p>
           </div>
