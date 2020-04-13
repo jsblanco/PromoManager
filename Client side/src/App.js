@@ -42,7 +42,7 @@ componentDidUpdate=async ()=> {
 
 populateProjectSidebar=()=>{
 
-  let sortedProjects = this.state.userData.ongoingProjects.map(project=>{
+ const sortedProject = [...this.state.userData.ongoingProjects].map(project=>{
     let activePhase = project.phases.findIndex(
       (phase) => !phase.isItOver
     );
@@ -55,7 +55,7 @@ populateProjectSidebar=()=>{
         if (activeTaskIndex > -1) {
           project.currentRole = project.phases[activePhase].tasks[activeTaskIndex].assignedUser[0];
           project.phases[activePhase].tasks[activeTaskIndex].activeTask = true;
-          if (project.phases[activePhase].tasks[activeTaskIndex].deadline.length){
+          if (project.phases[activePhase].tasks[activeTaskIndex].deadline!= undefined){
             project.deadline = project.phases[activePhase].tasks[activeTaskIndex].deadline;
           } else {
             project.deadline = "As soon as possible"
@@ -66,9 +66,16 @@ populateProjectSidebar=()=>{
       }
     }
     return project
+  }).sort((a,b)=>{
+    if ((a.currentRole == this.props.user.role) && (b.currentRole != this.props.user.role) ){
+      return -1
+    } 
+    if ((a.currentRole != this.props.user.role) && (b.currentRole == this.props.user.role) ){
+      return 1
+    }
   })
 
-  return this.state.userData.ongoingProjects.map((project) => (
+  return sortedProject.map((project) => (
     <ProjectList project={project} key={project.budgetNumber} />
   ));
 }
@@ -101,7 +108,7 @@ populateProjectSidebar=()=>{
             {projects}
           </div>
 
-          <div className="col-xl-10 col-lg-11 col-sm-8">
+          <div className="col-xl-10 col-lg-9 col-sm-8">
             <Switch>
               <AnonRoute exact path="/signup" component={Signup} />
               <AnonRoute exact path="/login" component={Login} />
