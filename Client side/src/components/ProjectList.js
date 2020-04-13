@@ -16,6 +16,7 @@ const ProjectList = (props) => {
     let weekDay = unreadableDate.getDay()
     let day = unreadableDate.getDate();
     let month = unreadableDate.getMonth();
+    console.log(weekDay, day, month)
 
     switch (month) {
       case 0:
@@ -107,20 +108,20 @@ const ProjectList = (props) => {
       day = day.slice(1);
     }
     return `${weekDay}, ${month} the ${day}`;
-}
+  }
   
 switch (true){
   case (deadlineDate.getTime()<today.getTime()):
-    deadline = <p className="mt-0 text-danger font-weight-bold">Missed deadline: {readableDate(deadlineDate)}</p>
+    deadline = <p className="mt-0">Missed deadline: <b className="missed-deadline font-weight-bold">{readableDate(deadlineDate)}</b></p>
     break;
   case (deadlineDate.getTime() == today.getTime()):
-    deadline = <p className="mt-0">Next deadline: <b className="text-danger font-weight-bold">today</b></p>
+    deadline = <p className="mt-0">Next deadline: <b className="deadline-today font-weight-bold">today</b></p>
     break;
   case (deadlineDate.getTime() == tomorrow.getTime()):
-    deadline = <p className="mt-0">Next deadline: <b className="text-warning font-weight-bold">tomorrow</b></p>
+    deadline = <p className="mt-0">Next deadline: <b className="deadline-tomorrow font-weight-bold">tomorrow</b></p>
     break;
   case (deadlineDate.getTime()>today.getTime()):
-    deadline = <p className="mt-0">Next deadline: {readableDate(deadlineDate)}</p>;
+    deadline = <p className="mt-0">Next deadline: <b className="text-success">{readableDate(deadlineDate)}</b></p>;
     break;
   default:
     deadline = <p className="mt-0">Awaiting project task distribution</p>;
@@ -128,9 +129,9 @@ switch (true){
   }
 
   if (props.project.currentRole === props.user.role) {
-    activeRole = "";
+    activeRole = "active-role";
   } else {
-    activeRole = "notMyProject font-italic";
+    activeRole = "text-muted bg-light font-italic";
   }
 
   return (

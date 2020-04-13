@@ -37,3 +37,35 @@
   background-color: rgb(241, 241, 241) !important;
   color: darkslategray !important;
 }
+
+.missed-deadline {
+  color: firebrick;
+}
+
+.active.active-role b.missed-deadline {
+  color: rgb(255, 126, 148)!important;
+}
+
+.deadline-today{
+  color: chocolate
+}
+
+.active.active-role b.deadline-today{
+  color: gold
+}
+
+.deadline-tomorrow{
+  color: dodgerblue;
+}
+
+.active.active-role b.deadline-tomorrow{
+  color: mediumturquoise;
+}
+
+.deadline-far{
+  color: dodgerblue;
+}
+
+.active.active-role b.deadline-far{
+  color: mediumturquoise;
+}
