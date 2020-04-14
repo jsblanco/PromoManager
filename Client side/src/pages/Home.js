@@ -45,9 +45,9 @@ class Home extends Component {
             <h4>{project.name}</h4>
             <TaskCard
                 key={project._id}
-                index={project.index}
+                index={project.pendingTask.index}
                 projectId={project._id}
-                phaseId={project.phaseId}
+                phaseId={project.pendingTask.phaseId}
                 teamMembers={project.teamMembers}
                 assignedUserName={this.props.user.name}
                 task={project.pendingTask}
