@@ -33,6 +33,7 @@ class ProjectDetails extends Component {
     });
   };
 
+
   showPhaseCreator = () => {
     this.setState({
       showPhaseCreator: !this.state.showPhaseCreator,
@@ -51,6 +52,11 @@ class ProjectDetails extends Component {
     const projectId = this.state.project._id;
     userService.postComments({ projectId, comments });
   };
+  
+  closeProject = () => {
+    const projectId = this.state.project._id;
+    userService.postComments({ projectId, comments });
+  };
 
   render() {
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
@@ -62,6 +68,7 @@ class ProjectDetails extends Component {
       createPhaseButton,
       editProjectButton,
       comments,
+      closeProject,
       addComment;
     let projectData = this.state.project;
     if (projectData.phases) {
@@ -74,6 +81,7 @@ class ProjectDetails extends Component {
       phases = projectData.phases.map((phase) => (
         <PhaseCard
           key={phase._id}
+          position={projectData.phases.length - projectData.phases.indexOf(phase)}
           phase={phase}
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
@@ -175,6 +183,28 @@ class ProjectDetails extends Component {
       );
     }
 
+
+
+
+   if (this.state.project.phases[this.state.project.phases.length-1].isItOver===true){
+
+closeProject =<form onSubmit={this.closeProject} className="text-center my-2">
+<div className="row w-100 text-center">
+<h5 className="text-danger font-weight-bold w-100">
+You are about to close this project
+</h5>
+<p className="w-100">It will be marked as finished, and team members will not receive further notifications.
+</p>
+</div>
+<button type="submit" className="btn btn-danger">
+Close project
+</button>
+</form>
+
+   
+   }
+
+//////////////////////
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
         <div className="col-xl-8 col-lg-8 pr-0" id="project-details">
@@ -215,6 +245,7 @@ class ProjectDetails extends Component {
             {phases}
             {createPhaseForm}
             {createPhaseButton}
+            {closeProject}
           </section>
         </div>
         <div className=" col-xl-3 col-lg-2">

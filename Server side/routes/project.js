@@ -399,4 +399,39 @@ router.put('/:projectId/addcomment', (req, res, next) => {
 
 
 
+
+
+//Terminar un proyecto
+
+router.put("/:projectId/close", async (req, res, next) => {
+  const {projectId}= req.params
+  
+  try {
+      
+      let finishedProject = await Project.findByIdAndUpdate(id, {isItOver: true});
+      res.status(200).json(finishedProject);
+    } catch (error) {
+        next(error);
+      }
+      //Moveremos el proyecto de onGoingProjects a finishedProjects
+      finishedProject.teamMembers.map(async (user) => {
+        if (user!=undefined) {
+          try {
+            const updatedUser = await User.findByIdAndUpdate(user, {
+              $push: { finishedProjects: projectId },
+              $pull: { ongoingProjects: projectId },
+            });
+            res.status(200);
+          } catch (error) {
+            next(error);
+          }
+        }
+      });
+;})
+
+
+
+
+
+
 module.exports = router;

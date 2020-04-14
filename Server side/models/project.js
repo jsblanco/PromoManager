@@ -5,6 +5,7 @@ const projectSchema = new Schema({
   name: {type: String, required: true},
   budgetNumber: {type: String, required: true},
   client: {type: String, required: true},
+  isItOver: {type: Boolean, default: false},
   description: {type: String, required: true},
   version: {type: Number},
   teamMembers: [{ type: Schema.Types.ObjectId, ref: 'User'}],

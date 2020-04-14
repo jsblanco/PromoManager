@@ -35,6 +35,11 @@ class User {
   .then((data) => data.data)
   }
 
+  closeProject({projectId}){
+    return this.user
+    .put(`/project/${projectId}/close`)
+    .then((data) => data.data)
+    }
 
   newProject({
     name,

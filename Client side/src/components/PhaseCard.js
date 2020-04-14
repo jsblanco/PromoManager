@@ -112,7 +112,6 @@ class PhaseCard extends Component {
       );
     }
 
-
     return (
       <div className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
         <div className="row pb-2">

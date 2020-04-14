@@ -47,8 +47,8 @@ class Navbar extends Component {
 
     return (
       <nav className="navbar bg-info mx-0 w-100 text-light">
-        <Link to={"/"} id="home-btn">
-          <h4 className="text-light">Home</h4>
+        <Link to={"/"} className=" text-decoration-none" id="home-btn">
+          <h4 className="text-light text-decoration-none">Home</h4>
         </Link>
         <h2 className="text-white font-weight-bold">
           PromoManager<sup>®</sup>
