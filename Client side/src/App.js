@@ -77,6 +77,14 @@ class App extends Component {
             } else {
               project.currentRole = "Account";
             }
+            if (
+              project.phases[activePhase].tasks[activeTaskIndex].assignedUser[0] == this.props.user.role              
+            ){
+              project.pendingTask = project.phases[activePhase].tasks[activeTaskIndex];
+              project.pendingTask.index = activeTaskIndex;
+              project.pendingTask.phaseId = project.phases[activePhase]._id;
+
+            } 
           }
         }
         return project;
@@ -115,6 +123,7 @@ class App extends Component {
 
   render() {
     let projects, newProject;
+
     const { isLoggedin } = this.props;
     if (this.state.loaded === true && isLoggedin) {
       projects = this.populateProjectSidebar();
@@ -139,7 +148,7 @@ class App extends Component {
 
     return (
       <div className="overflow-hidden">
-        <Navbar />
+        <Navbar pendingTasks={this.state.userData.ongoingProjects} />
         <div className="row ">
           <div className="col-xl-2 col-lg-3 col-sm-4 list-group project-list pr-0 overflow-auto">
           <div>
@@ -172,6 +181,7 @@ class App extends Component {
             <PrivateRoute
                 exact
                 path="/"
+                pendingTasks={this.state.userData.ongoingProjects}
                 component={Home}
               />
             </Switch>

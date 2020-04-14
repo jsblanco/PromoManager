@@ -161,6 +161,15 @@ router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
       message: "",
       spentTime: "00:00",
     });
+
+    /*
+    const currentPhase = await Phase.findById(phaseId).populate("basicTasks");
+    let project= await Project.findById(projectId).populate("teamMembers")
+    let userIndex =project.teamMembers.findIndex((user) => user.role==newTask.assignedUser[0]);
+    User.findByIdAndUpdate(req.session.currentUser._id, {$pull: {"pendingTasks": phaseId}},{ new: true })
+    User.findByIdAndUpdate(project.teamMembers[userIndex]._id, {$push: {"pendingTasks": phaseId}},{ new: true })
+    */
+
     const updatedPhase = await Phase.findByIdAndUpdate(
       phaseId,
       { $push: { tasks: newTask, basicTasks: newTaskInDb._id } },
@@ -182,7 +191,7 @@ router.put(
     taskIndex = parseInt(taskIndex);
 
     try {
-      const currentPhase = await Phase.findById(phaseId);
+      const currentPhase = await Phase.findById(phaseId).populate("basicTasks");
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex].isItOver = true;
       newTasks[taskIndex].assignedUser = assignedUser;
@@ -190,7 +199,13 @@ router.put(
       if (message) {
         newTasks[taskIndex + 1].message = message;
       }
-
+/*
+      let project= await Project.findById(projectId).populate("teamMembers")
+      let userIndex =project.teamMembers.findIndex((user) => user.role == newTasks[taskIndex + 1].assignedUser[0]);
+      console.log("UEUEUEUE: ",project.teamMembers[userIndex]._id,)
+      await User.findByIdAndUpdate(req.session.currentUser._id, {$pull: {"pendingTasks": phaseId}},{ new: true })
+      await User.findByIdAndUpdate(project.teamMembers[userIndex]._id, {$push: {"pendingTasks": phaseId}},{ new: true })
+*/
       if (taskIndex === newTasks.length - 1) {
         let updatedPhase = await Phase.findByIdAndUpdate(
           phaseId,
@@ -222,12 +237,19 @@ router.put(
     taskIndex = parseInt(taskIndex);
 
     try {
-      const currentPhase = await Phase.findById(phaseId);
+      const currentPhase = await Phase.findById(phaseId).populate("basicTasks");
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex - 1].isItOver = false;
       newTasks[taskIndex - 1].message = message;
       newTasks[taskIndex].assignedUser = assignedUser;
       newTasks[taskIndex].spentTime = spentTime;
+/*
+      let project= await Project.findById(projectId).populate("teamMembers")
+      let userIndex =project.teamMembers.findIndex((user) => user.role==newTasks[taskIndex - 1].assignedUser[0]);
+      console.log("UEUEUEUE: ",project.teamMembers[userIndex]._id,"  Phase ID:", phaseId, "req.session.currentUser._id :", req.session.currentUser._id)
+      User.findByIdAndUpdate(req.session.currentUser._id, {$pull: {"pendingTasks": phaseId}},{ new: true })
+      User.findByIdAndUpdate(project.teamMembers[userIndex]._id, {$push: {"pendingTasks": phaseId}},{ new: true })
+*/
 
       let updatedPhase = await Phase.findByIdAndUpdate(
         phaseId,
@@ -268,6 +290,13 @@ router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
         message: "",
       })
     );
+
+/*
+    let project= await Project.findById(projectId).populate("teamMembers")
+    let userIndex =project.teamMembers.findIndex((user) => (user.role==currentPhase.basicTasks[0].assignedUser[0]));
+    User.findByIdAndUpdate(req.session.currentUser._id, {$pull: {"pendingTasks": phaseId}},{ new: true })
+    User.findByIdAndUpdate(project.teamMembers[userIndex]._id, {$push: {"pendingTasks": phaseId}},{ new: true })
+*/
 
     let resetPhase = await Phase.findByIdAndUpdate(
       phaseId,

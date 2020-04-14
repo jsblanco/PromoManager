@@ -7,6 +7,7 @@ const userSchema = new Schema({
   password: {type: String, required: true},
   role: {type: String, enum: [ "Account", "Scientific", "Design", "Developer", "AV", "Administration"] },
   ongoingProjects: [{ type: Schema.Types.ObjectId, ref: 'Project' }],
+//  pendingTasks: [{ type: Schema.Types.ObjectId, ref: 'Phase' }],
   finishedProjects:  [{ type: Schema.Types.ObjectId, ref: 'Project' }],
 }, {
   timestamps: {
