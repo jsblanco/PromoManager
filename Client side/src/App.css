@@ -84,3 +84,9 @@
 .inactive-role {
   background-color: rgb(240, 240, 240) !important;
 }
+
+
+input:invalid, {
+    border-color:hsl(0, 50%, 50%);
+    background:hsl(0, 50%, 90%);
+}

@@ -92,13 +92,13 @@ class ProjectDetails extends Component {
       ));
     }
     if (this.state.showPhaseCreator === true) {
-      createPhaseForm = <PhaseCreator projectId={this.state.project._id}/>;
+      createPhaseForm = <PhaseCreator projectId={this.state.project._id} />;
       phaseCreatorToggler = "Discard new phase";
     } else {
       phaseCreatorToggler = "Add new phase";
     }
 
-    if (!this.state.project.isItOver  && this.props.user.role === "Account") {
+    if (!this.state.project.isItOver && this.props.user.role === "Account") {
       createPhaseButton = (
         <button
           className="btn btn-primary my-2 w-100"
@@ -189,50 +189,60 @@ class ProjectDetails extends Component {
       );
     }
 
-    if (!this.state.project.isItOver && this.state.project.phases !== undefined && this.props.user.role == "Account") {
-      if (this.state.project.phases.length>0){
-      if (
-        this.state.project.phases[this.state.project.phases.length - 1]
-          .isItOver === true
-      ) {
-        closeProject = (
-          <form onSubmit={this.closeProject} className="text-center my-2">
-            <div className="row w-100 text-center">
-              <h5 className="text-danger font-weight-bold w-100">
-                You are about to close this project
-              </h5>
-              <p className="w-100">
-                It will be marked as finished, and team members will not receive
-                further notifications.
-              </p>
-            </div>
-            <button type="submit" className="btn btn-danger">
-              Close project
-            </button>
-          </form>
-        );}
+    if (
+      !this.state.project.isItOver &&
+      this.state.project.phases !== undefined &&
+      this.props.user.role == "Account"
+    ) {
+      if (this.state.project.phases.length > 0) {
+        if (
+          this.state.project.phases[this.state.project.phases.length - 1]
+            .isItOver === true
+        ) {
+          closeProject = (
+            <form onSubmit={this.closeProject} className="text-center my-2">
+              <div className="row w-100 text-center">
+                <h5 className="text-danger font-weight-bold w-100">
+                  You are about to close this project
+                </h5>
+                <p className="w-100">
+                  It will be marked as finished, and team members will not
+                  receive further notifications.
+                </p>
+              </div>
+              <button type="submit" className="btn btn-danger">
+                Close project
+              </button>
+            </form>
+          );
+        }
       }
     }
-    if (this.state.project.isItOver){
-      closeProject =
-            <div className="card shadow p-3 mb-3 mt-2 bg-white rounded text-center my-2">
-              <h5 className="text-danger font-weight-bold w-100">
-                This project is closed
-              </h5>
-            </div>
-
+    if (this.state.project.isItOver) {
+      closeProject = (
+        <div className="card shadow p-3 mb-3 mt-2 bg-white rounded text-center my-2">
+          <h5 className="text-danger font-weight-bold w-100">
+            This project is closed
+          </h5>
+        </div>
+      );
     }
 
     //////////////////////
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
-        <div className="col-xl-9 col-lg-9 col-md-9 pr-0" id="project-details">
+        <div className="col-xl-9 col-lg-9 col-md-9 px-4" id="project-details">
           <header className="px-2">
-            <h1 className="px-2">
-              {this.state.project.budgetNumber} -{this.state.project.name}
-            </h1>
+            <div className="row">
+              <div className="col-10">
+                <h1 className="px-2">
+                  {this.state.project.budgetNumber} -{this.state.project.name}
+                </h1>
+              </div>
+              <div className="col-2 mt-2">{editProjectButton}</div>
+            </div>
             <div className="row mx-2">
-              <div className="col-8">
+              <div className="">
                 <p className="d-inline mb-0 mr-3">
                   <b>Client: </b>
                   {this.state.project.client}
@@ -242,9 +252,8 @@ class ProjectDetails extends Component {
                 </p>
                 <p>{this.state.project.description}</p>
               </div>
-              <div className="col-2 ml-5">{editProjectButton}</div>
             </div>
-            <section className="mx-2 px-3 mb-4">
+            <section className="mx-2 px-3 my-4">
               <h3>Project team:</h3>
               {this.state.project.teamMembers.map((user) => {
                 if (user) {
@@ -258,8 +267,8 @@ class ProjectDetails extends Component {
             </section>
           </header>
 
-          <section id="phases" className="mx-2">
-            <h3 className="px-4 ">Development phases:</h3>
+          <section id="phases" className="mx-2 px-5">
+            <h3 className="px-4 mt-4 pb-2">Development phases:</h3>
             {phases}
             {createPhaseForm}
             {createPhaseButton}

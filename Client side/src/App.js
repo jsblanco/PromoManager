@@ -153,7 +153,7 @@ class App extends Component {
     }
 
     return (
-      <div className="overflow-hidden">
+      <div className="">
         <Navbar pendingTasks={this.state.userData.ongoingProjects} />
         <div className="row ">
           <div className="col-xl-2 col-lg-3 col-sm-4 list-group project-list pr-0 overflow-auto">

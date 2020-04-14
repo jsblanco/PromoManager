@@ -17,7 +17,8 @@ router.post(
   isNotLoggedIn(),
   validationLogin(),
   async (req, res, next) => {
-    const { name, password, email, role } = req.body;
+    let { name, password, email, role } = req.body;
+    email = email.toLowerCase()
     try {
       const emailExists = await User.findOne({ email }, "email");
       if (emailExists) return next(createError(400));
@@ -46,11 +47,10 @@ router.post(
   isNotLoggedIn(),
   validationLogin(),
   async (req, res, next) => {
-    const { email, password } = req.body;
-    console.log(email, password)
+    let { email, password } = req.body;
+    email = email.toLowerCase()
     try {
       const user = await User.findOne({ email }).populate("ongoingProjects");
-      console.log("founduser:", user)
       if (!user) {
         next(createError(404));
       } else if (bcrypt.compareSync(password, user.password)) {

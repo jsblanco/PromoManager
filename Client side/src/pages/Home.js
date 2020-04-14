@@ -38,7 +38,7 @@ class Home extends Component {
     }
 
     if (pendingTasks.length>0){
-      pendingTaskFeed=  <div className="h-75 feed w-100 overflow-auto">
+      pendingTaskFeed=  <div className="h-75 feed w-100 px-5 overflow-auto">
       {pendingTasks.map(project=>{
             return  <div key={project._id} className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
             <h4>{project.name}</h4>

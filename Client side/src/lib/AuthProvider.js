@@ -2,6 +2,7 @@ import React from "react";
 import auth from "./auth-service";
 const { Consumer, Provider } = React.createContext();
 
+
 const withAuth = (WrappedComponent) => {
   return class extends React.Component {
     render() {
@@ -71,7 +72,10 @@ class AuthProvider extends React.Component {
     const { login, logout, signup } = this;
 
     return isLoading ? (
-      <div>Loading</div>
+      <div className="h-100 w-100 d-flex flex-column justify-content-around align-items-center font-italic my-5">
+      <h4 className="my-5 py-5 text-info font-weight-bold">Your projects will be here soon...</h4>
+      <div className="mt-5"><img src="loading.gif"/></div>
+      </div>
     ) : (
       <Provider value={{ isLoggedin, user, login, logout, signup }}>
         {this.props.children}
