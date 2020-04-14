@@ -33,7 +33,6 @@ class ProjectDetails extends Component {
     });
   };
 
-
   showPhaseCreator = () => {
     this.setState({
       showPhaseCreator: !this.state.showPhaseCreator,
@@ -52,10 +51,10 @@ class ProjectDetails extends Component {
     const projectId = this.state.project._id;
     userService.postComments({ projectId, comments });
   };
-  
+
   closeProject = () => {
     const projectId = this.state.project._id;
-    userService.postComments({ projectId, comments });
+    userService.postComments({ projectId });
   };
 
   render() {
@@ -81,7 +80,9 @@ class ProjectDetails extends Component {
       phases = projectData.phases.map((phase) => (
         <PhaseCard
           key={phase._id}
-          position={projectData.phases.length - projectData.phases.indexOf(phase)}
+          position={
+            projectData.phases.length - projectData.phases.indexOf(phase)
+          }
           phase={phase}
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
@@ -175,7 +176,10 @@ class ProjectDetails extends Component {
               placeholder="What's on your mind?"
               required
             ></textarea>
-            <button className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center" type="submit">
+            <button
+              className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center"
+              type="submit"
+            >
               <i className="fas fa-comment text-light m-1 pr-3"></i>Comment{" "}
             </button>
           </form>
@@ -183,35 +187,37 @@ class ProjectDetails extends Component {
       );
     }
 
+    if (this.state.project.phases) {
+      if (
+        this.state.project.phases[this.state.project.phases.length - 1]
+          .isItOver === true
+      ) {
+        closeProject = (
+          <form onSubmit={this.closeProject} className="text-center my-2">
+            <div className="row w-100 text-center">
+              <h5 className="text-danger font-weight-bold w-100">
+                You are about to close this project
+              </h5>
+              <p className="w-100">
+                It will be marked as finished, and team members will not receive
+                further notifications.
+              </p>
+            </div>
+            <button type="submit" className="btn btn-danger">
+              Close project
+            </button>
+          </form>
+        );
+      }
+    }
 
-
-
-   if (this.state.project.phases[this.state.project.phases.length-1].isItOver===true){
-
-closeProject =<form onSubmit={this.closeProject} className="text-center my-2">
-<div className="row w-100 text-center">
-<h5 className="text-danger font-weight-bold w-100">
-You are about to close this project
-</h5>
-<p className="w-100">It will be marked as finished, and team members will not receive further notifications.
-</p>
-</div>
-<button type="submit" className="btn btn-danger">
-Close project
-</button>
-</form>
-
-   
-   }
-
-//////////////////////
+    //////////////////////
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
         <div className="col-xl-8 col-lg-8 pr-0" id="project-details">
           <header className="px-2">
             <h1 className="px-2">
-              {this.state.project.budgetNumber} -
-              {this.state.project.name}
+              {this.state.project.budgetNumber} -{this.state.project.name}
             </h1>
             <div className="row mx-2">
               <div className="col-8">
