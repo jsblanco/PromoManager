@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Switch, NavLink } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 
 import TaskCard from "../components/TaskCard";
@@ -39,12 +38,11 @@ class Home extends Component {
     }
 
     if (pendingTasks.length>0){
-      pendingTaskFeed=  <div className="h-75 overflow-auto">
+      pendingTaskFeed=  <div className="h-75 feed w-100 overflow-auto">
       {pendingTasks.map(project=>{
-            return  <div className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
+            return  <div key={project._id} className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
             <h4>{project.name}</h4>
             <TaskCard
-                key={project._id}
                 index={project.pendingTask.index}
                 projectId={project._id}
                 phaseId={project.pendingTask.phaseId}
@@ -52,17 +50,15 @@ class Home extends Component {
                 assignedUserName={this.props.user.name}
                 task={project.pendingTask}
               />
-  
-            </div>
-  
-  
+            </div>  
           })}
       </div>
-           }
+           } else {pendingTaskFeed=  <div className="h-25 feed w-100 overflow-auto d-flex align-items-center justify-content-center">
+             <p className="text-muted font-italic">Congratulations! You have finished all your pending tasks.</p>
+           </div>}
           
-console.log(pendingTasks)
     return (
-      <div className="h-100 d-flex flex-column justify-content-start align-items-center mt-5 pt-5">
+      <div className="h-100 d-flex flex-column justify-content-start align-items-center pt-5 overflow-hidden">
         <h1>{greeting}, {this.props.user.name}</h1>
         <h5>
           Today is{" "}

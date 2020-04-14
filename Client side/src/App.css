@@ -5,6 +5,9 @@
   font-size: small;
 }
 
+.feed{
+  max-width: 800px !important;
+}
 .project-list{
   height: 90vh;
 }

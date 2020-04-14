@@ -16,7 +16,6 @@ const ProjectList = (props) => {
     let weekDay = unreadableDate.getDay()
     let day = unreadableDate.getDate();
     let month = unreadableDate.getMonth();
-    console.log(weekDay, day, month)
 
     switch (month) {
       case 0:
@@ -114,10 +113,10 @@ switch (true){
   case (deadlineDate.getTime()<today.getTime()):
     deadline = <p className="mt-0">Missed deadline: <b className="missed-deadline font-weight-bold">{readableDate(deadlineDate)}</b></p>
     break;
-  case (deadlineDate.getTime() == today.getTime()):
+  case (deadlineDate.getTime() === today.getTime()):
     deadline = <p className="mt-0">Next deadline: <b className="deadline-today font-weight-bold">today</b></p>
     break;
-  case (deadlineDate.getTime() == tomorrow.getTime()):
+  case (deadlineDate.getTime() === tomorrow.getTime()):
     deadline = <p className="mt-0">Next deadline: <b className="deadline-tomorrow font-weight-bold">tomorrow</b></p>
     break;
   case (deadlineDate.getTime()>today.getTime()):
