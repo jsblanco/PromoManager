@@ -54,7 +54,8 @@ class ProjectDetails extends Component {
 
   closeProject = () => {
     const projectId = this.state.project._id;
-    userService.postComments({ projectId });
+    const teamMembers = this.state.project.teamMembers;
+    userService.closeProject({ projectId, teamMembers });
   };
 
   render() {
@@ -86,17 +87,18 @@ class ProjectDetails extends Component {
           phase={phase}
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
+          isProjectOver={this.state.project.isItOver}
         />
       ));
     }
     if (this.state.showPhaseCreator === true) {
-      createPhaseForm = <PhaseCreator projectId={this.state.project._id} />;
+      createPhaseForm = <PhaseCreator projectId={this.state.project._id}/>;
       phaseCreatorToggler = "Discard new phase";
     } else {
       phaseCreatorToggler = "Add new phase";
     }
 
-    if (this.props.user.role === "Account") {
+    if (!this.state.project.isItOver  && this.props.user.role === "Account") {
       createPhaseButton = (
         <button
           className="btn btn-primary my-2 w-100"
@@ -187,7 +189,8 @@ class ProjectDetails extends Component {
       );
     }
 
-    if (this.state.project.phases) {
+    if (!this.state.project.isItOver && this.state.project.phases !== undefined && this.props.user.role == "Account") {
+      if (this.state.project.phases.length>0){
       if (
         this.state.project.phases[this.state.project.phases.length - 1]
           .isItOver === true
@@ -207,14 +210,23 @@ class ProjectDetails extends Component {
               Close project
             </button>
           </form>
-        );
+        );}
       }
+    }
+    if (this.state.project.isItOver){
+      closeProject =
+            <div className="card shadow p-3 mb-3 mt-2 bg-white rounded text-center my-2">
+              <h5 className="text-danger font-weight-bold w-100">
+                This project is closed
+              </h5>
+            </div>
+
     }
 
     //////////////////////
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
-        <div className="col-xl-8 col-lg-8 pr-0" id="project-details">
+        <div className="col-xl-9 col-lg-9 col-md-9 pr-0" id="project-details">
           <header className="px-2">
             <h1 className="px-2">
               {this.state.project.budgetNumber} -{this.state.project.name}
@@ -254,7 +266,7 @@ class ProjectDetails extends Component {
             {closeProject}
           </section>
         </div>
-        <div className=" col-xl-3 col-lg-2">
+        <div className=" col-xl-3 col-lg-2 col-md-1">
           <h3>Project comments</h3>
           {comments}
           {addComment}

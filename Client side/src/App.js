@@ -34,8 +34,7 @@ class App extends Component {
       });
     }
     this.populateProjectSidebar();
-  };  
-
+  };
 
   shouldComponentUpdate = async () => {
     return this.state.booleanForUpdate;
@@ -78,13 +77,18 @@ class App extends Component {
               project.currentRole = "Account";
             }
             if (
-              project.phases[activePhase].tasks[activeTaskIndex].assignedUser[0] == this.props.user.role              
-            ){
-              project.pendingTask = project.phases[activePhase].tasks[activeTaskIndex];
-              project.pendingTask.index = activeTaskIndex;
-              project.pendingTask.phaseId = project.phases[activePhase]._id;
-
-            } 
+              project.phases[activePhase].tasks[activeTaskIndex]
+            ) {
+              if (
+                project.phases[activePhase].tasks[activeTaskIndex]
+                  .assignedUser[0] == this.props.user.role
+              ) {
+                project.pendingTask =
+                  project.phases[activePhase].tasks[activeTaskIndex];
+                project.pendingTask.index = activeTaskIndex;
+                project.pendingTask.phaseId = project.phases[activePhase]._id;
+              }
+            }
           }
         }
         return project;
@@ -102,20 +106,22 @@ class App extends Component {
         ) {
           return 1;
         }
-        if ((new Date(a.deadline).getTime()) < (new Date(b.deadline).getTime)) {
+        if (new Date(a.deadline).getTime() < new Date(b.deadline).getTime) {
           return 1;
         }
-        if ((new Date(a.deadline).getTime()) > (new Date(b.deadline).getTime)) {
+        if (new Date(a.deadline).getTime() > new Date(b.deadline).getTime) {
           return -1;
         }
       });
-    
-      if (sortedProject.phases){
-        if (sortedProject.phases[sortedProject.phases.length-1].tasks){
-          sortedProject.phases[sortedProject.phases.length-1].tasks[sortedProject.phases[sortedProject.phases.length-1].tasks.length-1].lastTaskInTheProject= true;
-        }
+
+    if (sortedProject.phases) {
+      if (sortedProject.phases[sortedProject.phases.length - 1].tasks) {
+        sortedProject.phases[sortedProject.phases.length - 1].tasks[
+          sortedProject.phases[sortedProject.phases.length - 1].tasks.length - 1
+        ].lastTaskInTheProject = true;
       }
-    
+    }
+
     return sortedProject.map((project) => (
       <ProjectList project={project} key={project.budgetNumber} />
     ));
@@ -151,10 +157,10 @@ class App extends Component {
         <Navbar pendingTasks={this.state.userData.ongoingProjects} />
         <div className="row ">
           <div className="col-xl-2 col-lg-3 col-sm-4 list-group project-list pr-0 overflow-auto">
-          <div>
-            {newProject}
-            {projects}
-          </div>
+            <div>
+              {newProject}
+              {projects}
+            </div>
           </div>
 
           <div className="col-xl-10 col-lg-9 col-sm-8">
@@ -178,7 +184,7 @@ class App extends Component {
                 component={ProjectEdit}
                 updateApp={this.updateApp}
               />
-            <PrivateRoute
+              <PrivateRoute
                 exact
                 path="/"
                 pendingTasks={this.state.userData.ongoingProjects}

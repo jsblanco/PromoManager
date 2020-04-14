@@ -7,7 +7,7 @@ import { createBrowserHistory } from 'history';
 class User {
   constructor() {
     this.user = axios.create({
-      baseURL: "http://localhost:4000",
+      baseURL: process.env.REACT_APP_API_URI,
       withCredentials: true,
     });
   }
@@ -35,9 +35,9 @@ class User {
   .then((data) => data.data)
   }
 
-  closeProject({projectId}){
+  closeProject({projectId, teamMembers}){
     return this.user
-    .put(`/project/${projectId}/close`)
+    .put(`/project/${projectId}/close`, {teamMembers})
     .then((data) => data.data)
     }
 

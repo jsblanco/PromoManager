@@ -405,19 +405,20 @@ router.put('/:projectId/addcomment', (req, res, next) => {
 
 router.put("/:projectId/close", async (req, res, next) => {
   const {projectId}= req.params
-  
+  const {teamMembers}= req.body
+  console.log('projectId :', projectId);
   try {
       
-      let finishedProject = await Project.findByIdAndUpdate(id, {isItOver: true});
+      let finishedProject = await Project.findOneAndUpdate({projectId}, {isItOver: true});
       res.status(200).json(finishedProject);
     } catch (error) {
         next(error);
       }
       //Moveremos el proyecto de onGoingProjects a finishedProjects
-      finishedProject.teamMembers.map(async (user) => {
+      teamMembers.map(async (user) => {
         if (user!=undefined) {
           try {
-            const updatedUser = await User.findByIdAndUpdate(user, {
+            const updatedUser = await User.findByIdAndUpdate(user._id, {
               $push: { finishedProjects: projectId },
               $pull: { ongoingProjects: projectId },
             });

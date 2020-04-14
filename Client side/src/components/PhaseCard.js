@@ -85,6 +85,7 @@ class PhaseCard extends Component {
               phaseId={this.state.phase._id}
               teamMembers={this.state.teamMembers}
               assignedUserName={assignedUserName}
+              isProjectOver={this.props.isProjectOver}
               task={task}
             />
           );

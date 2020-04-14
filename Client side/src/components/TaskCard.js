@@ -190,7 +190,7 @@ class TaskCard extends Component {
       </div>
     );
 
-    if (this.props.user.role === "Account") {
+    if (!this.props.isProjectOver  && this.props.user.role === "Account") {
       button = (
         <button className="btn btn-info" onClick={this.showInput}>
           Edit task
