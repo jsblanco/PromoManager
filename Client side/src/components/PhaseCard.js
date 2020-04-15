@@ -4,12 +4,16 @@ import TaskCard from "./TaskCard";
 import { withAuth } from "../lib/AuthProvider";
 
 class PhaseCard extends Component {
-  state = {
-    teamMembers: this.props.teamMembers,
-    phase: this.props.phase,
-    addTaskToggler: false,
-    projectId: this.props.projectId,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      teamMembers: this.props.teamMembers,
+      phase: this.props.phase,
+      addTaskToggler: false,
+      projectId: this.props.projectId,
+      hideTasks: this.props.phase.isItOver,
+    };
+  }
 
   showTaskCreator = () => {
     this.setState({
@@ -17,9 +21,83 @@ class PhaseCard extends Component {
     });
   };
 
+  showTasks = () => {
+    this.setState({
+      hideTasks: !this.state.hideTasks,
+    });
+  };
+
+  populateTasks = () => {
+    let assignedUserName = "";
+    let projectPhase = this.state.phase;
+    if (projectPhase.activePhase && projectPhase.tasks) {
+      let activeTaskIndex = projectPhase.tasks.findIndex(
+        (task) => !task.isItOver
+      );
+      if (activeTaskIndex > -1) {
+        projectPhase.tasks[activeTaskIndex].activeTask = true;
+      }
+    }
+
+    let index =
+      this.state.phase.tasks.length - (this.state.phase.basicTasks.length + 1);
+    return this.state.phase.tasks
+      .slice(-this.state.phase.basicTasks.length)
+      .map((task) => {
+        let assignedUserIndex = this.state.teamMembers.findIndex(
+          (member) => member.role == task.assignedUser[0]
+        );
+        assignedUserName = `${this.state.teamMembers[assignedUserIndex].role}: ${this.state.teamMembers[assignedUserIndex].name}`;
+        index++;
+        if (index === this.state.phase.tasks.length - 1) {
+          task.lastTask = true;
+        }
+        if (
+          index ===
+          this.state.phase.tasks.length - this.state.phase.basicTasks.length
+        ) {
+          task.firstTask = true;
+        }
+
+        return (
+          <TaskCard
+            key={index}
+            index={index}
+            projectId={this.state.projectId}
+            phaseId={this.state.phase._id}
+            teamMembers={this.state.teamMembers}
+            assignedUserName={assignedUserName}
+            isProjectOver={this.props.isProjectOver}
+            isPhaseOver={this.state.phase.isItOver}
+            task={task}
+          />
+        );
+      });
+  };
+
   render() {
-    let createTaskForm, createTaskButton, taskCreatorToggler, tasks;
+    let createTaskForm, createTaskButton, taskCreatorToggler, tasks, showTasks;
     let isItOver;
+
+    if (this.props.phase.isItOver && this.state.hideTasks) {
+      showTasks = (
+        <button
+          onClick={this.showTasks}
+          className="btn btn-outline-info border-white font-italic"
+        >
+          Tasks were hidden because phase is completed - <b>Show tasks anyway</b>
+        </button>
+      );
+    } else if (this.props.phase.isItOver && !this.state.hideTasks) {
+      showTasks = (
+        <button
+          onClick={this.showTasks}
+          className="btn btn-outline-info border-white font-italic"
+        >
+          Hide tasks
+        </button>
+      );
+    }
 
     if (this.state.phase.activePhase) {
       isItOver = (
@@ -43,53 +121,8 @@ class PhaseCard extends Component {
       );
     }
 
-    if (this.state.phase.tasks) {
-      let assignedUserName = "";
-
-      let projectPhase = this.state.phase;
-      if (projectPhase.activePhase && projectPhase.tasks) {
-        let activeTaskIndex = projectPhase.tasks.findIndex(
-          (task) => !task.isItOver
-        );
-        if (activeTaskIndex > -1) {
-          projectPhase.tasks[activeTaskIndex].activeTask = true;
-        }
-      }
-
-      let index =
-        this.state.phase.tasks.length -
-        (this.state.phase.basicTasks.length + 1);
-      tasks = this.state.phase.tasks
-        .slice(-this.state.phase.basicTasks.length)
-        .map((task) => {
-          let assignedUserIndex = this.state.teamMembers.findIndex(
-            (member) => member.role == task.assignedUser[0]
-          );
-          assignedUserName = `${this.state.teamMembers[assignedUserIndex].role}: ${this.state.teamMembers[assignedUserIndex].name}`;
-          index++;
-          if (index === this.state.phase.tasks.length - 1) {
-            task.lastTask = true;
-          }
-          if (
-            index ===
-            this.state.phase.tasks.length - this.state.phase.basicTasks.length
-          ) {
-            task.firstTask = true;
-          }
-
-          return (
-            <TaskCard
-              key={index}
-              index={index}
-              projectId={this.state.projectId}
-              phaseId={this.state.phase._id}
-              teamMembers={this.state.teamMembers}
-              assignedUserName={assignedUserName}
-              isProjectOver={this.props.isProjectOver}
-              task={task}
-            />
-          );
-        });
+    if (this.state.phase.tasks && !this.state.hideTasks) {
+      tasks = <div>{this.populateTasks()}</div>;
     }
 
     if (this.state.addTaskToggler) {
@@ -124,6 +157,7 @@ class PhaseCard extends Component {
         {tasks}
         {createTaskForm}
         {createTaskButton}
+        {showTasks}
       </div>
     );
   }
