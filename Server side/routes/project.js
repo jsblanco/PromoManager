@@ -409,8 +409,8 @@ router.put("/:projectId/close", async (req, res, next) => {
   const { teamMembers } = req.body;
   console.log("projectId :", projectId);
   try {
-    let finishedProject = await Project.findOneAndUpdate(
-      { projectId },
+    let finishedProject = await Project.findByIdAndUpdate(
+      projectId,
       { isItOver: true }
     );
     res.status(200).json(finishedProject);

@@ -176,7 +176,8 @@ class App extends Component {
         );
       }
     }
-    if (this.props.isLoggedIn) {
+
+    if (this.state.userData) {
       toggleProjects = (
         <button
           className="list-group-item list-group-item-action bg-info text-light pl-5 justify-content-left d-flex align-items-center"

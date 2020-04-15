@@ -12,6 +12,12 @@ class ProjectDetails extends Component {
       project: { teamMembers: [] },
       showPhaseCreator: false,
       comments: "",
+      Account: "00:00",
+      Scientific: "00:00",
+      Design: "00:00",
+      Developer: "00:00",
+      AV: "00:00",
+      Administration: "00:00",
     };
   }
 
@@ -57,6 +63,22 @@ class ProjectDetails extends Component {
     const teamMembers = this.state.project.teamMembers;
     userService.closeProject({ projectId, teamMembers });
   };
+
+  calculateTotalSpentTime = (accumulator, task) => {
+    let totalHours =  (parseFloat(accumulator) + parseFloat(task));
+    let totalMinutes = parseFloat(parseFloat(accumulator.slice(-2)) + parseFloat(task.slice(-2)));
+    if (totalMinutes >= 60) {
+      totalHours++;
+      totalMinutes -= 60;
+    }
+    totalHours = "0"+totalHours
+    totalMinutes= "0"+totalMinutes
+    if (totalHours.length > 2) {
+      totalHours = totalHours.toString().slice(1);
+    }
+    return `${totalHours}:${totalMinutes.toString().slice(-2)}`;
+  };
+
 
   render() {
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
@@ -228,6 +250,50 @@ class ProjectDetails extends Component {
       );
     }
 
+    let Account = [];
+    let Scientific = [];
+    let Design = [];
+    let Developer = [];
+    let AV = [];
+    let Administration = [];
+    if (this.state.project.phases) {
+      [...this.state.project.phases].map((phase) => {
+        if (phase.tasks) {
+          phase.tasks.map((task) => {
+            switch (task.assignedUser[0]) {
+              case "Account":
+                Account.push(task.spentTime);
+                break;
+              case "Scientific":
+                Scientific.push(task.spentTime);
+                break;
+              case "Design":
+                Design.push(task.spentTime);
+                break;
+              case "Developer":
+                Developer.push(task.spentTime);
+                break;
+              case "AV":
+                AV.push(task.spentTime);
+                break;
+              case "Administration":
+                Administration.push(task.spentTime);
+                break;
+              default:
+                break;
+            }
+          });
+        }
+      });
+      Account.length>0? Account = Account.reduce(this.calculateTotalSpentTime) : Account = "00:00";
+      Scientific.length>0? Scientific = Scientific.reduce(this.calculateTotalSpentTime) :Scientific = "00:00";
+      Design.length>0? Design = Design.reduce(this.calculateTotalSpentTime) : Design = "00:00";
+      Developer.length>0? Developer = Developer.reduce(this.calculateTotalSpentTime) : Developer ="00:00";
+      AV.length>0? AV = AV.reduce(this.calculateTotalSpentTime) : AV = "00:00";
+      Administration.length>0? Administration = Administration.reduce(this.calculateTotalSpentTime) : Administration = "00:00";
+
+    }
+    const timeSpent = [Account, Scientific, Design, Developer, AV, Administration]
     //////////////////////
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
@@ -255,15 +321,21 @@ class ProjectDetails extends Component {
             </div>
             <section className="mx-2 px-3 my-4">
               <h3>Project team:</h3>
-              {this.state.project.teamMembers.map((user) => {
+              <div className="d-flex flex-row justify-content-center">
+              {this.state.project.teamMembers.map((user, index) => {
                 if (user) {
                   return (
-                    <p className="d-inline mt-1 mb-3 mr-4" key={user._id}>
-                      <b>{user.role}:</b> {user.name}
+                    <div className="card shadow px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center">
+                    <p className="mt-1 mb-1" key={user._id}>
+                      {user.role}
                     </p>
+                      <h4>{user.name}</h4> 
+                    <p className="font-italic"><b>Time spent:</b> {timeSpent[index]}h</p>
+                    </div>
                   );
                 }
               })}
+              </div>
             </section>
           </header>
 
