@@ -16,11 +16,11 @@ class PhaseCard extends Component {
     };
   }
 
-  showResetHistory=()=>{
+  showResetHistory = () => {
     this.setState({
-      showResetHistory: !this.state.showResetHistory
-    })
-  }
+      showResetHistory: !this.state.showResetHistory,
+    });
+  };
 
   showTaskCreator = () => {
     this.setState({
@@ -34,12 +34,13 @@ class PhaseCard extends Component {
     });
   };
 
-  populateTasks = () => {    
-    return this.createTaskCards(this.state.phase.tasks.slice(-this.state.phase.basicTasks.length))
+  populateTasks = () => {
+    return this.createTaskCards(
+      this.state.phase.tasks.slice(-this.state.phase.basicTasks.length)
+    );
   };
-  
-  
-  createTaskCards(taskArray){
+
+  createTaskCards(taskArray) {
     let assignedUserName = "";
     let projectPhase = this.state.phase;
     if (projectPhase.activePhase && projectPhase.tasks) {
@@ -85,7 +86,12 @@ class PhaseCard extends Component {
   }
 
   render() {
-    let createTaskForm, createTaskButton, taskCreatorToggler, tasks, showTasks, resetToggler;
+    let createTaskForm,
+      createTaskButton,
+      taskCreatorToggler,
+      tasks,
+      showTasks,
+      resetToggler;
     let isItOver;
 
     if (this.props.phase.isItOver && this.state.hideTasks) {
@@ -94,7 +100,8 @@ class PhaseCard extends Component {
           onClick={this.showTasks}
           className="btn btn-light bg-white border-white text-info font-italic"
         >
-          Tasks were hidden because phase is completed - <b>Show tasks anyway</b>
+          Tasks were hidden because phase is completed -
+          <b>Show tasks anyway</b>
         </button>
       );
     } else if (this.props.phase.isItOver && !this.state.hideTasks) {
@@ -130,19 +137,39 @@ class PhaseCard extends Component {
       );
     }
 
-    if (this.state.phase.tasks){
-    switch (true){
-      case( this.state.phase.tasks.length === this.state.phase.basicTasks.length):
-      break;
-      case( this.state.phase.tasks.length > this.state.phase.basicTasks.length):
-      resetToggler = <button className="btn btn-outline-info" onClick={this.showResetHistory}>Show history</button>
-      break;
-      default:
-        
-      break;
+    if (this.state.phase.tasks) {
+      switch (true) {
+        case this.state.phase.tasks.length ===
+          this.state.phase.basicTasks.length:
+          resetToggler = (
+            <div className="d-flex justify-content-right font-italic text-secondary">
+              
+              Current round: <b className="text-dark mx-2">1</b>
+            </div>
+          );
+          break;
+        case this.state.phase.tasks.length > this.state.phase.basicTasks.length:
+          resetToggler = (
+            <div className="d-flex justify-content-right align-items-center font-italic text-secondary">
+              
+              Current round: <b className="text-dark mx-2">
+              {this.state.phase.tasks.length /
+                this.state.phase.basicTasks.length}
+              </b>
+              <button
+                className="ml-4 btn btn-outline-info"
+                onClick={this.showResetHistory}
+              >
+                Show history
+              </button>
+            </div>
+          );
+          break;
+        default:
+          break;
+      }
     }
-  }
-/*
+    /*
     if (this.state.phase.tasks && !this.state.hideTasks) {
       tasks = <div>{this.populateTasks()}</div>;
     }
@@ -150,14 +177,18 @@ class PhaseCard extends Component {
 */
 
     if (this.state.phase.tasks && !this.state.hideTasks) {
-      if (this.state.showResetHistory){
+      if (this.state.showResetHistory) {
         tasks = <div>{this.createTaskCards(this.state.phase.tasks)}</div>;
       } else {
-        tasks = <div>{this.createTaskCards(this.state.phase.tasks.slice(-this.state.phase.basicTasks.length))}</div>;
+        tasks = (
+          <div>
+            {this.createTaskCards(
+              this.state.phase.tasks.slice(-this.state.phase.basicTasks.length)
+            )}
+          </div>
+        );
+      }
     }
-    }
-
-
 
     if (this.state.addTaskToggler) {
       createTaskForm = (
@@ -188,7 +219,6 @@ class PhaseCard extends Component {
           </div>
           <div className="col-md-3">{resetToggler}</div>
           <div className="col-md-3">{isItOver}</div>
-
         </div>
         {tasks}
         {createTaskForm}
