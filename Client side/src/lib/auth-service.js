@@ -10,7 +10,7 @@ class Auth {
     });
   }
 
-  signup( { name, password, email, role }) {
+  signup({ name, password, email, role }) {
     return this.auth
       .post("/auth/signup", { name, password, email, role })
       .then(({ data }) => data);
@@ -19,8 +19,8 @@ class Auth {
   login({ email, password }) {
     return this.auth
       .post("/auth/login", { email, password })
-      .then(({ data }) => data)
- //     .then(()=> <Redirect to = {{ pathname: "/" }} />);
+      .then(({ data }) => data);
+    //     .then(()=> <Redirect to = {{ pathname: "/" }} />);
   }
 
   logout() {

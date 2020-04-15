@@ -2,7 +2,6 @@ import React from "react";
 import auth from "./auth-service";
 const { Consumer, Provider } = React.createContext();
 
-
 const withAuth = (WrappedComponent) => {
   return class extends React.Component {
     render() {
@@ -26,7 +25,6 @@ const withAuth = (WrappedComponent) => {
   };
 };
 
-
 class AuthProvider extends React.Component {
   state = { isLoggedin: false, user: null, isLoading: true };
 
@@ -37,7 +35,12 @@ class AuthProvider extends React.Component {
         this.setState({ isLoggedin: true, user: user, isLoading: false })
       )
       .catch((err) =>
-        this.setState({ isLoggedin: false, user: null, userData:false, isLoading: false })
+        this.setState({
+          isLoggedin: false,
+          user: null,
+          userData: false,
+          isLoading: false,
+        })
       );
   }
 
@@ -63,7 +66,7 @@ class AuthProvider extends React.Component {
   logout = () => {
     auth
       .logout()
-      .then(() => this.setState({ isLoggedin: false, user: null,  }))
+      .then(() => this.setState({ isLoggedin: false, user: null }))
       .catch((err) => console.log(err));
   };
 
@@ -73,14 +76,18 @@ class AuthProvider extends React.Component {
 
     return isLoading ? (
       <div className="h-100 w-100 d-flex flex-column justify-content-around align-items-center font-italic my-5">
-      <h4 className="my-5 py-5 text-info font-weight-bold">Your projects will be here soon...</h4>
-      <div className="mt-5"><img src="loading.gif"/></div>
+        <h4 className="my-5 py-5 text-info font-weight-bold">
+          Your projects will be here soon...
+        </h4>
+        <div className="mt-5">
+          <img src="loading.gif" />
+        </div>
       </div>
     ) : (
       <Provider value={{ isLoggedin, user, login, logout, signup }}>
         {this.props.children}
       </Provider>
-    ); 
+    );
   }
 }
 

@@ -4,15 +4,15 @@ import { withAuth } from "../lib/AuthProvider";
 
 const ProjectList = (props) => {
   let deadline, activeRole;
-  let today = new Date()
-  let tomorrow = new Date(today.getDate() + 1)
+  let today = new Date();
+  let tomorrow = new Date(today.getDate() + 1);
   let deadlineDate = new Date(props.project.deadline);
-  today.setHours(2,0,0,0)
-  tomorrow.setHours(2,0,0,0)
-  deadlineDate.setHours(2,0,0,0)
+  today.setHours(2, 0, 0, 0);
+  tomorrow.setHours(2, 0, 0, 0);
+  deadlineDate.setHours(2, 0, 0, 0);
 
   function readableDate(unreadableDate) {
-    let weekDay = unreadableDate.getDay()
+    let weekDay = unreadableDate.getDay();
     let day = unreadableDate.getDate();
     let month = unreadableDate.getMonth();
 
@@ -57,8 +57,8 @@ const ProjectList = (props) => {
         month = "somewhere in time, on ";
         break;
     }
-  
-    switch (weekDay){
+
+    switch (weekDay) {
       case 1:
         weekDay = "Monday";
         break;
@@ -81,12 +81,12 @@ const ProjectList = (props) => {
         weekDay = "Sunday";
         break;
       default:
-          month = "Someday";
-          break;
+        month = "Someday";
+        break;
     }
 
-//    console.log(dateText.charAt(9));
-//    if (dateText.charAt(9) !== 0) { day += dateText.charAt(8); }
+    //    console.log(dateText.charAt(9));
+    //    if (dateText.charAt(9) !== 0) { day += dateText.charAt(8); }
 
     switch (day) {
       case 1:
@@ -107,23 +107,45 @@ const ProjectList = (props) => {
     }
     return `${weekDay}, ${month} the ${day}`;
   }
-  
-switch (true){
-  case (deadlineDate.getTime()<today.getTime()):
-    deadline = <p className="mt-0">Missed deadline: <b className="missed-deadline font-weight-bold">{readableDate(deadlineDate)}</b></p>
-    break;
-  case (deadlineDate.getTime() === today.getTime()):
-    deadline = <p className="mt-0">Next deadline: <b className="deadline-today font-weight-bold">today</b></p>
-    break;
-  case (deadlineDate.getTime() === tomorrow.getTime()):
-    deadline = <p className="mt-0">Next deadline: <b className="deadline-tomorrow font-weight-bold">tomorrow</b></p>
-    break;
-  case (deadlineDate.getTime()>today.getTime()):
-    deadline = <p className="mt-0">Next deadline: <b className="deadline-far">{readableDate(deadlineDate)}</b></p>;
-    break;
-  default:
-    deadline = <p className="mt-0">Awaiting project task distribution</p>;
-    break;    
+
+  switch (true) {
+    case deadlineDate.getTime() < today.getTime():
+      deadline = (
+        <p className="mt-0">
+          Missed deadline:{" "}
+          <b className="missed-deadline font-weight-bold">
+            {readableDate(deadlineDate)}
+          </b>
+        </p>
+      );
+      break;
+    case deadlineDate.getTime() === today.getTime():
+      deadline = (
+        <p className="mt-0">
+          Next deadline:{" "}
+          <b className="deadline-today font-weight-bold">today</b>
+        </p>
+      );
+      break;
+    case deadlineDate.getTime() === tomorrow.getTime():
+      deadline = (
+        <p className="mt-0">
+          Next deadline:{" "}
+          <b className="deadline-tomorrow font-weight-bold">tomorrow</b>
+        </p>
+      );
+      break;
+    case deadlineDate.getTime() > today.getTime():
+      deadline = (
+        <p className="mt-0">
+          Next deadline:{" "}
+          <b className="deadline-far">{readableDate(deadlineDate)}</b>
+        </p>
+      );
+      break;
+    default:
+      deadline = <p className="mt-0">Awaiting project task distribution</p>;
+      break;
   }
 
   if (props.project.currentRole === props.user.role) {

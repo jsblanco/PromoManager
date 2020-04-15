@@ -3,7 +3,6 @@ import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 
 class EditProject extends Component {
-
   state = {
     name: "",
     userList: [],
@@ -19,7 +18,7 @@ class EditProject extends Component {
 
   componentDidMount = async () => {
     let userList = await userService.getUsers();
-    let budgetNumber = this.props.match.params.budgetNumber
+    let budgetNumber = this.props.match.params.budgetNumber;
     let project = await userService.getProject(budgetNumber);
     let teamMembersInOrder = [];
     let teamMembersNames = [];
@@ -84,16 +83,19 @@ class EditProject extends Component {
       originalMembers,
       id,
     } = this.state;
-    userService.updateProject({
-      name,
-      client,
-      description,
-      type,
-      teamMembers,
-      originalMembers,
-      id,
-    })
-    .then(()=>this.props.history.push(`/project/${this.state.budgetNumber}/details`))
+    userService
+      .updateProject({
+        name,
+        client,
+        description,
+        type,
+        teamMembers,
+        originalMembers,
+        id,
+      })
+      .then(() =>
+        this.props.history.push(`/project/${this.state.budgetNumber}/details`)
+      );
     this.props.updateApp();
   };
 
@@ -101,7 +103,9 @@ class EditProject extends Component {
     let { name, value } = event.target;
     let teamMembers = this.state.teamMembers;
     let index;
-    if (value === ""){value = null}
+    if (value === "") {
+      value = null;
+    }
     switch (name) {
       case "Account":
         index = 0;
@@ -135,7 +139,7 @@ class EditProject extends Component {
 
     for (let i = 0; i < 6; i++) {
       if (this.state.teamMembers[i]) {
-        member[i] =
+        member[i] = (
           <option
             defaultValue={this.state.teamMembers[i]}
             className="font-weight-bold"
@@ -143,9 +147,9 @@ class EditProject extends Component {
           >
             Currently: {this.state.teamNames[i]}
           </option>
-        
+        );
       } else {
-        member.push( );
+        member.push();
       }
     }
 
@@ -167,8 +171,9 @@ class EditProject extends Component {
             </div>
             <div className="col-4">
               <label className="mt-2 mb-0">Budget number</label>
-              <p className="w-100 text-secondary font-italic">{this.state.budgetNumber} - This value cannot be changed</p>
-  
+              <p className="w-100 text-secondary font-italic">
+                {this.state.budgetNumber} - This value cannot be changed
+              </p>
             </div>
             <div className="col-4">
               <label className="mt-2 mb-0">Client:</label>
@@ -266,7 +271,7 @@ class EditProject extends Component {
               </select>
             </div>
             <div className="col-4">
-              <label  className="mt-2 mb-0">Developer:</label>
+              <label className="mt-2 mb-0">Developer:</label>
               <select
                 className="w-100 py-1"
                 name="Developer"
@@ -287,7 +292,11 @@ class EditProject extends Component {
             </div>
             <div className="col-4">
               <label className="mt-2 mb-0">Audiovisual:</label>
-              <select className="w-100 py-1" name="AV" onChange={this.handleChange}>
+              <select
+                className="w-100 py-1"
+                name="AV"
+                onChange={this.handleChange}
+              >
                 {member[4]}
                 {this.state.userList.map((user) => {
                   if (user.role === "AV") {
@@ -330,8 +339,7 @@ class EditProject extends Component {
                 onChange={this.handleChange}
                 value={this.state.description}
                 required
-              >
-              </textarea>
+              ></textarea>
             </div>
           </div>
 
@@ -339,7 +347,6 @@ class EditProject extends Component {
             type="submit"
             className="my-5 btn btn-success p-2 font-weight-bold"
             value="Edit this project"
-            
           />
         </form>
       </div>

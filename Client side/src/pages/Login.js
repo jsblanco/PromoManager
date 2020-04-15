@@ -67,7 +67,10 @@ class Login extends Component {
               <p className="text-muted mt-5 mb-1">
                 Not registered in PromoManager?
               </p>
-              <Link className="btn btn-outline-info font-weight-bold" to={"/signup"}>
+              <Link
+                className="btn btn-outline-info font-weight-bold"
+                to={"/signup"}
+              >
                 Register
               </Link>
             </form>

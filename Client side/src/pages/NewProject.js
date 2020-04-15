@@ -21,7 +21,7 @@ class NewProject extends Component {
   };
 
   handleFormSubmit = (event) => {
-//    event.preventDefault();
+    //    event.preventDefault();
     const {
       name,
       budgetNumber,
@@ -30,48 +30,49 @@ class NewProject extends Component {
       type,
       teamMembers,
     } = this.state;
-;
-
-userService.newProject({
-  name,
-  budgetNumber,
-  client,
-  description,
-  type,
-  teamMembers,
-})
-.then(()=>this.props.history.push(`/project/${this.state.budgetNumber}/details`))
-this.props.updateApp();
-};
+    userService
+      .newProject({
+        name,
+        budgetNumber,
+        client,
+        description,
+        type,
+        teamMembers,
+      })
+      .then(() =>
+        this.props.history.push(`/project/${this.state.budgetNumber}/details`)
+      );
+    this.props.updateApp();
+  };
 
   handleChange = (event) => {
     const { name, value } = event.target;
-    let teamMembers = this.state.teamMembers
-    let index
-    switch (name){
+    let teamMembers = this.state.teamMembers;
+    let index;
+    switch (name) {
       case "account":
-        index=0;
+        index = 0;
         break;
       case "scientific":
-        index=1;
+        index = 1;
         break;
       case "design":
-        index=2;
+        index = 2;
         break;
       case "developer":
-        index=3;
+        index = 3;
         break;
       case "av":
-        index=4;
+        index = 4;
         break;
       case "administration":
-        index=5;
+        index = 5;
         break;
     }
-    teamMembers[index]= value
+    teamMembers[index] = value;
     this.setState({
       [name]: value,
-      teamMembers: teamMembers
+      teamMembers: teamMembers,
     });
   };
 
@@ -256,17 +257,15 @@ this.props.updateApp();
                 onChange={this.handleChange}
                 value={description}
                 required
-              >
-              </textarea>
+              ></textarea>
             </div>
           </div>
-          
+
           <input
             type="submit"
             className="my-5 btn btn-success p-2 font-weight-bold"
             value="Create the project"
           />
-          
         </form>
       </div>
     );

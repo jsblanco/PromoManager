@@ -39,19 +39,21 @@ class App extends Component {
   };
 
   showFinishedProjects = async () => {
-    if (!this.state.pastProjectsFetched){
-      let finishedProjects = await userService.getFinishedProjects(this.props.user._id)
+    if (!this.state.pastProjectsFetched) {
+      let finishedProjects = await userService.getFinishedProjects(
+        this.props.user._id
+      );
       let userData = this.state.userData;
-      userData.finishedProjects = finishedProjects.finishedProjects
+      userData.finishedProjects = finishedProjects.finishedProjects;
       this.setState({
         userData: userData,
         pastProjectsFetched: true,
         showFinishedProjects: !this.state.showFinishedProjects,
-      })
+      });
     } else {
       this.setState({
         showFinishedProjects: !this.state.showFinishedProjects,
-      })
+      });
     }
   };
 
@@ -70,7 +72,7 @@ class App extends Component {
     this.state.showFinishedProjects === true
       ? (projectsInSidebar = "finishedProjects")
       : (projectsInSidebar = "ongoingProjects");
-   //   console.log(this.state.userData[projectsInSidebar])
+    //   console.log(this.state.userData[projectsInSidebar])
     const sortedProject = this.state.userData[projectsInSidebar]
       .map((project) => {
         let activePhase = project.phases.findIndex((phase) => !phase.isItOver);
@@ -167,33 +169,35 @@ class App extends Component {
             className="list-group-item list-group-item-action bg-success text-light pl-5 justify-content-left d-flex align-items-center"
             to={`/project/new`}
             activeClassName="active"
-          ><i className="fas fa-plus-circle mr-3"></i>
+          >
+            <i className="fas fa-plus-circle mr-3"></i>
             Create a new project
           </NavLink>
         );
       }
     }
-    if (this.props.isLoggedIn){
-    toggleProjects = (
-      <button
-        className="list-group-item list-group-item-action bg-info text-light pl-5 justify-content-left d-flex align-items-center"
-        onClick={this.showFinishedProjects}
-      >
-        <i className="fas fa-archive mr-3"></i> Show finished projects
-      </button>
-    );
-
-    if (this.state.showFinishedProjects === true) {
+    if (this.props.isLoggedIn) {
       toggleProjects = (
         <button
-          className="list-group-item list-group-item-action bg-primary text-light pl-5 justify-content-left d-flex align-items-center"
+          className="list-group-item list-group-item-action bg-info text-light pl-5 justify-content-left d-flex align-items-center"
           onClick={this.showFinishedProjects}
-        ><i className="fas fa-calendar-alt mr-3"></i>
-          Show ongoing projects
+        >
+          <i className="fas fa-archive mr-3"></i> Show finished projects
         </button>
       );
+
+      if (this.state.showFinishedProjects === true) {
+        toggleProjects = (
+          <button
+            className="list-group-item list-group-item-action bg-primary text-light pl-5 justify-content-left d-flex align-items-center"
+            onClick={this.showFinishedProjects}
+          >
+            <i className="fas fa-calendar-alt mr-3"></i>
+            Show ongoing projects
+          </button>
+        );
+      }
     }
-  }
 
     return (
       <div className="">

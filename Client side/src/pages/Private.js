@@ -3,12 +3,20 @@ import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 
 class NewProject extends Component {
-  state = { name: "", account: this.props.user._id, userList: this.props.userList, version: 0, type: "", client:"", scientific: "" };
-  
-  componentDidMount=()=>{
-    console.log(this.props)
-    console.log(this.props.userList)
-  }
+  state = {
+    name: "",
+    account: this.props.user._id,
+    userList: this.props.userList,
+    version: 0,
+    type: "",
+    client: "",
+    scientific: "",
+  };
+
+  componentDidMount = () => {
+    console.log(this.props);
+    console.log(this.props.userList);
+  };
 
   handleFormSubmit = (event) => {
     event.preventDefault();
@@ -17,13 +25,20 @@ class NewProject extends Component {
   };
 
   handleChange = (event) => {
-    console.log(this.props.pepe)
+    console.log(this.props.pepe);
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
 
   render() {
-    const { name, budgetNumber, email, client, scientific, account } = this.state;
+    const {
+      name,
+      budgetNumber,
+      email,
+      client,
+      scientific,
+      account,
+    } = this.state;
     return (
       <div>
         <h1>Sign Up</h1>
@@ -64,56 +79,54 @@ class NewProject extends Component {
             <option value="Video">Video</option>
           </select>
 
-
-        <h2>Members:</h2>
-        <div className="row">
-        <div className="col-6">
-          <label>Account:</label>
-          <input
-            type="text"
-            name="account"
-            value={account}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div className="col-6">
-          <label>Scientific:</label>
-          <input
-            type="text"
-            name="scientific"
-            value={scientific}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div className="col-6">
-        <label>Design:</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div className="col-6">
-        <label>Developer:</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div className="col-6">
-        <label>AV:</label>
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
-        </div>
-        </div>
-
+          <h2>Members:</h2>
+          <div className="row">
+            <div className="col-6">
+              <label>Account:</label>
+              <input
+                type="text"
+                name="account"
+                value={account}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="col-6">
+              <label>Scientific:</label>
+              <input
+                type="text"
+                name="scientific"
+                value={scientific}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="col-6">
+              <label>Design:</label>
+              <input
+                type="text"
+                name="name"
+                value={name}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="col-6">
+              <label>Developer:</label>
+              <input
+                type="text"
+                name="name"
+                value={name}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="col-6">
+              <label>AV:</label>
+              <input
+                type="text"
+                name="name"
+                value={name}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
 
           <input type="submit" value="Create the project" />
         </form>
@@ -123,4 +136,3 @@ class NewProject extends Component {
 }
 
 export default withAuth(NewProject);
-

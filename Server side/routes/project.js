@@ -6,17 +6,18 @@ const Project = require("../models/project");
 const Phase = require("../models/phase");
 const Task = require("../models/task");
 
-
 //devuelve un proyecto existente
-router.get("/:budgetNumber", async (req,res,next)=>{
-  const {budgetNumber} = req.params;
+router.get("/:budgetNumber", async (req, res, next) => {
+  const { budgetNumber } = req.params;
   try {
-  let project= await (await Project.findOne({budgetNumber}).populate("teamMembers").populate("phases"))
-  res.status(200).json(project);
-} catch (error) {
-  next(error);
-}
-})
+    let project = await await Project.findOne({ budgetNumber })
+      .populate("teamMembers")
+      .populate("phases");
+    res.status(200).json(project);
+  } catch (error) {
+    next(error);
+  }
+});
 
 //crea un nuevo proyecto
 router.post("/new", async (req, res, next) => {
@@ -77,47 +78,45 @@ router.put("/edit", async (req, res, next) => {
     id,
   } = req.body;
   try {
-      //actualizamos el proyecto 
-      let updatedProject = await Project.findByIdAndUpdate(id, {
-        name,
-        client,
-        description,
-        type,
-        teamMembers,
-      });
-      res.status(200).json(updatedProject);
-    } catch (error) {
+    //actualizamos el proyecto
+    let updatedProject = await Project.findByIdAndUpdate(id, {
+      name,
+      client,
+      description,
+      type,
+      teamMembers,
+    });
+    res.status(200).json(updatedProject);
+  } catch (error) {
+    next(error);
+  }
+  //quitaremos el proyecto de los usuarios iniciales
+  originalMembers.map(async (user) => {
+    if (user != undefined) {
+      try {
+        const updatedUser = await User.findByIdAndUpdate(user, {
+          $pull: { ongoingProjects: id },
+        });
+        res.status(200);
+      } catch (error) {
         next(error);
       }
-      //quitaremos el proyecto de los usuarios iniciales
-      originalMembers.map(async (user) => {
-        if (user!=undefined) {
-          try {
-            const updatedUser = await User.findByIdAndUpdate(user, {
-              $pull: { ongoingProjects: id },
-            });
-            res.status(200);
-          } catch (error) {
-            next(error);
-          }
-        }
-      });
-      //y añadimos el proyecto a los usuarios que hemos asignado ahora
-      teamMembers.map(async (user) => {
-        if (user) {
-          try {
-            const updatedUser = await User.findByIdAndUpdate(user, {
-              $push: { ongoingProjects: id },
-            });
-            res.status(200);
-          } catch (error) {
-            next(error);
-          }
-        }
-      });
     }
-);
-
+  });
+  //y añadimos el proyecto a los usuarios que hemos asignado ahora
+  teamMembers.map(async (user) => {
+    if (user) {
+      try {
+        const updatedUser = await User.findByIdAndUpdate(user, {
+          $push: { ongoingProjects: id },
+        });
+        res.status(200);
+      } catch (error) {
+        next(error);
+      }
+    }
+  });
+});
 
 //Crea una fase sin tareas para un proyecto
 router.post("/:id/newphase", async (req, res, next) => {
@@ -145,7 +144,7 @@ router.post("/:id/newphase", async (req, res, next) => {
 //Crea una tarea y la añade a una fase
 router.post("/:projectId/addtask/:phaseId", async (req, res, next) => {
   const { projectId, phaseId } = req.params;
-  const { name, assignedUser} = req.body;
+  const { name, assignedUser } = req.body;
   try {
     const newTask = {
       name,
@@ -186,9 +185,12 @@ router.put(
   async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
-    const completedOn = new Date()
-    completedOn.setHours(2,0,0,0)
-    let assignedUser = [req.session.currentUser.role, req.session.currentUser._id]
+    const completedOn = new Date();
+    completedOn.setHours(2, 0, 0, 0);
+    let assignedUser = [
+      req.session.currentUser.role,
+      req.session.currentUser._id,
+    ];
     taskIndex = parseInt(taskIndex);
 
     try {
@@ -201,7 +203,7 @@ router.put(
       if (message) {
         newTasks[taskIndex + 1].message = message;
       }
-/*
+      /*
       let project= await Project.findById(projectId).populate("teamMembers")
       let userIndex =project.teamMembers.findIndex((user) => user.role == newTasks[taskIndex + 1].assignedUser[0]);
       console.log("UEUEUEUE: ",project.teamMembers[userIndex]._id,)
@@ -235,7 +237,10 @@ router.put(
   async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
-    let assignedUser = [req.session.currentUser.role, req.session.currentUser._id]
+    let assignedUser = [
+      req.session.currentUser.role,
+      req.session.currentUser._id,
+    ];
     taskIndex = parseInt(taskIndex);
 
     try {
@@ -246,7 +251,7 @@ router.put(
       newTasks[taskIndex - 1].completedOn = undefined;
       newTasks[taskIndex].assignedUser = assignedUser;
       newTasks[taskIndex].spentTime = spentTime;
-/*
+      /*
       let project= await Project.findById(projectId).populate("teamMembers")
       let userIndex =project.teamMembers.findIndex((user) => user.role==newTasks[taskIndex - 1].assignedUser[0]);
       console.log("UEUEUEUE: ",project.teamMembers[userIndex]._id,"  Phase ID:", phaseId, "req.session.currentUser._id :", req.session.currentUser._id)
@@ -294,7 +299,7 @@ router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
       })
     );
 
-/*
+    /*
     let project= await Project.findById(projectId).populate("teamMembers")
     let userIndex =project.teamMembers.findIndex((user) => (user.role==currentPhase.basicTasks[0].assignedUser[0]));
     User.findByIdAndUpdate(req.session.currentUser._id, {$pull: {"pendingTasks": phaseId}},{ new: true })
@@ -356,7 +361,7 @@ router.put("/:projectId/deletephase/:phaseId/", async (req, res, next) => {
 //Añadir o actualizar el deadline de una tarea
 router.put("/:projectId/:phaseId/update/:taskIndex", async (req, res, next) => {
   let { projectId, phaseId, taskIndex } = req.params;
-  const {name, assignedUser, deadline} = req.body;
+  const { name, assignedUser, deadline } = req.body;
   taskIndex = parseInt(taskIndex);
 
   try {
@@ -376,66 +381,56 @@ router.put("/:projectId/:phaseId/update/:taskIndex", async (req, res, next) => {
   }
 });
 
-
 //Añadir comentarios a un proyecto
-router.put('/:projectId/addcomment', (req, res, next) => {
-  const user = req.session.currentUser._id
-  const {
-    comments
-  } = req.body;
-  Project.findByIdAndUpdate(
-      req.params.projectId, {
-        $push: {
-          comments: {
-            $each: [{
-              user,
-              comments
-            }],
-            $position: 0
-          }
-        }
-      })
-    .catch(error => {
-      console.log(error);
-    });
+router.put("/:projectId/addcomment", (req, res, next) => {
+  const user = req.session.currentUser._id;
+  const { comments } = req.body;
+  Project.findByIdAndUpdate(req.params.projectId, {
+    $push: {
+      comments: {
+        $each: [
+          {
+            user,
+            comments,
+          },
+        ],
+        $position: 0,
+      },
+    },
+  }).catch((error) => {
+    console.log(error);
+  });
 });
-
-
-
-
 
 //Terminar un proyecto
 
 router.put("/:projectId/close", async (req, res, next) => {
-  const {projectId}= req.params
-  const {teamMembers}= req.body
-  console.log('projectId :', projectId);
+  const { projectId } = req.params;
+  const { teamMembers } = req.body;
+  console.log("projectId :", projectId);
   try {
-      
-      let finishedProject = await Project.findOneAndUpdate({projectId}, {isItOver: true});
-      res.status(200).json(finishedProject);
-    } catch (error) {
+    let finishedProject = await Project.findOneAndUpdate(
+      { projectId },
+      { isItOver: true }
+    );
+    res.status(200).json(finishedProject);
+  } catch (error) {
+    next(error);
+  }
+  //Moveremos el proyecto de onGoingProjects a finishedProjects
+  teamMembers.map(async (user) => {
+    if (user != undefined) {
+      try {
+        const updatedUser = await User.findByIdAndUpdate(user._id, {
+          $push: { finishedProjects: projectId },
+          $pull: { ongoingProjects: projectId },
+        });
+        res.status(200);
+      } catch (error) {
         next(error);
       }
-      //Moveremos el proyecto de onGoingProjects a finishedProjects
-      teamMembers.map(async (user) => {
-        if (user!=undefined) {
-          try {
-            const updatedUser = await User.findByIdAndUpdate(user._id, {
-              $push: { finishedProjects: projectId },
-              $pull: { ongoingProjects: projectId },
-            });
-            res.status(200);
-          } catch (error) {
-            next(error);
-          }
-        }
-      });
-;})
-
-
-
-
-
+    }
+  });
+});
 
 module.exports = router;

@@ -100,8 +100,7 @@ class PhaseCard extends Component {
           onClick={this.showTasks}
           className="btn btn-light bg-white border-white text-info font-italic"
         >
-          Tasks were hidden because phase is completed -
-          <b>Show tasks anyway</b>
+          Tasks were hidden because phase is completed -<b>Show tasks anyway</b>
         </button>
       );
     } else if (this.props.phase.isItOver && !this.state.hideTasks) {
@@ -143,7 +142,6 @@ class PhaseCard extends Component {
           this.state.phase.basicTasks.length:
           resetToggler = (
             <div className="d-flex justify-content-right font-italic text-secondary">
-              
               Current round: <b className="text-dark mx-2">1</b>
             </div>
           );
@@ -151,10 +149,10 @@ class PhaseCard extends Component {
         case this.state.phase.tasks.length > this.state.phase.basicTasks.length:
           resetToggler = (
             <div className="d-flex justify-content-right align-items-center font-italic text-secondary">
-              
-              Current round: <b className="text-dark mx-2">
-              {this.state.phase.tasks.length /
-                this.state.phase.basicTasks.length}
+              Current round:{" "}
+              <b className="text-dark mx-2">
+                {this.state.phase.tasks.length /
+                  this.state.phase.basicTasks.length}
               </b>
               <button
                 className="ml-4 btn btn-outline-info"

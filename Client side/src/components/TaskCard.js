@@ -211,7 +211,7 @@ class TaskCard extends Component {
           case differenceWithDeadline > 0:
             wasTheDeadlineMet = (
               <div className="w-100 justify-content-center row">
-              {completedOn}
+                {completedOn}
                 <p className="ml-3 text-danger">
                   Task completed <b>{differenceWithDeadline} days</b> after the
                   deadline
@@ -222,7 +222,7 @@ class TaskCard extends Component {
           case differenceWithDeadline == 0:
             wasTheDeadlineMet = (
               <div className="w-100 justify-content-center row">
-              {completedOn}
+                {completedOn}
                 <p className="ml-3 text-info">
                   Task completed upon the deadline
                 </p>
@@ -473,12 +473,12 @@ class TaskCard extends Component {
       );
     }
 
-    if (
-      this.props.task.message && !this.props.task.isItOver
-    ) {
+    if (this.props.task.message && !this.props.task.isItOver) {
       message = (
         <div className="">
-          <p className="font-weight-bold text-danger mb-0">This task was returned.</p>
+          <p className="font-weight-bold text-danger mb-0">
+            This task was returned.
+          </p>
           <p className="font-weight-bold d-inline ml-3">Reason: </p>
           <p className="d-inline font-italic">{this.props.task.message}</p>
         </div>
