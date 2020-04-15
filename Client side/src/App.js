@@ -173,7 +173,7 @@ class App extends Component {
         );
       }
     }
-
+    if (this.props.isLoggedIn){
     toggleProjects = (
       <button
         className="list-group-item list-group-item-action bg-info text-light pl-5 justify-content-left d-flex align-items-center"
@@ -193,6 +193,7 @@ class App extends Component {
         </button>
       );
     }
+  }
 
     return (
       <div className="">

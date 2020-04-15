@@ -175,82 +175,96 @@ class TaskCard extends Component {
       activeMarker,
       issueDetected,
       warningMessage,
-      message, 
+      message,
+      wasTheDeadlineMet,
       readableDeadline,
-      completedOnTime,
       completionDate;
 
-    this.props.task.completedOn? completionDate= new Date(this.props.task.completedOn) : completionDate= "Sometime"
-    this.state.deadline? readableDeadline= new Date(this.state.deadline) : readableDeadline= "As soon as possible"
+    this.props.task.completedOn
+      ? (completionDate = new Date(this.props.task.completedOn))
+      : (completionDate = "Sometime");
+    this.state.deadline
+      ? (readableDeadline = new Date(this.state.deadline))
+      : (readableDeadline = "As soon as possible");
 
+    if (this.props.task.isItOver) {
+      if (this.props.task.completedOn && this.state.deadline) {
+        let differenceWithDeadline =
+          completionDate.getDate() - readableDeadline.getDate();
 
-    if (this.props.task.completedOn && this.state.deadline){
+        const completedOn = (
+          <div className="d-flex align-content-center mr-4">
+            <label htmlFor="deadline" className="pr-3">
+              Task completed on:
+            </label>
+            <p className={`font-weight-bold d-inline`}>
+              {completionDate.toLocaleString("en-UK", {
+                weekday: "long",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+          </div>
+        );
 
-      switch (true){
-        case (completionDate.getTime()<readableDeadline.getTime()):
-          completedOnTime = "text-success";
-          break;
-        case (completionDate.getTime() === readableDeadline.getTime()):
-          completedOnTime = "text-info";
-          break;
-        case (completionDate.getTime()>readableDeadline.getTime()):
-          completedOnTime = "text-danger";
-          break;
-        default:
-          completedOnTime = "";
-          break;    
-        }      
+        switch (true) {
+          case differenceWithDeadline > 0:
+            wasTheDeadlineMet = (
+              <div className="w-100 justify-content-center row">
+              {completedOn}
+                <p className="ml-3 text-danger">
+                  Task completed <b>{differenceWithDeadline}</b> after the
+                  deadline
+                </p>
+              </div>
+            );
+            break;
+          case differenceWithDeadline == 0:
+            wasTheDeadlineMet = (
+              <div className="w-100 justify-content-center row">
+              {completedOn}
+                <p className="ml-3 text-info">
+                  Task completed upon the deadline
+                </p>
+              </div>
+            );
+            break;
+          case differenceWithDeadline < 0:
+            wasTheDeadlineMet = (
+              <div className="w-100 justify-content-center row">
+                {completedOn}
+                <p className="ml-3 text-success">
+                  Task completed <b>{differenceWithDeadline * -1} days</b>{" "}
+                  before the deadline
+                </p>
+              </div>
+            );
+            break;
+        }
+      }
     }
-
-
-
-
-
 
     taskName = <p className="d-inline">{this.state.name}</p>;
     assignedTo = (
       <p className="font-weight-bold d-inline">{this.state.assignedUserName}</p>
     );
-    if (this.props.task.isItOver){
-    deadline = (
-      <div className="d-flex flex-column align-items-start">
-      <div className="d-flex align-content-center">
-        <label htmlFor="deadline" className="pr-3">
-          Completed on:
-        </label>
-        <p className={`font-weight-bold d-inline ${completedOnTime}`}>{completionDate.toLocaleString("en-UK", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-          })}</p>
-      </div>
-      <div className="d-flex align-content-center">
-        <label htmlFor="deadline" className="pr-3">
-          Deadline:
-        </label>
-                <p className="font-weight-bold d-inline">{readableDeadline.toLocaleString("en-UK", {
-            weekday: "long",
-            month: "long",
-            day: "numeric",
-          })}</p>
-      </div>
-      </div>
-    ); } else {
+
     deadline = (
       <div className="d-flex align-content-center">
         <label htmlFor="deadline" className="pr-3">
           Deadline:
         </label>
-                <p className="font-weight-bold d-inline">{readableDeadline.toLocaleString("en-UK", {
+        <p className="font-weight-bold d-inline">
+          {readableDeadline.toLocaleString("en-UK", {
             weekday: "long",
             month: "long",
             day: "numeric",
-          })}</p>
+          })}
+        </p>
       </div>
     );
-    }
 
-    if (!this.props.isProjectOver  && this.props.user.role === "Account") {
+    if (!this.props.isProjectOver && this.props.user.role === "Account") {
       button = (
         <button className="btn btn-info" onClick={this.showInput}>
           Edit task
@@ -302,10 +316,11 @@ class TaskCard extends Component {
           />
         </div>
       );
-      button =
+      button = (
         <button className="btn btn-warning" type="submit">
           Update task
         </button>
+      );
     } else if (
       this.props.user.role === "Account" &&
       !this.props.task.deadline &&
@@ -325,10 +340,11 @@ class TaskCard extends Component {
           />
         </div>
       );
-      button =
+      button = (
         <button className="btn btn-warning" type="submit">
           Update task
         </button>
+      );
     } else if (!this.state.deadline) {
       deadline = (
         <div className="d-flex align-items-center">
@@ -472,34 +488,37 @@ class TaskCard extends Component {
     if (this.state.resetPhaseVerification) {
       messageInput = (
         <form onSubmit={this.resetPhase} className="text-center my-2">
-                  <div className="row w-100 text-center">
+          <div className="row w-100 text-center">
             <h5 className="text-danger font-weight-bold w-100">
               You are about to reset this phase
             </h5>
-            <p className="w-100">This step restarts <b>all tasks</b> in this phase, and should be taken when <b>client feedback</b> has been received.</p>
+            <p className="w-100">
+              This step restarts <b>all tasks</b> in this phase, and should be
+              taken when <b>client feedback</b> has been received.
+            </p>
           </div>
           <div className="row mb-2 w-100 d-flex justify-content-center align-items-center">
-              <label htmlFor="spentTime" className="pr-3">
-                Time spent:
-              </label>
-              <input
-                onChange={this.calculateTotalSpentTime}
-                type="time"
-                name="inputSpentTime"
-                className="pt-1 pb-2 text-center"
-                required
-              />
-              <label htmlFor="message" className="pl-5 pr-3">
-                Client feedback:
-              </label>
-              <textarea
-                onChange={this.handleChange}
-                name="message"
-                className="pt-1 pb-2 w-50"
-                placeholder="Describe the feedback from the client to the team"
-                required
-              />
-            </div>
+            <label htmlFor="spentTime" className="pr-3">
+              Time spent:
+            </label>
+            <input
+              onChange={this.calculateTotalSpentTime}
+              type="time"
+              name="inputSpentTime"
+              className="pt-1 pb-2 text-center"
+              required
+            />
+            <label htmlFor="message" className="pl-5 pr-3">
+              Client feedback:
+            </label>
+            <textarea
+              onChange={this.handleChange}
+              name="message"
+              className="pt-1 pb-2 w-50"
+              placeholder="Describe the feedback from the client to the team"
+              required
+            />
+          </div>
           <button type="submit" className="btn btn-danger">
             Reset phase
           </button>
@@ -558,8 +577,9 @@ class TaskCard extends Component {
                 {this.state.spentTime} hours
               </p>
             </div>
-          {button}
+            {button}
           </div>
+          {wasTheDeadlineMet}
           {message}
         </form>
         <div className="row d-flex justify-content-center">

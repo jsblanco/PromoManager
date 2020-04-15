@@ -21,7 +21,7 @@ class Login extends Component {
     const { email, password } = this.state;
 
     return (
-      <div className="w-75 h-75 text-center d-flex flex-column justify-content-center">
+      <div className="w-75 h-100 text-center d-flex flex-column justify-content-center">
         <h1 className="display-3 text-info font-weight-bold mt-5">
           Welcome to PromoManager
         </h1>
@@ -64,11 +64,11 @@ class Login extends Component {
                 value="Login"
               />
 
-              <p className="text-muted mt-5 mb-0">
+              <p className="text-muted mt-5 mb-1">
                 Not registered in PromoManager?
               </p>
-              <Link className="btn btn-outline-info" to={"/signup"}>
-                Login
+              <Link className="btn btn-outline-info font-weight-bold" to={"/signup"}>
+                Register
               </Link>
             </form>
           </div>
