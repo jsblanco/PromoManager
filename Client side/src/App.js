@@ -21,7 +21,8 @@ class App extends Component {
   state = {
     userData: { ongoingProjects: [] },
     loaded: false,
-    booleanForUpdate: true,
+    booleanForUpdate: false,
+    pastProjectsFetched: false,
   };
 
   componentDidMount = async () => {
@@ -31,9 +32,30 @@ class App extends Component {
         userData: userData,
         loaded: true,
         booleanForUpdate: false,
+        showFinishedProjects: false,
       });
     }
     this.populateProjectSidebar();
+  };
+
+  showFinishedProjects = async () => {
+    if (!this.state.pastProjectsFetched){
+      let finishedProjects = await userService.getFinishedProjects(this.props.user._id)
+      let userData = this.state.userData;
+      console.log('finishedProjects :', finishedProjects);
+      userData.finishedProjects = finishedProjects.finishedProjects
+      console.log('userData :', userData);
+
+      this.setState({
+        userData: userData,
+        pastProjectsFetched: true,
+        showFinishedProjects: !this.state.showFinishedProjects,
+      })
+    } else {
+      this.setState({
+        showFinishedProjects: !this.state.showFinishedProjects,
+      })
+    }
   };
 
   shouldComponentUpdate = async () => {
@@ -47,7 +69,12 @@ class App extends Component {
   };
 
   populateProjectSidebar = () => {
-    const sortedProject = [...this.state.userData.ongoingProjects]
+    let projectsInSidebar;
+    this.state.showFinishedProjects === true
+      ? (projectsInSidebar = "finishedProjects")
+      : (projectsInSidebar = "ongoingProjects");
+   //   console.log(this.state.userData[projectsInSidebar])
+    const sortedProject = this.state.userData[projectsInSidebar]
       .map((project) => {
         let activePhase = project.phases.findIndex((phase) => !phase.isItOver);
         if (activePhase > -1) {
@@ -76,9 +103,7 @@ class App extends Component {
             } else {
               project.currentRole = "Account";
             }
-            if (
-              project.phases[activePhase].tasks[activeTaskIndex]
-            ) {
+            if (project.phases[activePhase].tasks[activeTaskIndex]) {
               if (
                 project.phases[activePhase].tasks[activeTaskIndex]
                   .assignedUser[0] == this.props.user.role
@@ -128,14 +153,14 @@ class App extends Component {
   };
 
   render() {
-    let projects, newProject;
-
+    let projects, newProject, toggleProjects;
     const { isLoggedin } = this.props;
     if (this.state.loaded === true && isLoggedin) {
       projects = this.populateProjectSidebar();
       if (
+        this.state.booleanForUpdate == true ||
         this.state.userData.ongoingProjects.length !==
-        this.props.user.ongoingProjects.length
+          this.props.user.ongoingProjects.length
       ) {
         this.populateProjectSidebar();
       }
@@ -152,6 +177,26 @@ class App extends Component {
       }
     }
 
+    toggleProjects = (
+      <button
+        className="list-group-item list-group-item-action bg-info text-light"
+        onClick={this.showFinishedProjects}
+      >
+        Show finished projects
+      </button>
+    );
+
+    if (this.state.showFinishedProjects === true) {
+      toggleProjects = (
+        <button
+          className="list-group-item list-group-item-action bg-info text-light"
+          onClick={this.showFinishedProjects}
+        >
+          Show ongoing projects
+        </button>
+      );
+    }
+
     return (
       <div className="">
         <Navbar pendingTasks={this.state.userData.ongoingProjects} />
@@ -159,6 +204,7 @@ class App extends Component {
           <div className="col-xl-2 col-lg-3 col-sm-4 list-group project-list pr-0 overflow-auto">
             <div>
               {newProject}
+              {toggleProjects}
               {projects}
             </div>
           </div>

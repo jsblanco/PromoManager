@@ -221,7 +221,7 @@ class TaskCard extends Component {
           </option>
           {this.state.teamMembers.map((user) => {
             return (
-              <option key={user._id} value={user.role}>
+              <option key={Math.random} value={user.role}>
                 {user.role}: {user.name}
               </option>
             );

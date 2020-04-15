@@ -28,6 +28,17 @@ class User {
       );
     }
 
+    getFinishedProjects(userId) {
+      return (
+        this.user
+        .get(`/user/${userId}/past-projects`)
+        .then((data) => data.data)
+        );
+      }
+
+
+    
+
 
   postComments({projectId, comments}){
   return this.user

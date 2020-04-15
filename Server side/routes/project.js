@@ -5,7 +5,6 @@ const User = require("../models/user");
 const Project = require("../models/project");
 const Phase = require("../models/phase");
 const Task = require("../models/task");
-//const session = require("express-session");
 
 
 //devuelve un proyecto existente
