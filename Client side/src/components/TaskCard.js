@@ -177,10 +177,35 @@ class TaskCard extends Component {
       warningMessage,
       message, 
       readableDeadline,
+      completedOnTime,
       completionDate;
 
     this.props.task.completedOn? completionDate= new Date(this.props.task.completedOn) : completionDate= "Sometime"
     this.state.deadline? readableDeadline= new Date(this.state.deadline) : readableDeadline= "As soon as possible"
+
+
+    if (this.props.task.completedOn && this.state.deadline){
+
+      switch (true){
+        case (completionDate.getTime()<readableDeadline.getTime()):
+          completedOnTime = "text-success";
+          break;
+        case (completionDate.getTime() === readableDeadline.getTime()):
+          completedOnTime = "text-info";
+          break;
+        case (completionDate.getTime()>readableDeadline.getTime()):
+          completedOnTime = "text-danger";
+          break;
+        default:
+          completedOnTime = "";
+          break;    
+        }      
+    }
+
+
+
+
+
 
     taskName = <p className="d-inline">{this.state.name}</p>;
     assignedTo = (
@@ -193,7 +218,7 @@ class TaskCard extends Component {
         <label htmlFor="deadline" className="pr-3">
           Completed on:
         </label>
-        <p className="font-weight-bold d-inline">{completionDate.toLocaleString("en-UK", {
+        <p className={`font-weight-bold d-inline ${completedOnTime}`}>{completionDate.toLocaleString("en-UK", {
             weekday: "long",
             month: "long",
             day: "numeric",

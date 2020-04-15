@@ -5,8 +5,7 @@ import { withAuth } from "../lib/AuthProvider";
 const ProjectList = (props) => {
   let deadline, activeRole;
   let today = new Date()
-  let tomorrow = new Date()
-  tomorrow.setDate(tomorrow.getDate() + 1)
+  let tomorrow = new Date(today.getDate() + 1)
   let deadlineDate = new Date(props.project.deadline);
   today.setHours(2,0,0,0)
   tomorrow.setHours(2,0,0,0)
