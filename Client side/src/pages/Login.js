@@ -22,7 +22,7 @@ class Login extends Component {
 
     return (
       <div className="w-75 h-100 text-center d-flex flex-column justify-content-center">
-        <h1 className="display-3 text-info font-weight-bold mt-5">
+        <h1 className="display-3 text-info font-weight-bold mt-3">
           Welcome to PromoManager
         </h1>
         <h4 className="my-4 text-secondary">

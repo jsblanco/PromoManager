@@ -474,13 +474,13 @@ class TaskCard extends Component {
     }
 
     if (
-      this.props.task.message &&
-      this.props.user.role === this.props.task.role
+      this.props.task.message && !this.props.task.isItOver
     ) {
       message = (
-        <div className="col-12">
-          <p className="font-italics d-inline">Comments: </p>
-          <p className="d-inline">{this.props.task.message}</p>
+        <div className="">
+          <p className="font-weight-bold text-danger mb-0">This task was returned.</p>
+          <p className="font-weight-bold d-inline ml-3">Reason: </p>
+          <p className="d-inline font-italic">{this.props.task.message}</p>
         </div>
       );
     }
