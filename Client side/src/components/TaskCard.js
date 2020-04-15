@@ -213,7 +213,7 @@ class TaskCard extends Component {
               <div className="w-100 justify-content-center row">
               {completedOn}
                 <p className="ml-3 text-danger">
-                  Task completed <b>{differenceWithDeadline}</b> after the
+                  Task completed <b>{differenceWithDeadline} days</b> after the
                   deadline
                 </p>
               </div>
@@ -295,7 +295,7 @@ class TaskCard extends Component {
           </option>
           {this.state.teamMembers.map((user) => {
             return (
-              <option key={Math.random} value={user.role}>
+              <option key={user._id} value={user.role}>
                 {user.role}: {user.name}
               </option>
             );

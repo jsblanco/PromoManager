@@ -48,7 +48,6 @@ router.post(
   validationLogin(),
   async (req, res, next) => {
     let { email, password } = req.body;
-    email = email.toLowerCase()
     try {
       const user = await User.findOne({ email }).populate("ongoingProjects");
       if (!user) {
