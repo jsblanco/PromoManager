@@ -22,44 +22,57 @@ class Login extends Component {
 
     return (
       <div className="w-75 h-75 text-center d-flex flex-column justify-content-center">
+        <h1 className="display-3 text-info font-weight-bold mt-5">
+          Welcome to PromoManager
+        </h1>
+        <h4 className="my-4 text-secondary">
+          Manage your projects. Meet your deadlines. Keep track of your time.
+          All of this, in one place.
+        </h4>
+        <div className="w-100 d-flex justify-content-center">
+          <div className="shadow p-3 mb-3 card bg-white rounded mt-5  text-center">
+            <h1>Log into your account</h1>
+            <p className="font-italic text-secondary">
+              Your projects are waiting for you!
+            </p>
 
-<h1 className="display-3 text-info font-weight-bold mt-5">Welcome to PromoManager</h1>
-<h4 className="my-4 text-secondary">Manage your projects. Meet your deadlines. Keep track of your time. All of this, in one place.</h4>
-<div className="w-100 d-flex justify-content-center">
+            <form
+              onSubmit={this.handleFormSubmit}
+              className="d-flex flex-column justify-content-center"
+            >
+              <label className="mt-3 mb-0">Email:</label>
+              <input
+                type="text"
+                name="email"
+                value={email}
+                onChange={this.handleChange}
+                required
+              />
 
-        <div className="shadow p-3 mb-3 card bg-white rounded p-5 mt-5  text-center">
-        <h1>Log into your account</h1>
-          <p className="font-italic text-secondary">Your projects are waiting for you!</p>
-        
+              <label className="mt-3 mb-0">Password:</label>
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={this.handleChange}
+                required
+              />
 
-        <form onSubmit={this.handleFormSubmit} className="d-flex flex-column justify-content-center">
-          <label className="mt-3 mb-0">Email:</label>
-          <input
-            type='text'
-            name='email'
-            value={email}
-            onChange={this.handleChange}
-            required
-          />
+              <input
+                className="btn btn-success mt-4"
+                type="submit"
+                value="Login"
+              />
 
-          <label className="mt-3 mb-0">Password:</label>
-          <input
-            type='password'
-            name='password'
-            value={password}
-            onChange={this.handleChange}
-            required
-          />
-
-          <input className="btn btn-success mt-4" type='submit' value='Login' />
-
-          <p className="text-muted mt-5 mb-0">Not registered in PromoManager?</p>
-            <Link className="btn btn-outline-info" to={"/signup"}>
-              Login
-            </Link>
-        </form>
-      </div>
-      </div>
+              <p className="text-muted mt-5 mb-0">
+                Not registered in PromoManager?
+              </p>
+              <Link className="btn btn-outline-info" to={"/signup"}>
+                Login
+              </Link>
+            </form>
+          </div>
+        </div>
       </div>
     );
   }

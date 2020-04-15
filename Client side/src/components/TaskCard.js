@@ -175,20 +175,55 @@ class TaskCard extends Component {
       activeMarker,
       issueDetected,
       warningMessage,
-      message;
+      message, 
+      readableDeadline,
+      completionDate;
+
+    this.props.task.completedOn? completionDate= new Date(this.props.task.completedOn) : completionDate= "Sometime"
+    this.state.deadline? readableDeadline= new Date(this.state.deadline) : readableDeadline= "As soon as possible"
 
     taskName = <p className="d-inline">{this.state.name}</p>;
     assignedTo = (
       <p className="font-weight-bold d-inline">{this.state.assignedUserName}</p>
     );
+    if (this.props.task.isItOver){
+    deadline = (
+      <div className="d-flex flex-column align-items-start">
+      <div className="d-flex align-content-center">
+        <label htmlFor="deadline" className="pr-3">
+          Completed on:
+        </label>
+        <p className="font-weight-bold d-inline">{completionDate.toLocaleString("en-UK", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })}</p>
+      </div>
+      <div className="d-flex align-content-center">
+        <label htmlFor="deadline" className="pr-3">
+          Deadline:
+        </label>
+                <p className="font-weight-bold d-inline">{readableDeadline.toLocaleString("en-UK", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })}</p>
+      </div>
+      </div>
+    ); } else {
     deadline = (
       <div className="d-flex align-content-center">
         <label htmlFor="deadline" className="pr-3">
           Deadline:
         </label>
-        <p className="font-weight-bold d-inline">{this.state.deadline}</p>
+                <p className="font-weight-bold d-inline">{readableDeadline.toLocaleString("en-UK", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })}</p>
       </div>
     );
+    }
 
     if (!this.props.isProjectOver  && this.props.user.role === "Account") {
       button = (
