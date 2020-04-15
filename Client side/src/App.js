@@ -42,10 +42,7 @@ class App extends Component {
     if (!this.state.pastProjectsFetched){
       let finishedProjects = await userService.getFinishedProjects(this.props.user._id)
       let userData = this.state.userData;
-      console.log('finishedProjects :', finishedProjects);
       userData.finishedProjects = finishedProjects.finishedProjects
-      console.log('userData :', userData);
-
       this.setState({
         userData: userData,
         pastProjectsFetched: true,
@@ -167,10 +164,10 @@ class App extends Component {
       if (this.props.user.role === "Account") {
         newProject = (
           <NavLink
-            className="list-group-item list-group-item-action bg-success text-light"
+            className="list-group-item list-group-item-action bg-success text-light pl-5 justify-content-left d-flex align-items-center"
             to={`/project/new`}
             activeClassName="active"
-          >
+          ><i className="fas fa-plus-circle mr-3"></i>
             Create a new project
           </NavLink>
         );
@@ -179,19 +176,19 @@ class App extends Component {
 
     toggleProjects = (
       <button
-        className="list-group-item list-group-item-action bg-info text-light"
+        className="list-group-item list-group-item-action bg-info text-light pl-5 justify-content-left d-flex align-items-center"
         onClick={this.showFinishedProjects}
       >
-        Show finished projects
+        <i className="fas fa-archive mr-3"></i> Show finished projects
       </button>
     );
 
     if (this.state.showFinishedProjects === true) {
       toggleProjects = (
         <button
-          className="list-group-item list-group-item-action bg-info text-light"
+          className="list-group-item list-group-item-action bg-primary text-light pl-5 justify-content-left d-flex align-items-center"
           onClick={this.showFinishedProjects}
-        >
+        ><i className="fas fa-calendar-alt mr-3"></i>
           Show ongoing projects
         </button>
       );
