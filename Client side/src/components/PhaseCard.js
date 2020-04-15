@@ -83,7 +83,7 @@ class PhaseCard extends Component {
       showTasks = (
         <button
           onClick={this.showTasks}
-          className="btn btn-outline-info border-white font-italic"
+          className="btn btn-light bg-white border-white text-info font-italic"
         >
           Tasks were hidden because phase is completed - <b>Show tasks anyway</b>
         </button>
@@ -92,7 +92,7 @@ class PhaseCard extends Component {
       showTasks = (
         <button
           onClick={this.showTasks}
-          className="btn btn-outline-info border-white font-italic"
+          className="btn btn-light bg-white border-white text-info font-italic"
         >
           Hide tasks
         </button>

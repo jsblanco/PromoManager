@@ -7,6 +7,7 @@ const taskSchema = new Schema({
   { type: String, enum: [ "Account", "Scientific", "Design", "Developer", "AV", "Administration"], required: true},
   { type: Schema.Types.ObjectId, ref: 'User'}],
   deadline: { type: Date},
+  completedOn: {type: Date},
   spentTime: {type: String},
   isItOver: {type: Boolean, default: false},
   message: {type: String},

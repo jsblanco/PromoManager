@@ -186,6 +186,8 @@ router.put(
   async (req, res, next) => {
     let { projectId, phaseId, taskIndex } = req.params;
     const { spentTime, message } = req.body;
+    const completedOn = new Date()
+    completedOn.setHours(2,0,0,0)
     let assignedUser = [req.session.currentUser.role, req.session.currentUser._id]
     taskIndex = parseInt(taskIndex);
 
@@ -193,6 +195,7 @@ router.put(
       const currentPhase = await Phase.findById(phaseId).populate("basicTasks");
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex].isItOver = true;
+      newTasks[taskIndex].completedOn = completedOn;
       newTasks[taskIndex].assignedUser = assignedUser;
       newTasks[taskIndex].spentTime = spentTime;
       if (message) {
@@ -240,6 +243,7 @@ router.put(
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex - 1].isItOver = false;
       newTasks[taskIndex - 1].message = message;
+      newTasks[taskIndex - 1].completedOn = undefined;
       newTasks[taskIndex].assignedUser = assignedUser;
       newTasks[taskIndex].spentTime = spentTime;
 /*
