@@ -39,7 +39,6 @@ class App extends Component {
   };
 
   handleChange = (event) => {
-    console.log(event)
     let { name, value } = event.target;
     this.setState({
       [name]: value,

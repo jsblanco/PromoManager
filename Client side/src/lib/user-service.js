@@ -1,6 +1,4 @@
 import axios from "axios";
-//import { Route, Redirect } from "react-router-dom";
-import { createBrowserHistory } from "history";
 
 class User {
   constructor() {
@@ -9,7 +7,7 @@ class User {
       withCredentials: true,
     });
   }
-
+  
   getUsers() {
     return this.user.get("/user/list").then((data) => data.data);
   }
@@ -123,8 +121,6 @@ class User {
       })
       .then((data) => data.data);
   }
-
-  //fin
 }
 
 const axiosRequestFunctions = new User();

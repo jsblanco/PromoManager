@@ -12,30 +12,24 @@ class ProjectDetails extends Component {
       project: { teamMembers: [] },
       showPhaseCreator: false,
       comments: "",
-      Account: "00:00",
-      Scientific: "00:00",
-      Design: "00:00",
-      Developer: "00:00",
-      AV: "00:00",
-      Administration: "00:00",
-      booleanForUpdate: false,
+      isUpdated: false,
     };
   }
 
-  booleanForUpdate = () => {
+  isUpdated = () => {
     this.setState({
-      booleanForUpdate: true,
+      isUpdated: true,
     });
   };
 
   componentDidUpdate = async () => {
-    if (this.state.booleanForUpdate == true) {
+    if (this.state.isUpdated == true) {
       let budgetNumber = this.props.match.params.budgetNumber;
       let project = await userService.getProject(budgetNumber);
       this.setState({
         project: project,
         budgetNumber: budgetNumber,
-        booleanForUpdate: false,
+        isUpdated: false,
       });
     }
   };
@@ -55,7 +49,7 @@ class ProjectDetails extends Component {
     this.setState({
       project: project,
       budgetNumber: budgetNumber,
-      booleanForUpdate: false,
+      isUpdated: false,
     });
   };
 
@@ -73,12 +67,12 @@ class ProjectDetails extends Component {
   };
 
   addComment = async (event) => {
- //   event.preventDefault();
+    event.preventDefault();
     const { comments } = this.state;
     const projectId = this.state.project._id;
     await userService.postComments({ projectId, comments });
     this.setState({
-      booleanForUpdate: true,
+      isUpdated: true,
     });
   };
 
@@ -110,7 +104,6 @@ class ProjectDetails extends Component {
   };
 
   render() {
-    console.log("renderAgain");
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
       this.updateProject();
     }
@@ -141,7 +134,7 @@ class ProjectDetails extends Component {
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
           isProjectOver={this.state.project.isItOver}
-          reloadPage={this.booleanForUpdate}
+          reloadPage={this.isUpdated}
         />
       ));
     }
@@ -149,7 +142,7 @@ class ProjectDetails extends Component {
       createPhaseForm = (
         <PhaseCreator
           projectId={this.state.project._id}
-          reloadPage={this.booleanForUpdate}
+          reloadPage={this.isUpdated}
           showPhaseCreator={this.showPhaseCreator}
         />
       );
@@ -254,8 +247,7 @@ class ProjectDetails extends Component {
       this.state.project.phases !== undefined &&
       this.props.user.role == "Account"
     ) {
-      if (this.state.project.phases.length > 0) {
-        if (
+      if (this.state.project.phases.length > 0 &&
           this.state.project.phases[this.state.project.phases.length - 1]
             .isItOver === true
         ) {
@@ -277,7 +269,7 @@ class ProjectDetails extends Component {
           );
         }
       }
-    }
+    
     if (this.state.project.isItOver) {
       closeProject = (
         <div className="card shadow p-3 mb-3 mt-2 bg-white rounded text-center my-2">
@@ -377,13 +369,13 @@ class ProjectDetails extends Component {
             </div>
             <section className="mx-2 px-3 my-4">
               <h3>Project team:</h3>
-              <div className="d-flex flex-row justify-content-center">
+              <div className="d-flex flex-row row justify-content-center">
                 {this.state.project.teamMembers.map((user, index) => {
                   if (user) {
                     return (
                       <div
                         key={user._id}
-                        className="card shadow px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center"
+                        className="card shadow col-lg-2 px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center"
                       >
                         <p className="mt-1 mb-1" key={user._id}>
                           {user.role}

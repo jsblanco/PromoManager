@@ -19,7 +19,6 @@ router.get("/list", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    console.log("User ID: ", id);
     const userList = await User.findById(id).populate({
       path: "ongoingProjects",
       populate: {
@@ -36,7 +35,6 @@ router.get("/:id", async (req, res, next) => {
 router.get("/:id/past-projects", async (req, res, next) => {
   const { id } = req.params;
   try {
-    console.log("User ID: ", id);
     const userList = await User.findById(id).populate({
       path: "finishedProjects",
       populate: {

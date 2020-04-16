@@ -22,15 +22,14 @@ class TaskCard extends Component {
     phaseCompleteVerification: false,
   };
 
-
-   componentDidUpdate=()=>{
-     if (this.props.task.activeTask !== this.state.activeTask){
-       this.setState({
+  componentDidUpdate = () => {
+    if (this.props.task.activeTask !== this.state.activeTask) {
+      this.setState({
         activeTask: this.props.task.activeTask,
-       })
-     }
-   }
-
+        spentTime: this.props.task.spentTime,
+      });
+    }
+  };
 
   showResetPhaseVerification = () => {
     this.setState({
@@ -79,9 +78,8 @@ class TaskCard extends Component {
 
   handleAssignedUser = (event) => {
     let { name, value } = event.target;
-    let userName = this.props.teamMembers.filter(user => user.role == value)
-    let assignedUserName= `${value}: ${userName[0].name}`
-    console.log(assignedUserName);
+    let userName = this.props.teamMembers.filter((user) => user.role == value);
+    let assignedUserName = `${value}: ${userName[0].name}`;
     let assignedUser = value;
     this.setState({
       assignedUser: [assignedUser],
@@ -113,17 +111,17 @@ class TaskCard extends Component {
       showButton: false,
       taskUpdated: true,
     });
-    this.props.reloadPage()
+    this.props.reloadPage();
   };
 
   resetPhase = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const { projectId, phaseId, spentTime, message } = this.state;
     await userService.resetPhase({ projectId, phaseId, spentTime, message });
     this.setState({
       resetPhaseVerification: false,
     });
-    this.props.reloadPage()
+    this.props.reloadPage();
   };
 
   showMessageInput = (event) => {
@@ -158,7 +156,7 @@ class TaskCard extends Component {
   };
 
   submitTaskAsOk = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     this.submitSpentTime();
     const { phaseId, projectId, index, spentTime } = this.state;
     await userService.taskIsOk({
@@ -170,16 +168,16 @@ class TaskCard extends Component {
     this.setState({
       phaseCompleteVerification: false,
       taskIsOk: false,
-    })
-    this.props.reloadPage()
+    });
+    this.props.reloadPage();
   };
 
   submitTaskAsNotOk = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     this.submitSpentTime();
     this.setState({
       taskNotOk: false,
-    })
+    });
     const { phaseId, projectId, index, message, spentTime } = this.state;
     await userService.taskIsNotOk({
       phaseId,
@@ -214,60 +212,56 @@ class TaskCard extends Component {
       ? (readableDeadline = new Date(this.state.deadline))
       : (readableDeadline = "As soon as possible");
 
-    if (this.state.isItOver) {
-      if (this.props.task.completedOn && this.state.deadline) {
-        let differenceWithDeadline =
-          completionDate.getDate() - readableDeadline.getDate();
+    if (this.props.task.completedOn && this.state.deadline) {
+      let differenceWithDeadline =
+        completionDate.getDate() - readableDeadline.getDate();
 
-        const completedOn = (
-          <div className="d-flex align-content-center mr-4">
-            <label htmlFor="deadline" className="pr-3">
-              Task completed on:
-            </label>
-            <p className={`font-weight-bold d-inline`}>
-              {completionDate.toLocaleString("en-UK", {
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
-          </div>
-        );
+      const completedOn = (
+        <div className="d-flex align-content-center mr-4">
+          <label htmlFor="deadline" className="pr-3">
+            Task completed on:
+          </label>
+          <p className={`font-weight-bold d-inline`}>
+            {completionDate.toLocaleString("en-UK", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+        </div>
+      );
 
-        switch (true) {
-          case differenceWithDeadline > 0:
-            wasTheDeadlineMet = (
-              <div className="w-100 justify-content-center row">
-                {completedOn}
-                <p className="ml-3 text-danger">
-                  Task completed <b>{differenceWithDeadline} days</b> after the
-                  deadline
-                </p>
-              </div>
-            );
-            break;
-          case differenceWithDeadline == 0:
-            wasTheDeadlineMet = (
-              <div className="w-100 justify-content-center row">
-                {completedOn}
-                <p className="ml-3 text-info">
-                  Task completed upon the deadline
-                </p>
-              </div>
-            );
-            break;
-          case differenceWithDeadline < 0:
-            wasTheDeadlineMet = (
-              <div className="w-100 justify-content-center row">
-                {completedOn}
-                <p className="ml-3 text-success">
-                  Task completed <b>{differenceWithDeadline * -1} days</b>{" "}
-                  before the deadline
-                </p>
-              </div>
-            );
-            break;
-        }
+      switch (true) {
+        case differenceWithDeadline > 0:
+          wasTheDeadlineMet = (
+            <div className="w-100 justify-content-center row">
+              {completedOn}
+              <p className="ml-3 text-danger">
+                Task completed <b>{differenceWithDeadline} days</b> after the
+                deadline
+              </p>
+            </div>
+          );
+          break;
+        case differenceWithDeadline == 0:
+          wasTheDeadlineMet = (
+            <div className="w-100 justify-content-center row">
+              {completedOn}
+              <p className="ml-3 text-info">Task completed upon the deadline</p>
+            </div>
+          );
+          break;
+        case differenceWithDeadline < 0:
+          wasTheDeadlineMet = (
+            <div className="w-100 justify-content-center row">
+              {completedOn}
+              <p className="ml-3 text-success">
+                Task completed <b>{differenceWithDeadline * -1} days</b> before
+                the deadline
+              </p>
+            </div>
+          );
+          break;
       }
     }
 

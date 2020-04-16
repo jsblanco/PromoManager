@@ -11,7 +11,6 @@ class Navbar extends Component {
   populateNotifications = () => {
     let pendingTasks = [];
     this.props.pendingTasks.map((project) => {
-      console.log(project);
       if (project.pendingTask) {
         pendingTasks.push(project);
       }
