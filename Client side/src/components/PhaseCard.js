@@ -16,6 +16,14 @@ class PhaseCard extends Component {
     };
   }
 
+  componentDidUpdate=()=>{
+    if (this.props.phase !== this.state.phase){
+      this.setState({
+        phase: this.props.phase,
+      })
+    }
+  }
+
   showResetHistory = () => {
     this.setState({
       showResetHistory: !this.state.showResetHistory,

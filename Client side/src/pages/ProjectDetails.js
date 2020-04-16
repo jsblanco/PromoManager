@@ -18,8 +18,30 @@ class ProjectDetails extends Component {
       Developer: "00:00",
       AV: "00:00",
       Administration: "00:00",
+      booleanForUpdate: false,
     };
   }
+
+  booleanForUpdate=()=>{
+    this.setState({
+      booleanForUpdate: true
+    })
+  }
+
+  
+componentDidUpdate = async ()=>{
+  console.log('componentDidUpdate empieza');
+  if (this.state.booleanForUpdate==true){
+    console.log('componentDidUpdate entra en el if')
+    let budgetNumber = this.props.match.params.budgetNumber;
+    let project = await userService.getProject(budgetNumber);
+    this.setState({
+      project: project,
+      budgetNumber: budgetNumber,
+      booleanForUpdate: false,
+    });}
+  }
+
 
   componentDidMount = async () => {
     let budgetNumber = this.props.match.params.budgetNumber;
@@ -36,6 +58,7 @@ class ProjectDetails extends Component {
     this.setState({
       project: project,
       budgetNumber: budgetNumber,
+      booleanForUpdate: false,
     });
   };
 
@@ -84,9 +107,12 @@ class ProjectDetails extends Component {
   }
 
   render() {
+    console.log("renderAgain")
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
       this.updateProject();
     }
+
+    
     let phases,
       createPhaseForm,
       phaseCreatorToggler,
@@ -113,7 +139,7 @@ class ProjectDetails extends Component {
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
           isProjectOver={this.state.project.isItOver}
-          reloadPage={this.reloadPage}
+          reloadPage={this.booleanForUpdate}
         />
       ));
     }

@@ -22,6 +22,23 @@ class TaskCard extends Component {
     phaseCompleteVerification: false,
   };
 
+
+  //si las task me fallan, quita esta función
+  componentDidUpdate=()=>{
+    if (this.props.task !== this.state.task){
+      this.setState({
+        phase: this.props.phase,
+        name: this.props.task.name,
+        spentTime: this.props.task.spentTime,
+        assignedUserName: this.props.assignedUserName,
+        assignedUser: this.props.task.assignedUser,
+        deadline: this.props.task.deadline,
+        inputSpentTime: "",
+        message: this.props.task.message,
+      })
+    }
+  }
+
   showResetPhaseVerification = () => {
     this.setState({
       phaseCompleteVerification: false,
@@ -105,7 +122,8 @@ class TaskCard extends Component {
     });
   };
 
-  resetPhase = async () => {
+  resetPhase = async (event) => {
+    event.preventDefault()
     const { projectId, phaseId, spentTime, message } = this.state;
     await userService.resetPhase({ projectId, phaseId, spentTime, message });
     this.setState({
