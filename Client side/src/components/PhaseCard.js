@@ -51,18 +51,14 @@ class PhaseCard extends Component {
         this.state.phase.tasks[activeTaskIndex].activeTask = true;
       }
     }
-    let index =
-      this.state.phase.tasks.length - (this.state.phase.basicTasks.length + 1);
-
 
       
     return taskArray.map((task) => {
+      let index = taskArray.indexOf(task)
       let assignedUserIndex = this.state.teamMembers.findIndex(
         (member) => member.role == task.assignedUser[0]
       );
-      assignedUserName = `${this.state.teamMembers[assignedUserIndex].role}: ${this.state.teamMembers[assignedUserIndex].name}`;
-      index++;
-      
+      assignedUserName = `${this.state.teamMembers[assignedUserIndex].role}: ${this.state.teamMembers[assignedUserIndex].name}`;      
       let hideOldTasks = ""
       if (!this.state.showResetHistory){
           if (taskArray.length-(taskArray.indexOf(task)) > this.state.phase.basicTasks.length){

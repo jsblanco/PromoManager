@@ -242,15 +242,17 @@ router.put(
       req.session.currentUser._id,
     ];
     taskIndex = parseInt(taskIndex);
-
+    console.log("Empieza el try")
     try {
-      const currentPhase = await Phase.findById(phaseId).populate("basicTasks");
+      const currentPhase = await Phase.findById(phaseId)//.populate("basicTasks");
+      console.log("Encuentra la fase actual")
       let newTasks = [...currentPhase.tasks];
       newTasks[taskIndex - 1].isItOver = false;
       newTasks[taskIndex - 1].message = message;
       newTasks[taskIndex - 1].completedOn = undefined;
-      newTasks[taskIndex].assignedUser = assignedUser;
-      newTasks[taskIndex].spentTime = spentTime;
+      console.log(newTasks)
+ //     newTasks[taskIndex].assignedUser = assignedUser;
+  //    newTasks[taskIndex].spentTime = spentTime;
       /*
       let project= await Project.findById(projectId).populate("teamMembers")
       let userIndex =project.teamMembers.findIndex((user) => user.role==newTasks[taskIndex - 1].assignedUser[0]);

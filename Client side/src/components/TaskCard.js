@@ -69,10 +69,13 @@ class TaskCard extends Component {
 
   handleAssignedUser = (event) => {
     let { name, value } = event.target;
-    console.log(value);
+    let userName = this.props.teamMembers.filter(user => user.role == value)
+    let assignedUserName= `${value}: ${userName[0].name}`
+    console.log(assignedUserName);
     let assignedUser = value;
     this.setState({
       assignedUser: [assignedUser],
+      assignedUserName: assignedUserName,
     });
   };
 
@@ -480,7 +483,7 @@ class TaskCard extends Component {
             This task was returned.
           </p>
           <p className="font-weight-bold d-inline ml-3">Reason: </p>
-          <p className="d-inline font-italic">{this.props.task.message}</p>
+          <p className="d-inline font-italic">{this.state.message}</p>
         </div>
       );
     }
