@@ -296,7 +296,7 @@ router.put("/:projectId/resetphase/:phaseId", async (req, res, next) => {
         name: task.name,
         assignedUser: task.assignedUser,
         isItOver: false,
-        spentTime: "",
+        spentTime: "00:00",
         message: "",
       })
     );
