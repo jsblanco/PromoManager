@@ -41,6 +41,7 @@ class PhaseCard extends Component {
   };
 
   createTaskCards(taskArray) {
+    if (!this.state.hideTasks){
     let assignedUserName = "";
     if (this.state.phase.activePhase && this.state.phase.tasks) {
       let activeTaskIndex = this.state.phase.tasks.findIndex(
@@ -94,7 +95,7 @@ class PhaseCard extends Component {
         />
       );
     });
-  }
+  }}
 
   render() {
     let createTaskForm,
@@ -152,21 +153,21 @@ class PhaseCard extends Component {
         case this.state.phase.tasks.length ===
           this.state.phase.basicTasks.length:
           resetToggler = (
-            <div className="d-flex justify-content-right font-italic text-secondary">
+            <div className="d-flex justify-content-left font-italic text-secondary">
               Current round: <b className="text-dark mx-2">1</b>
             </div>
           );
           break;
         case this.state.phase.tasks.length > this.state.phase.basicTasks.length:
           resetToggler = (
-            <div className="d-flex justify-content-right align-items-center font-italic text-secondary">
-              Current round:{" "}
-              <b className="text-dark mx-2">
+            <div className="d-flex justify-content-left align-items-center font-italic text-secondary">
+              Current round:
+              <b className="text-dark ml-1 mr-2">
                 {this.state.phase.tasks.length /
                   this.state.phase.basicTasks.length}
               </b>
               <button
-                className="ml-4 btn btn-outline-info"
+                className="ml-2 btn btn-outline-info"
                 onClick={this.showResetHistory}
               >
                 Show history
