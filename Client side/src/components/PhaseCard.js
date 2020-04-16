@@ -27,6 +27,7 @@ class PhaseCard extends Component {
   showResetHistory = () => {
     this.setState({
       showResetHistory: !this.state.showResetHistory,
+      hideTasks: false,
     });
   };
 

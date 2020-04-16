@@ -30,9 +30,7 @@ class ProjectDetails extends Component {
 
   
 componentDidUpdate = async ()=>{
-  console.log('componentDidUpdate empieza');
   if (this.state.booleanForUpdate==true){
-    console.log('componentDidUpdate entra en el if')
     let budgetNumber = this.props.match.params.budgetNumber;
     let project = await userService.getProject(budgetNumber);
     this.setState({
@@ -75,10 +73,12 @@ componentDidUpdate = async ()=>{
     });
   };
 
-  addComment = () => {
+  addComment = async (event) => {
+    event.preventDefault()
     const { comments } = this.state;
     const projectId = this.state.project._id;
     userService.postComments({ projectId, comments });
+    this.booleanForUpdate()
   };
 
   closeProject = () => {

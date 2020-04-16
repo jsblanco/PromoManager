@@ -23,21 +23,15 @@ class TaskCard extends Component {
   };
 
 
-  //si las task me fallan, quita esta función
-  componentDidUpdate=()=>{
-    if (this.props.task !== this.state.task){
-      this.setState({
-        phase: this.props.phase,
-        name: this.props.task.name,
-        spentTime: this.props.task.spentTime,
-        assignedUserName: this.props.assignedUserName,
-        assignedUser: this.props.task.assignedUser,
-        deadline: this.props.task.deadline,
-        inputSpentTime: "",
-        message: this.props.task.message,
-      })
-    }
-  }
+  // componentDidUpdate=()=>{
+  //   if (this.props.task.activeTask !== this.state.activeTask){
+  //     this.setState({
+  //       spentTime: this.props.task.spentTime,
+        
+  //     })
+  //   }
+  // }
+
 
   showResetPhaseVerification = () => {
     this.setState({
@@ -120,6 +114,7 @@ class TaskCard extends Component {
       showButton: false,
       taskUpdated: true,
     });
+    this.props.reloadPage()
   };
 
   resetPhase = async (event) => {
@@ -163,8 +158,12 @@ class TaskCard extends Component {
     });
   };
 
-  submitTaskAsOk = () => {
+  submitTaskAsOk = (event) => {
+    event.preventDefault()
     this.submitSpentTime();
+    this.setState({
+      taskIsOk: false,
+    })
     const { phaseId, projectId, index, spentTime } = this.state;
     userService.taskIsOk({
       phaseId,
@@ -172,10 +171,15 @@ class TaskCard extends Component {
       index,
       spentTime,
     });
+    this.props.reloadPage()
   };
 
-  submitTaskAsNotOk = () => {
+  submitTaskAsNotOk = (event) => {
+    event.preventDefault()
     this.submitSpentTime();
+    this.setState({
+      taskNotOk: false,
+    })
     const { phaseId, projectId, index, message, spentTime } = this.state;
     userService.taskIsNotOk({
       phaseId,
@@ -184,6 +188,7 @@ class TaskCard extends Component {
       message,
       spentTime,
     });
+    this.props.reloadPage();
   };
 
   render() {
@@ -209,7 +214,7 @@ class TaskCard extends Component {
       ? (readableDeadline = new Date(this.state.deadline))
       : (readableDeadline = "As soon as possible");
 
-    if (this.props.task.isItOver) {
+    if (this.state.isItOver) {
       if (this.props.task.completedOn && this.state.deadline) {
         let differenceWithDeadline =
           completionDate.getDate() - readableDeadline.getDate();
@@ -495,7 +500,7 @@ class TaskCard extends Component {
       );
     }
 
-    if (this.props.task.message && !this.props.task.isItOver) {
+    if (this.props.task.message && !this.state.isItOver) {
       message = (
         <div className="">
           <p className="font-weight-bold text-danger mb-0">
