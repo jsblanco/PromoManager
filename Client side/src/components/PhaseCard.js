@@ -42,23 +42,33 @@ class PhaseCard extends Component {
 
   createTaskCards(taskArray) {
     let assignedUserName = "";
-    let projectPhase = this.state.phase;
-    if (projectPhase.activePhase && projectPhase.tasks) {
-      let activeTaskIndex = projectPhase.tasks.findIndex(
+    if (this.state.phase.activePhase && this.state.phase.tasks) {
+      let activeTaskIndex = this.state.phase.tasks.findIndex(
         (task) => !task.isItOver
       );
       if (activeTaskIndex > -1) {
-        projectPhase.tasks[activeTaskIndex].activeTask = true;
+        this.state.phase.tasks[activeTaskIndex].activeTask = true;
       }
     }
     let index =
       this.state.phase.tasks.length - (this.state.phase.basicTasks.length + 1);
+
+
+      
     return taskArray.map((task) => {
       let assignedUserIndex = this.state.teamMembers.findIndex(
         (member) => member.role == task.assignedUser[0]
       );
       assignedUserName = `${this.state.teamMembers[assignedUserIndex].role}: ${this.state.teamMembers[assignedUserIndex].name}`;
       index++;
+      
+      let hideOldTasks = ""
+      if (!this.state.showResetHistory){
+          if (taskArray.length-(taskArray.indexOf(task)) > this.state.phase.basicTasks.length){
+            hideOldTasks = "d-none"
+          }
+      }
+
       if (index === this.state.phase.tasks.length - 1) {
         task.lastTask = true;
       }
@@ -80,6 +90,7 @@ class PhaseCard extends Component {
           isProjectOver={this.props.isProjectOver}
           isPhaseOver={this.state.phase.isItOver}
           task={task}
+          hideOldTasks={hideOldTasks}
         />
       );
     });
@@ -167,16 +178,14 @@ class PhaseCard extends Component {
           break;
       }
     }
+    
+
+    if (this.state.phase.tasks){
+      tasks = <div>{this.createTaskCards(this.state.phase.tasks)}</div>;
+    }
     /*
     if (this.state.phase.tasks && !this.state.hideTasks) {
-      tasks = <div>{this.populateTasks()}</div>;
-    }
-
-*/
-
-    if (this.state.phase.tasks && !this.state.hideTasks) {
       if (this.state.showResetHistory) {
-        tasks = <div>{this.createTaskCards(this.state.phase.tasks)}</div>;
       } else {
         tasks = (
           <div>
@@ -187,6 +196,7 @@ class PhaseCard extends Component {
         );
       }
     }
+*/
 
     if (this.state.addTaskToggler) {
       createTaskForm = (

@@ -325,7 +325,7 @@ class ProjectDetails extends Component {
               {this.state.project.teamMembers.map((user, index) => {
                 if (user) {
                   return (
-                    <div className="card shadow px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center">
+                    <div key={user._id} className="card shadow px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center">
                     <p className="mt-1 mb-1" key={user._id}>
                       {user.role}
                     </p>

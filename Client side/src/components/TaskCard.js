@@ -559,7 +559,7 @@ class TaskCard extends Component {
 
     ////////////////////////////
     return (
-      <div className={` card ${active} p-2`}>
+      <div className={` card ${active} ${this.props.hideOldTasks} p-2`}>
         <form onSubmit={this.updateTask}>
           <h5>
             <b>{taskName}</b>
