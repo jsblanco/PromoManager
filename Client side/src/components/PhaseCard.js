@@ -211,6 +211,7 @@ class PhaseCard extends Component {
           phaseId={this.state.phase._id}
           teamMembers={this.state.teamMembers}
           projectId={this.state.projectId}
+          showTaskCreator={this.showTaskCreator}
           reloadPage={this.props.reloadPage}
         />
       );

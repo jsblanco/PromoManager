@@ -150,6 +150,7 @@ class ProjectDetails extends Component {
         <PhaseCreator
           projectId={this.state.project._id}
           reloadPage={this.booleanForUpdate}
+          showPhaseCreator={this.showPhaseCreator}
         />
       );
       phaseCreatorToggler = "Discard new phase";

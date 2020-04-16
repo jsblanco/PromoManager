@@ -14,6 +14,7 @@ export default class TaskCreator extends Component {
     event.preventDefault()
     const { phaseId, name, assignedUser, projectId } = this.state;
     await userService.createTask({ phaseId, name, assignedUser, projectId });
+    this.props.showTaskCreator();
     this.props.reloadPage()
   };
 

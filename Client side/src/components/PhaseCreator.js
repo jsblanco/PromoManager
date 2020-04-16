@@ -15,6 +15,7 @@ export default class PhaseCreator extends Component {
     event.preventDefault()
     const { projectId, name } = this.state;
     userService.createPhase({ projectId, name });
+    this.props.showPhaseCreator();
     this.props.reloadPage()
   };
 
