@@ -23,6 +23,7 @@ class App extends Component {
     loaded: false,
     booleanForUpdate: false,
     pastProjectsFetched: false,
+    searchQuery: "",
   };
 
   componentDidMount = async () => {
@@ -35,6 +36,15 @@ class App extends Component {
         showFinishedProjects: false,
       });
     }
+    this.populateProjectSidebar();
+  };
+
+  handleChange = (event) => {
+    console.log(event)
+    let { name, value } = event.target;
+    this.setState({
+      [name]: value,
+    });
     this.populateProjectSidebar();
   };
 
@@ -73,7 +83,7 @@ class App extends Component {
       ? (projectsInSidebar = "finishedProjects")
       : (projectsInSidebar = "ongoingProjects");
     //   console.log(this.state.userData[projectsInSidebar])
-    const sortedProject = this.state.userData[projectsInSidebar]
+    let sortedProject = this.state.userData[projectsInSidebar]
       .map((project) => {
         let activePhase = project.phases.findIndex((phase) => !phase.isItOver);
         if (activePhase > -1) {
@@ -146,13 +156,25 @@ class App extends Component {
       }
     }
 
+    if (this.state.searchQuery) {
+      sortedProject = sortedProject.filter(
+        (project) =>
+          project.name
+            .toLowerCase()
+            .includes(this.state.searchQuery.toLowerCase()) ||
+          project.budgetNumber
+            .toLowerCase()
+            .includes(this.state.searchQuery.toLowerCase())
+      );
+    }
+
     return sortedProject.map((project) => (
       <ProjectList project={project} key={project.budgetNumber} />
     ));
   };
 
   render() {
-    let projects, newProject, toggleProjects;
+    let projects, newProject, toggleProjects, searchInput;
     const { isLoggedin } = this.props;
     if (this.state.loaded === true && isLoggedin) {
       projects = this.populateProjectSidebar();
@@ -187,6 +209,13 @@ class App extends Component {
         </button>
       );
 
+    searchInput= 
+    <input type="text" onChange={this.handleChange}
+className="list-group-item list-group-item-action bg-white text-secondary pl-5 justify-content-left d-flex align-items-center"
+placeholder="Search for a project..."
+name="searchQuery"/>
+
+
       if (this.state.showFinishedProjects === true) {
         toggleProjects = (
           <button
@@ -208,6 +237,7 @@ class App extends Component {
             <div>
               {newProject}
               {toggleProjects}
+              {searchInput}
               {projects}
             </div>
           </div>
