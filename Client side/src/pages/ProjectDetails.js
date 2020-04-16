@@ -73,11 +73,13 @@ class ProjectDetails extends Component {
   };
 
   addComment = async (event) => {
-    event.preventDefault();
+ //   event.preventDefault();
     const { comments } = this.state;
     const projectId = this.state.project._id;
-    userService.postComments({ projectId, comments });
-    this.booleanForUpdate();
+    await userService.postComments({ projectId, comments });
+    this.setState({
+      booleanForUpdate: true,
+    });
   };
 
   closeProject = () => {
@@ -236,8 +238,8 @@ class ProjectDetails extends Component {
               required
             ></textarea>
             <button
-              className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center"
               type="submit"
+              className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center"
             >
               <i className="fas fa-comment text-light m-1 pr-3"></i>Comment{" "}
             </button>

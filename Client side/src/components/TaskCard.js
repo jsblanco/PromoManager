@@ -23,14 +23,13 @@ class TaskCard extends Component {
   };
 
 
-  // componentDidUpdate=()=>{
-  //   if (this.props.task.activeTask !== this.state.activeTask){
-  //     this.setState({
-  //       spentTime: this.props.task.spentTime,
-        
-  //     })
-  //   }
-  // }
+   componentDidUpdate=()=>{
+     if (this.props.task.activeTask !== this.state.activeTask){
+       this.setState({
+        activeTask: this.props.task.activeTask,
+       })
+     }
+   }
 
 
   showResetPhaseVerification = () => {
@@ -158,30 +157,31 @@ class TaskCard extends Component {
     });
   };
 
-  submitTaskAsOk = (event) => {
+  submitTaskAsOk = async (event) => {
     event.preventDefault()
     this.submitSpentTime();
-    this.setState({
-      taskIsOk: false,
-    })
     const { phaseId, projectId, index, spentTime } = this.state;
-    userService.taskIsOk({
+    await userService.taskIsOk({
       phaseId,
       projectId,
       index,
       spentTime,
     });
+    this.setState({
+      phaseCompleteVerification: false,
+      taskIsOk: false,
+    })
     this.props.reloadPage()
   };
 
-  submitTaskAsNotOk = (event) => {
+  submitTaskAsNotOk = async (event) => {
     event.preventDefault()
     this.submitSpentTime();
     this.setState({
       taskNotOk: false,
     })
     const { phaseId, projectId, index, message, spentTime } = this.state;
-    userService.taskIsNotOk({
+    await userService.taskIsNotOk({
       phaseId,
       projectId,
       index,
