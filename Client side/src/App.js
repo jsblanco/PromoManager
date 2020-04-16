@@ -27,16 +27,15 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
-    if (this.props.user) {
-      let userData = await userService.getUserData(this.props.user._id);
-      this.setState({
-        userData: userData,
-        loaded: true,
-        booleanForUpdate: false,
-        showFinishedProjects: false,
-      });
-    }
+    await this.loadUserData()
     this.populateProjectSidebar();
+  };
+
+  componentDidUpdate = async () => {
+    if (this.state.booleanForUpdate == true){
+      await this.loadUserData()
+      this.populateProjectSidebar();
+    }
   };
 
   handleChange = (event) => {
@@ -48,6 +47,17 @@ class App extends Component {
     this.populateProjectSidebar();
   };
 
+  loadUserData= async()=>{
+    if (this.props.user) {
+      let userData = await userService.getUserData(this.props.user._id);
+      this.setState({
+        userData: userData,
+        loaded: true,
+        booleanForUpdate: false,
+        showFinishedProjects: false,
+      });
+    }
+  }
   showFinishedProjects = async () => {
     if (!this.state.pastProjectsFetched) {
       let finishedProjects = await userService.getFinishedProjects(
@@ -67,9 +77,6 @@ class App extends Component {
     }
   };
 
-  shouldComponentUpdate = async () => {
-    return this.state.booleanForUpdate;
-  };
 
   updateApp = () => {
     this.setState({
