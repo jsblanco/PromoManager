@@ -22,24 +22,23 @@ class ProjectDetails extends Component {
     };
   }
 
-  booleanForUpdate=()=>{
+  booleanForUpdate = () => {
     this.setState({
-      booleanForUpdate: true
-    })
-  }
+      booleanForUpdate: true,
+    });
+  };
 
-  
-componentDidUpdate = async ()=>{
-  if (this.state.booleanForUpdate==true){
-    let budgetNumber = this.props.match.params.budgetNumber;
-    let project = await userService.getProject(budgetNumber);
-    this.setState({
-      project: project,
-      budgetNumber: budgetNumber,
-      booleanForUpdate: false,
-    });}
-  }
-
+  componentDidUpdate = async () => {
+    if (this.state.booleanForUpdate == true) {
+      let budgetNumber = this.props.match.params.budgetNumber;
+      let project = await userService.getProject(budgetNumber);
+      this.setState({
+        project: project,
+        budgetNumber: budgetNumber,
+        booleanForUpdate: false,
+      });
+    }
+  };
 
   componentDidMount = async () => {
     let budgetNumber = this.props.match.params.budgetNumber;
@@ -74,11 +73,11 @@ componentDidUpdate = async ()=>{
   };
 
   addComment = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
     const { comments } = this.state;
     const projectId = this.state.project._id;
     userService.postComments({ projectId, comments });
-    this.booleanForUpdate()
+    this.booleanForUpdate();
   };
 
   closeProject = () => {
@@ -88,31 +87,32 @@ componentDidUpdate = async ()=>{
   };
 
   calculateTotalSpentTime = (accumulator, task) => {
-    let totalHours =  (parseFloat(accumulator) + parseFloat(task));
-    let totalMinutes = parseFloat(parseFloat(accumulator.slice(-2)) + parseFloat(task.slice(-2)));
+    let totalHours = parseFloat(accumulator) + parseFloat(task);
+    let totalMinutes = parseFloat(
+      parseFloat(accumulator.slice(-2)) + parseFloat(task.slice(-2))
+    );
     if (totalMinutes >= 60) {
       totalHours++;
       totalMinutes -= 60;
     }
-    totalHours = "0"+totalHours
-    totalMinutes= "0"+totalMinutes
+    totalHours = "0" + totalHours;
+    totalMinutes = "0" + totalMinutes;
     if (totalHours.length > 2) {
       totalHours = totalHours.toString().slice(1);
     }
     return `${totalHours}:${totalMinutes.toString().slice(-2)}`;
   };
 
-  reloadPage=()=>{
-    this.props.history.push(`/project/${this.state.budgetNumber}/details`)
-  }
+  reloadPage = () => {
+    this.props.history.push(`/project/${this.state.budgetNumber}/details`);
+  };
 
   render() {
-    console.log("renderAgain")
+    console.log("renderAgain");
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
       this.updateProject();
     }
 
-    
     let phases,
       createPhaseForm,
       phaseCreatorToggler,
@@ -144,7 +144,12 @@ componentDidUpdate = async ()=>{
       ));
     }
     if (this.state.showPhaseCreator === true) {
-      createPhaseForm = <PhaseCreator projectId={this.state.project._id} />;
+      createPhaseForm = (
+        <PhaseCreator
+          projectId={this.state.project._id}
+          reloadPage={this.booleanForUpdate}
+        />
+      );
       phaseCreatorToggler = "Discard new phase";
     } else {
       phaseCreatorToggler = "Add new phase";
@@ -315,15 +320,33 @@ componentDidUpdate = async ()=>{
           });
         }
       });
-      Account.length>0? Account = Account.reduce(this.calculateTotalSpentTime) : Account = "00:00";
-      Scientific.length>0? Scientific = Scientific.reduce(this.calculateTotalSpentTime) :Scientific = "00:00";
-      Design.length>0? Design = Design.reduce(this.calculateTotalSpentTime) : Design = "00:00";
-      Developer.length>0? Developer = Developer.reduce(this.calculateTotalSpentTime) : Developer ="00:00";
-      AV.length>0? AV = AV.reduce(this.calculateTotalSpentTime) : AV = "00:00";
-      Administration.length>0? Administration = Administration.reduce(this.calculateTotalSpentTime) : Administration = "00:00";
-
+      Account.length > 0
+        ? (Account = Account.reduce(this.calculateTotalSpentTime))
+        : (Account = "00:00");
+      Scientific.length > 0
+        ? (Scientific = Scientific.reduce(this.calculateTotalSpentTime))
+        : (Scientific = "00:00");
+      Design.length > 0
+        ? (Design = Design.reduce(this.calculateTotalSpentTime))
+        : (Design = "00:00");
+      Developer.length > 0
+        ? (Developer = Developer.reduce(this.calculateTotalSpentTime))
+        : (Developer = "00:00");
+      AV.length > 0
+        ? (AV = AV.reduce(this.calculateTotalSpentTime))
+        : (AV = "00:00");
+      Administration.length > 0
+        ? (Administration = Administration.reduce(this.calculateTotalSpentTime))
+        : (Administration = "00:00");
     }
-    const timeSpent = [Account, Scientific, Design, Developer, AV, Administration]
+    const timeSpent = [
+      Account,
+      Scientific,
+      Design,
+      Developer,
+      AV,
+      Administration,
+    ];
     //////////////////////
     return (
       <div className="my-4 row w-100 d-flex flex-row justify-content-around">
@@ -352,19 +375,24 @@ componentDidUpdate = async ()=>{
             <section className="mx-2 px-3 my-4">
               <h3>Project team:</h3>
               <div className="d-flex flex-row justify-content-center">
-              {this.state.project.teamMembers.map((user, index) => {
-                if (user) {
-                  return (
-                    <div key={user._id} className="card shadow px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center">
-                    <p className="mt-1 mb-1" key={user._id}>
-                      {user.role}
-                    </p>
-                      <h4>{user.name}</h4> 
-                    <p className="font-italic"><b>Time spent:</b> {timeSpent[index]}h</p>
-                    </div>
-                  );
-                }
-              })}
+                {this.state.project.teamMembers.map((user, index) => {
+                  if (user) {
+                    return (
+                      <div
+                        key={user._id}
+                        className="card shadow px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center"
+                      >
+                        <p className="mt-1 mb-1" key={user._id}>
+                          {user.role}
+                        </p>
+                        <h4>{user.name}</h4>
+                        <p className="font-italic">
+                          <b>Time spent:</b> {timeSpent[index]}h
+                        </p>
+                      </div>
+                    );
+                  }
+                })}
               </div>
             </section>
           </header>
