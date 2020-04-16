@@ -79,6 +79,9 @@ class ProjectDetails extends Component {
     return `${totalHours}:${totalMinutes.toString().slice(-2)}`;
   };
 
+  reloadPage=()=>{
+    this.props.history.push(`/project/${this.state.budgetNumber}/details`)
+  }
 
   render() {
     if (this.state.budgetNumber !== this.props.match.params.budgetNumber) {
@@ -110,6 +113,7 @@ class ProjectDetails extends Component {
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
           isProjectOver={this.state.project.isItOver}
+          reloadPage={this.reloadPage}
         />
       ));
     }

@@ -88,6 +88,7 @@ class PhaseCard extends Component {
           isPhaseOver={this.state.phase.isItOver}
           task={task}
           hideOldTasks={hideOldTasks}
+          reloadPage={this.props.reloadPage}
         />
       );
     });

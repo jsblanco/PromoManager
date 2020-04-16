@@ -105,12 +105,13 @@ class TaskCard extends Component {
     });
   };
 
-  resetPhase = () => {
+  resetPhase = async () => {
     const { projectId, phaseId, spentTime, message } = this.state;
-    userService.resetPhase({ projectId, phaseId, spentTime, message });
+    await userService.resetPhase({ projectId, phaseId, spentTime, message });
     this.setState({
       resetPhaseVerification: false,
     });
+    this.props.reloadPage()
   };
 
   showMessageInput = (event) => {
