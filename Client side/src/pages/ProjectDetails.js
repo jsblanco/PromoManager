@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 import PhaseCreator from "../components/PhaseCreator";
@@ -8,23 +8,24 @@ import PhaseCard from "../components/PhaseCard";
 
 
 export const ProjectDetails = (props) => {
-  const params = useParams()
+  const params = useParams();
+  const location = useLocation()
   const [isUpdated, setIsUpdated] = useState(false)
-  //const [comments, setComments] = useState("")
-  const [budgetNumber, setBudgetNumber] = useState(params.budgetNumber)
-  const [showPhaseCreator, setShowPhaseCreator] = useState(true)
+  const [comments, setComments] = useState("")
+  const [showPhaseCreator, setShowPhaseCreator] = useState(false)
   const [project, setProject] = useState({teamMembers:[]})
+  const [commentArray, setCommentArray] = useState([])
 
   useEffect(() => {
-    if (isUpdated == false) {
-      let budgetNumber = params.budgetNumber;
-      userService.getProject(budgetNumber)
-      .then(data => setProject(data))
-      //  setBudgetNumber= budgetNumber;
-    setIsUpdated(true);
-    }
-  }, [isUpdated])
+      userService.getProject(params.budgetNumber)
+      .then(data => {setProject(data); setCommentArray(data.comments)})
+  }, [isUpdated, location])
 
+
+  useEffect(() => {
+}, [commentArray])
+
+  
   
 //Comentarios: a componente externo
 
@@ -33,29 +34,20 @@ export const ProjectDetails = (props) => {
       setShowPhaseCreator(!showPhaseCreatorValue);
     console.log(showPhaseCreator)
   };
-/*
-  handleChange = (event) => {
-    let { name, value } = event.target;
-    this.setState({
-      [name]: value,
-    });
-  };
 
-  addComment = async (event) => {
-    event.preventDefault();
-    const { comments } = this.state;
-    const projectId = project._id;
-    await userService.postComments({ projectId, comments });
-    this.setState({
-      isUpdated: true,
-    });
-  };
-*/
+const addCommentToProject = () => {
+  if (!!comments)
+  {
+  const projectId = project._id;
+  let projectData = [...commentArray]
+  projectData.unshift({comments:comments, user: props.user._id});
+  setCommentArray(projectData);
+  userService.postComments({ projectId, comments:comments });}
+};
 
 
 const setIsUpdatedToTrue = () => {
-  console.log("setIsUpdatedToTrue")
-   setIsUpdated(false)
+  isUpdated ? setIsUpdated(false):setIsUpdated(true);
 };
 
 
@@ -89,7 +81,7 @@ const setIsUpdatedToTrue = () => {
       phaseCreatorToggler,
       createPhaseButton,
       editProjectButton,
-      comments,
+      commentSection,
       closeProject,
       addComment;
     let projectData = project;
@@ -131,7 +123,7 @@ const setIsUpdatedToTrue = () => {
       createPhaseButton = (
         <button
           className="btn btn-primary my-2 w-100"
-          onClick={changeShowPhaseCreator}
+          onClick={()=>changeShowPhaseCreator()}
         >
           {phaseCreatorToggler}
         </button>
@@ -146,12 +138,12 @@ const setIsUpdatedToTrue = () => {
         </Link>
       );
     }
-    /*
-    if (project.comments) {
-      if (project.comments.length > 0) {
-        comments = (
+    
+    if (commentArray) {
+      if (commentArray.length > 0) {
+        commentSection = (
           <div id="comment-section">
-            {project.comments.map((comment) => {
+            {commentArray.map((comment) => {
               let userName;
               let userOrNot;
               if (props.user._id === comment.user) {
@@ -178,7 +170,7 @@ const setIsUpdatedToTrue = () => {
           </div>
         );
       } else {
-        comments = (
+        commentSection = (
           <div
             id="comment-section"
             className="d-flex justify-content-center align-items-center"
@@ -190,7 +182,7 @@ const setIsUpdatedToTrue = () => {
         );
       }
     }
-*/
+
     let isUserATeamMember = project.teamMembers.findIndex(
       (i) => i._id === props.user._id
     );
@@ -199,23 +191,24 @@ const setIsUpdatedToTrue = () => {
       addComment = (
         <div>
           <h4 className="mt-4">Add a comment</h4>
-          <form className="w-100" //onSubmit={addComment}
-          >
+          <div className="w-100">
             <textarea
-           //   onChange={handleChange}
               className="d-block w-100 border rounded-lg p-2 bg-light"
               type="text"
               name="comments"
+              value={comments}
+              onChange={(event)=>{setComments(event.target.value)}}
               placeholder="What's on your mind?"
               required
             ></textarea>
             <button
               type="submit"
               className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center"
+              onClick={()=>addCommentToProject()}
             >
               <i className="fas fa-comment text-light m-1 pr-3"></i>Comment{" "}
             </button>
-          </form>
+          </div>
         </div>
       );
     }
@@ -385,7 +378,7 @@ const setIsUpdatedToTrue = () => {
       </div>
       <div className=" col-xl-3 col-lg-2 col-md-1">
         <h3>Project comments</h3>
-        {comments}
+        {commentSection}
         {addComment}
       </div>
     </div>
