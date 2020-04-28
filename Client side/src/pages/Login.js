@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 
 class Login extends Component {
-  state = { email: "", password: "" };
+  state = { email: "", password: "", error: false };
 
   handleFormSubmit = async (event) => {
     event.preventDefault();
     const { email, password } = this.state;
     //console.log('Login -> form submit', { email, password });
-    this.props.login({ email, password })
-
+    await this.props.login({ email, password })
+    this.props.error && this.setState({error: this.props.error.login})
   };
 
   handleChange = (event) => {
@@ -22,7 +22,7 @@ class Login extends Component {
     const { email, password } = this.state;
     let error;
 
-    switch (this.props.error){
+    switch (this.state.error){
     case false:
       error="";
       break;

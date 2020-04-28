@@ -27,7 +27,7 @@ const withAuth = (WrappedComponent) => {
 };
 
 class AuthProvider extends React.Component {
-  state = { isLoggedin: false, user: null, isLoading: true, error: false };
+  state = { isLoggedin: false, user: null, isLoading: true, error: {login: false, signup: false} };
 
   componentDidMount() {
     auth
@@ -50,7 +50,7 @@ class AuthProvider extends React.Component {
     auth
       .signup({ name, password, email, role })
       .then((user) => this.setState({ isLoggedin: true, user }))
-      .catch((err) => this.setState({ error:err.response.request.status }));
+      .catch((err) => this.setState({ error:{login: false, signup: err.response.request.status} }));
   };
 
   login = (user) => {
@@ -59,7 +59,7 @@ class AuthProvider extends React.Component {
     auth
       .login({ email, password })
       .then((user) => this.setState({ isLoggedin: true, user }))
-      .catch((err) => this.setState({ error:err.response.request.status }));
+      .catch((err) => this.setState({ error:{login: err.response.request.status, signup: false,} }));
       //.catch(({ response }) => this.setState({ message: response.data.statusMessage }))
   };
 

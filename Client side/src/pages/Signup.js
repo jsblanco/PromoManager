@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 
 class Signup extends Component {
-  state = { name: "", password: "", passwordRepeat: "", email: "", role: "" };
+  state = { name: "", password: "", passwordRepeat: "", email: "", role: "", error:"" };
 
   handleFormSubmit = (event) => {
     event.preventDefault();
     let { name, password, passwordRepeat, email, role } = this.state;
     if (password == passwordRepeat) {
       this.props.signup({ name, password, email, role });
+      this.props.error && this.setState({error: this.props.error.signup})
     } else {
       this.setState({
         passwordRepeat: "",
@@ -26,8 +27,8 @@ class Signup extends Component {
     const { name, password, passwordRepeat, email } = this.state;
     let error;
 
-    switch (this.props.error){
-      case false:
+    switch (this.state.error){
+      case "":
         error="";
         break;
       case 400:
@@ -113,7 +114,7 @@ class Signup extends Component {
               <option value="AV">Audiovisual</option>
               <option value="Administration">Administration</option>
             </select>
-          {error}
+             {error}
             <input className="btn btn-success mt-3" type="submit" value="Signup" />
 
             <p className="text-muted mt-5 mb-0">Already have account?</p>
