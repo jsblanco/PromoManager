@@ -7,7 +7,7 @@ const withAuth = (WrappedComponent) => {
     render() {
       return (
         <Consumer>
-          {({ login, signup, user, logout, isLoggedin }) => {
+          {({ login, signup, user, logout, isLoggedin, error }) => {
             return (
               <WrappedComponent
                 login={login}
@@ -15,6 +15,7 @@ const withAuth = (WrappedComponent) => {
                 user={user}
                 logout={logout}
                 isLoggedin={isLoggedin}
+                error={error}
                 {...this.props}
               />
             );
@@ -26,7 +27,7 @@ const withAuth = (WrappedComponent) => {
 };
 
 class AuthProvider extends React.Component {
-  state = { isLoggedin: false, user: null, isLoading: true };
+  state = { isLoggedin: false, user: null, isLoading: true, error: false };
 
   componentDidMount() {
     auth
@@ -60,7 +61,8 @@ class AuthProvider extends React.Component {
     auth
       .login({ email, password })
       .then((user) => this.setState({ isLoggedin: true, user }))
-      .catch((err) => console.log(err));
+      .catch((err) => this.setState({error:err.response.request.status}));
+      //.catch(({ response }) => this.setState({ message: response.data.statusMessage }))
   };
 
   logout = () => {
@@ -71,7 +73,7 @@ class AuthProvider extends React.Component {
   };
 
   render() {
-    const { isLoading, isLoggedin, user } = this.state;
+    const { isLoading, isLoggedin, user, error } = this.state;
     const { login, logout, signup } = this;
 
     return isLoading ? (
@@ -84,7 +86,7 @@ class AuthProvider extends React.Component {
         </div>
       </div>
     ) : (
-      <Provider value={{ isLoggedin, user, login, logout, signup }}>
+      <Provider value={{ isLoggedin, user, login, logout, signup, error }}>
         {this.props.children}
       </Provider>
     );

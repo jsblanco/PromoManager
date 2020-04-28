@@ -5,11 +5,12 @@ import { withAuth } from "../lib/AuthProvider";
 class Login extends Component {
   state = { email: "", password: "" };
 
-  handleFormSubmit = (event) => {
+  handleFormSubmit = async (event) => {
     event.preventDefault();
     const { email, password } = this.state;
     //console.log('Login -> form submit', { email, password });
-    this.props.login({ email, password });
+    this.props.login({ email, password })
+
   };
 
   handleChange = (event) => {
@@ -19,6 +20,23 @@ class Login extends Component {
 
   render() {
     const { email, password } = this.state;
+    let error;
+
+    switch (this.props.error){
+    case false:
+      error="";
+      break;
+    case 401: 
+    console.log("hola")
+      error=<p className="py-2 text-light bg-danger w-100">Password doesn't match username</p>;
+      break;
+    case 404: 
+      error=<p className="py-2 text-light bg-danger w-100">Username not registered in PromoManager</p>;
+      break;
+    default:
+      error=<p className="py-2 text-light bg-danger w-100">Could not login with introduced credentials</p>;;
+      break;
+  }
 
     return (
       <div className="w-75 h-100 text-center d-flex flex-column justify-content-center">
@@ -59,12 +77,12 @@ class Login extends Component {
               />
 
               <input
-                className="btn btn-success mt-4"
+                className="btn btn-success mt-4 mb-3"
                 type="submit"
                 value="Login"
               />
-
-              <p className="text-muted mt-5 mb-1">
+              {error}
+              <p className="text-muted mt-3 mb-1">
                 Not registered in PromoManager?
               </p>
               <Link
