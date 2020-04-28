@@ -24,6 +24,21 @@ class Signup extends Component {
 
   render() {
     const { name, password, passwordRepeat, email } = this.state;
+    let error;
+
+    switch (this.props.error){
+      case false:
+        error="";
+        break;
+      case 400:
+        error= <p className="font-weight-bold m-0 text-danger w-100">This user is already registered in PromoManager</p>;
+        break;
+      default:
+        error= <p className="font-weight-bold m-0 text-danger w-100">Could not register with introduced credentials</p>;;
+        break;
+    }
+  
+
     return (
       <div className="w-75 d-flex justify-content-center">
         <div className="shadow p-3 mb-3 card bg-white rounded p-5 mt-5 d-flex flex-column text-center">
@@ -83,7 +98,7 @@ class Signup extends Component {
               </div>
             </div>
 
-            <label className="mb-0 mt-3">Role</label>
+            <label className="mb-2 mt-3">Role</label>
             <select
               name="role"
               onChange={this.handleChange}
@@ -98,8 +113,8 @@ class Signup extends Component {
               <option value="AV">Audiovisual</option>
               <option value="Administration">Administration</option>
             </select>
-
-            <input className="btn btn-success" type="submit" value="Signup" />
+          {error}
+            <input className="btn btn-success mt-3" type="submit" value="Signup" />
 
             <p className="text-muted mt-5 mb-0">Already have account?</p>
             <Link className="btn btn-outline-info" to={"/login"}>
