@@ -142,16 +142,16 @@ const TaskCard = props => {
 
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
-    submitSpentTime();
+    setPhaseCompleteVerification(false);
     const {spentTime}= task;
     await userService.taskIsOk({
       phaseId,
       projectId,
       index,
       spentTime,
-    });
-    setPhaseCompleteVerification(false);
+    })
     setTaskIsOk(false);
+    submitSpentTime();
     props.reloadPage();
   };
 
