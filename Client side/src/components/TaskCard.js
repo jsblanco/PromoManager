@@ -4,11 +4,11 @@ import { withAuth } from "../lib/AuthProvider";
 
 const TaskCard = props => {
 
-  const [projectId, setProjectId]= useState(props.projectId)
-  const [teamMembers, setTeamMembers]= useState(props.teamMembers)
-  const [phaseId, setPhaseId]= useState(props.phaseId)
-  const [index, setIndex]= useState(props.index)
-  const [timeSpentSoFar, setTimeSpentSoFar]= useState(props.task.spentTime)
+  const [projectId]= useState(props.projectId)
+  const [teamMembers]= useState(props.teamMembers)
+  const [phaseId]= useState(props.phaseId)
+  const [index]= useState(props.index)
+  const [timeSpentSoFar]= useState(props.task.spentTime)
   const [assignedUserName, setAssignedUserName]= useState(props.assignedUserName)
   const [task, setTask]= useState(props.task)
   const [showButton, setShowButton]= useState(false)
@@ -16,7 +16,7 @@ const TaskCard = props => {
   const [taskNotOk, setTaskNotOk]= useState(false)
   const [activeTask, setActiveTask]= useState(false)
   const [taskUpdated, setTaskUpdated]= useState(!!props.task.deadline)
-  const [inputSpentTime, setinputSpentTime]= useState("")
+  const [inputSpentTime]= useState("")
   const [resetPhaseVerification, setResetPhaseVerification]= useState(false)
   const [phaseCompleteVerification, setPhaseCompleteVerification]= useState(false)
 
@@ -39,7 +39,7 @@ const TaskCard = props => {
   };
 
   const calculateTotalSpentTime = (event) => {
-    let { name, value } = event.target;
+    let { value } = event.target;
     let totalHours =
       "0" + (parseFloat(timeSpentSoFar) + parseFloat(value));
     let totalMinutes =
@@ -74,7 +74,7 @@ const TaskCard = props => {
   const handleAssignedUser = (event) => {
     let { name, value } = event.target;
     console.log(name, value)
-    let userName = props.teamMembers.filter((user) => user.role == value);
+    let userName = props.teamMembers.filter((user) => user.role === value);
     let assignedUserName = `${value}: ${userName[0].name}`;
     let assignedUser = value;
     console.log(assignedUserName, assignedUser)
@@ -223,7 +223,7 @@ const TaskCard = props => {
             </div>
           );
           break;
-        case differenceWithDeadline == 0:
+        case differenceWithDeadline === 0:
           wasTheDeadlineMet = (
             <div className="w-100 justify-content-center row">
               {completedOn}

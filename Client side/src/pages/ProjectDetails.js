@@ -1,11 +1,9 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { /*Component,*/ useState, useEffect } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 import PhaseCreator from "../components/PhaseCreator";
 import PhaseCard from "../components/PhaseCard";
-
-
 
 export const ProjectDetails = (props) => {
   const params = useParams();
@@ -95,12 +93,11 @@ const setIsUpdatedToTrue = () => {
       phases = projectData.phases.map((phase) => (
         <PhaseCard
           key={phase._id}
-          position={
-            projectData.phases.length - projectData.phases.indexOf(phase)
-          }
+          //position={projectData.phases.length - projectData.phases.indexOf(phase)}
           phase={phase}
           teamMembers={projectData.teamMembers}
           projectId={projectData._id}
+          user={props.user}
           isProjectOver={project.isItOver}
          reloadPage={setIsUpdatedToTrue}
         />
@@ -216,7 +213,7 @@ const setIsUpdatedToTrue = () => {
     if (
       !project.isItOver &&
       project.phases !== undefined &&
-      props.user.role == "Account"
+      props.user.role === "Account"
     ) {
       if (project.phases.length > 0 &&
           project.phases[project.phases.length - 1]

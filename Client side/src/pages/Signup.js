@@ -8,7 +8,7 @@ class Signup extends Component {
   handleFormSubmit = (event) => {
     event.preventDefault();
     let { name, password, passwordRepeat, email, role } = this.state;
-    if (password == passwordRepeat) {
+    if (password === passwordRepeat) {
       this.props.signup({ name, password, email, role });
       this.props.error && this.setState({error: this.props.error.signup})
     } else {
