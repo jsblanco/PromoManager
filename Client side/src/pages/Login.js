@@ -28,13 +28,13 @@ class Login extends Component {
       break;
     case 401: 
     console.log("hola")
-      error=<p className="py-2 text-light bg-danger w-100">Password doesn't match username</p>;
+      error=<p className="font-weight-bold m-0 text-danger w-100">Password doesn't match username</p>;
       break;
     case 404: 
-      error=<p className="py-2 text-light bg-danger w-100">Username not registered in PromoManager</p>;
+      error=<p className="font-weight-bold m-0 text-danger w-100">Username not registered in PromoManager</p>;
       break;
     default:
-      error=<p className="py-2 text-light bg-danger w-100">Could not login with introduced credentials</p>;;
+      error=<p className="font-weight-bold m-0 text-danger w-100">Could not login with introduced credentials</p>;;
       break;
   }
 
@@ -71,18 +71,20 @@ class Login extends Component {
               <input
                 type="password"
                 name="password"
+                className="mb-3"
                 value={password}
                 onChange={this.handleChange}
                 required
               />
 
+              {error}
+
               <input
-                className="btn btn-success mt-4 mb-3"
+                className="btn btn-success mt-3"
                 type="submit"
                 value="Login"
               />
-              {error}
-              <p className="text-muted mt-3 mb-1">
+              <p className="text-muted mt-5 mb-1">
                 Not registered in PromoManager?
               </p>
               <Link
