@@ -8,17 +8,13 @@ const TaskCard = props => {
   const [teamMembers, setTeamMembers]= useState(props.teamMembers)
   const [phaseId, setPhaseId]= useState(props.phaseId)
   const [index, setIndex]= useState(props.index)
-  const [name, setName]= useState(props.task.name)
-  const [spentTime, setSpentTime]= useState(props.task.spentTime)
+  const [timeSpentSoFar, setTimeSpentSoFar]= useState(props.task.spentTime)
   const [assignedUserName, setAssignedUserName]= useState(props.assignedUserName)
-  const [assignedUser, setAssignedUser]= useState(props.task.assignedUser)
   const [task, setTask]= useState(props.task)
-  const [deadline, setDeadline]= useState(props.task.deadline)
   const [showButton, setShowButton]= useState(false)
   const [taskIsOk, setTaskIsOk]= useState(false)
   const [taskNotOk, setTaskNotOk]= useState(false)
   const [activeTask, setActiveTask]= useState(false)
-  const [message, setMessage]= useState(props.task.message)
   const [taskUpdated, setTaskUpdated]= useState(!!props.task.deadline)
   const [inputSpentTime, setinputSpentTime]= useState("")
   const [resetPhaseVerification, setResetPhaseVerification]= useState(false)
@@ -27,10 +23,9 @@ const TaskCard = props => {
   useEffect(() => {
     if (props.task.activeTask !== activeTask) {
         setActiveTask(props.task.activeTask);
-        setSpentTime(props.task.spentTime);
       ;
     }
-  }, []);
+  }, [task]);
 
   const showResetPhaseVerification = () => {
       setPhaseCompleteVerification(false);
@@ -46,11 +41,11 @@ const TaskCard = props => {
   const calculateTotalSpentTime = (event) => {
     let { name, value } = event.target;
     let totalHours =
-      "0" + (parseFloat(props.task.spentTime) + parseFloat(value));
+      "0" + (parseFloat(timeSpentSoFar) + parseFloat(value));
     let totalMinutes =
       "0" +
       parseFloat(
-        parseFloat(props.task.spentTime.slice(-2)) +
+        parseFloat(timeSpentSoFar.slice(-2)) +
           parseFloat(value.slice(-2))
       );
     if (totalMinutes > 60) {
@@ -61,7 +56,9 @@ const TaskCard = props => {
       totalHours = totalHours.toString().slice(1);
     }
     let spentTime = `${totalHours}:${totalMinutes.toString().slice(-2)}`;
-      setSpentTime(spentTime);
+      setTask({
+        ...task,
+        spentTime});
   };
 
 
@@ -81,21 +78,20 @@ const TaskCard = props => {
     let assignedUserName = `${value}: ${userName[0].name}`;
     let assignedUser = value;
     console.log(assignedUserName, assignedUser)
-    setAssignedUser([assignedUser]);
+    setTask({
+      ...task,
+      assignedUser: [assignedUser]});
     setAssignedUserName(assignedUserName);
   };
 
   const updateTask = (event) => {
     event.preventDefault();
-    /* const {
-      phaseId,
+    const {
       name,
       assignedUser,
       spentTime,
       deadline,
-      projectId,
-      index,
-    } = state;*/
+    } = task;
     userService.updateTask({
       phaseId,
       name,
@@ -112,6 +108,7 @@ const TaskCard = props => {
 
   const resetPhase = async (event) => {
     event.preventDefault();
+    const {spentTime, message} = task;
     await userService.resetPhase({ projectId, phaseId, spentTime, message });
     setResetPhaseVerification(false);
     props.reloadPage();
@@ -135,14 +132,18 @@ const TaskCard = props => {
   };
 
   const submitSpentTime = () => {
+    const {spentTime} = task;
     let totalTime =
     new Date(spentTime) + new Date(inputSpentTime);
-    setSpentTime(totalTime);
+    setTask({
+      ...task,
+      totalTime});
   };
 
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
     submitSpentTime();
+    const {spentTime}= task;
     await userService.taskIsOk({
       phaseId,
       projectId,
@@ -158,6 +159,7 @@ const TaskCard = props => {
     event.preventDefault();
     submitSpentTime();
     setTaskNotOk(false);
+    const {spentTime, message}= task;
     await userService.taskIsNotOk({
       phaseId,
       projectId,
@@ -186,11 +188,11 @@ const TaskCard = props => {
     props.task.completedOn
       ? (completionDate = new Date(props.task.completedOn))
       : (completionDate = "Sometime");
-    deadline
-      ? (readableDeadline = new Date(deadline))
+    task.deadline
+      ? (readableDeadline = new Date(task.deadline))
       : (readableDeadline = "As soon as possible");
 
-    if (props.task.completedOn && deadline) {
+    if (props.task.completedOn && task.deadline) {
       let differenceWithDeadline =
         completionDate.getDate() - readableDeadline.getDate();
 
@@ -243,7 +245,7 @@ const TaskCard = props => {
       }
     }
 
-    taskName = <p className="d-inline">{name}</p>;
+    taskName = <p className="d-inline">{task.name}</p>;
     assignedTo = (
       <p className="font-weight-bold d-inline">{assignedUserName}</p>
     );
@@ -277,7 +279,7 @@ const TaskCard = props => {
           name="name"
           type="text"
           onChange={handleChange}
-          value={name}
+          value={task.name}
         />
       );
       assignedTo = (
@@ -310,7 +312,7 @@ const TaskCard = props => {
             type="date"
             name="deadline"
             onChange={handleChange}
-            value={deadline}
+            value={task.deadline}
             required
           />
         </div>
@@ -334,7 +336,7 @@ const TaskCard = props => {
             type="date"
             name="deadline"
             onChange={handleChange}
-            value={deadline}
+            value={task.deadline}
             required
           />
         </div>
@@ -344,7 +346,7 @@ const TaskCard = props => {
           Update task
         </button>
       );
-    } else if (!deadline) {
+    } else if (!task.deadline) {
       deadlineInfo = (
         <div className="d-flex align-items-center">
           <label className="pr-3">Deadline:</label>
@@ -472,14 +474,14 @@ const TaskCard = props => {
       );
     }
 
-    if (props.task.message && !task.isItOver) {
+    if (props.task.message && !task.isItOver && (task.assignedUser[0]=== props.user.role || props.user.role==="Account")) {
       messageInfo = (
         <div className="">
           <p className="font-weight-bold text-danger mb-0">
             This task was returned.
           </p>
           <p className="font-weight-bold d-inline ml-3">Reason: </p>
-          <p className="d-inline font-italic">{messageInfo}</p>
+          <p className="d-inline font-italic">{task.message}</p>
         </div>
       );
     }
@@ -573,7 +575,7 @@ const TaskCard = props => {
             <div className="d-flex align-content-center">
               <label className="pr-3">Time spent:</label>
               <p className="font-weight-bold d-inline">
-                {spentTime} hours
+                {task.spentTime} hours
               </p>
             </div>
             {button}
