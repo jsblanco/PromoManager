@@ -43,7 +43,7 @@ const NewProject = props => {
      history.push(`/project/${budgetNumber}/details`)
   };
 
-  const handleChange = (event) => {
+  const handleUsers = (event) => {
     const { name, value } = event.target;
     let index;
     let teamMembers = newProject.teamMembers
@@ -66,13 +66,24 @@ const NewProject = props => {
       case "administration":
         index = 5;
         break;
+      default:
+        index= 10;
+        break;
     }
 
     teamMembers[index] = value;
     setNewProject({
       ...newProject,
-      [name]: value,
       teamMembers: teamMembers,
+    });
+  };
+
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setNewProject({
+      ...newProject,
+      [name]: value,
     });
   };
 
@@ -141,7 +152,7 @@ const NewProject = props => {
               <select
                 className="w-100"
                 name="account"
-                onChange={handleChange}
+                onChange={handleUsers}
                 required
               >
                 <option value="">Select a person</option>
@@ -161,7 +172,7 @@ const NewProject = props => {
               <select
                 className="w-100"
                 name="scientific"
-                onChange={handleChange}
+                onChange={handleUsers}
               >
                 <option value="">Select a person</option>
                 {userList.map((user) => {
@@ -180,7 +191,7 @@ const NewProject = props => {
               <select
                 className="w-100"
                 name="design"
-                onChange={handleChange}
+                onChange={handleUsers}
               >
                 <option value="">Select a person</option>
                 {userList.map((user) => {
@@ -199,7 +210,7 @@ const NewProject = props => {
               <select
                 className="w-100"
                 name="developer"
-                onChange={handleChange}
+                onChange={handleUsers}
               >
                 <option value="">Select a person</option>
                 {userList.map((user) => {
@@ -215,7 +226,7 @@ const NewProject = props => {
             </div>
             <div className="col-4">
               <label className="mt-1 mb-0">Audiovisual:</label>
-              <select className="w-100" name="av" onChange={handleChange}>
+              <select className="w-100" name="av" onChange={handleUsers}>
                 <option value="">Select a person</option>
                 {userList.map((user) => {
                   if (user.role === "AV") {
@@ -233,7 +244,7 @@ const NewProject = props => {
               <select
                 className="w-100"
                 name="administration"
-                onChange={handleChange}
+                onChange={handleUsers}
               >
                 <option value="">Select a person</option>
                 {userList.map((user) => {
