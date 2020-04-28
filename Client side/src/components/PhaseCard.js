@@ -10,6 +10,7 @@ const PhaseCard = props => {
 
   useEffect(() => {
     setPhase(props.phase);
+    console.log("Phase card")
   }, [props.phase]);
 
   const toggleResetHistory = () => {
@@ -75,7 +76,7 @@ const PhaseCard = props => {
             task={task}
             user={props.user}
             hideOldTasks={hideOldTasks}
-            reloadPage={props.reloadPage}
+            updatePage={props.updatePage}
           />
         );
       });
@@ -173,7 +174,7 @@ const PhaseCard = props => {
         teamMembers={props.teamMembers}
         projectId={props.projectId}
         showTaskCreator={showTaskCreator}
-        reloadPage={props.reloadPage}
+        updatePage={props.updatePage}
       />
     );
     taskCreatorToggler = "Discard new task";

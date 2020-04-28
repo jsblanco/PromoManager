@@ -57,8 +57,7 @@ class Navbar extends Component {
             <div className="row d-flex align-items-center">
               <Link to={"/"} className="my-3 text-decoration-none">
                 <p className="d-inline my-3 text-light font-italic">
-                  {" "}
-                  Pending tasks:{" "}
+                  Pending tasks:
                 </p>
                 {notifications}
               </Link>

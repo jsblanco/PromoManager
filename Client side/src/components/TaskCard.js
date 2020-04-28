@@ -9,16 +9,19 @@ const TaskCard = props => {
   const [taskIsOk, setTaskIsOk]= useState(false)
   const [taskNotOk, setTaskNotOk]= useState(false)
   const [activeTask, setActiveTask]= useState(false)
-  const [taskUpdated, setTaskUpdated]= useState(!!props.task.deadline)
   const [assignedUserName, setAssignedUserName]= useState(props.assignedUserName)
   const [resetPhaseVerification, setResetPhaseVerification]= useState(false)
   const [phaseCompleteVerification, setPhaseCompleteVerification]= useState(false)
+  const [taskUpdated, setTaskUpdated]= useState(!!props.task.deadline)
 
   useEffect(() => {
     if (props.task.activeTask !== activeTask) {
         setActiveTask(props.task.activeTask);
     }
+    console.log("Task card")
   }, [task]);
+
+  useEffect(() => {});
 
   const showResetPhaseVerification = () => {
       setPhaseCompleteVerification(false);
@@ -94,9 +97,10 @@ const TaskCard = props => {
       assignedUser,
       deadline,
     });
+    setTask({...task})
     setShowButton(false);
     setTaskUpdated(true);
-    props.reloadPage();
+    props.updatePage();
   };
 
   const resetPhase = async (event) => {
@@ -105,7 +109,7 @@ const TaskCard = props => {
     const {phaseId, projectId} = props;
     await userService.resetPhase({ projectId, phaseId, spentTime, message });
     setResetPhaseVerification(false);
-    props.reloadPage();
+    props.updatePage();
   };
 
   const showMessageInput = (event) => {
@@ -137,7 +141,7 @@ const TaskCard = props => {
       spentTime,
     })
     setTaskIsOk(false);
-    props.reloadPage();
+    props.updatePage();
   };
 
   const submitTaskAsNotOk = async (event) => {
@@ -152,7 +156,7 @@ const TaskCard = props => {
       message,
       spentTime,
     });
-    props.reloadPage();
+    props.updatePage();
   };
 
     let button,

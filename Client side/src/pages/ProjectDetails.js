@@ -17,8 +17,8 @@ export const ProjectDetails = (props) => {
   useEffect(() => {
       userService.getProject(params.budgetNumber)
       .then(data => {setProject(data); setCommentArray(data.comments)})
-  }, [isUpdated, location])
-
+      setIsUpdated(false)
+    }, [isUpdated, location])
 
   useEffect(() => {
 }, [commentArray])
@@ -31,6 +31,13 @@ export const ProjectDetails = (props) => {
       setShowPhaseCreator(!showPhaseCreatorValue);
     console.log(showPhaseCreator)
   };
+
+
+const updatePage=()=>{
+  setIsUpdated(true)
+  props.updatePage();
+}
+
 
 const addCommentToProject = () => {
   if (!!comments)
@@ -98,7 +105,7 @@ const setIsUpdatedToTrue = () => {
           projectId={projectData._id}
           user={props.user}
           isProjectOver={project.isItOver}
-         reloadPage={setIsUpdatedToTrue}
+         updatePage={updatePage}
         />
       ));
     }
@@ -106,7 +113,7 @@ const setIsUpdatedToTrue = () => {
       createPhaseForm = (
         <PhaseCreator
           projectId={project._id}
-         reloadPage={setIsUpdatedToTrue}
+          updatePage={setIsUpdatedToTrue}
           showPhaseCreator={changeShowPhaseCreator}
         />
       );
@@ -129,8 +136,7 @@ const setIsUpdatedToTrue = () => {
           className="btn btn-info"
           to={`/project/${project.budgetNumber}/edit`}
         >
-          {" "}
-          Edit project{" "}
+          Edit project
         </Link>
       );
     }

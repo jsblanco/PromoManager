@@ -16,7 +16,7 @@ export default class PhaseCreator extends Component {
     const { projectId, name } = this.state;
     userService.createPhase({ projectId, name });
     this.props.showPhaseCreator();
-    this.props.reloadPage()
+    this.props.updatePage()
   };
 
   render() {

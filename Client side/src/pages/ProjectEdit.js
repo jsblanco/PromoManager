@@ -1,78 +1,75 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, Component } from "react";
 import { withAuth } from "../lib/AuthProvider";
 import userService from "../lib/user-service";
 
-class EditProject extends Component {
-  state = {
+const EditProject = props =>{
+  const [project, setProject] = useState({
     name: "",
     userList: [],
     type: "",
     client: "",
     description: "",
     teamMembers: [],
-    budgetNumber: this.props.match.params.budgetNumber,
+    budgetNumber: props.match.params.budgetNumber,
     id: "",
     teamNames: [],
-    originalMembers: [],
-  };
+    originalMembers: ""
+  });
 
-  componentDidMount = async () => {
+  useEffect(()=>{
+    async function anyName(){
+    let budgetNumber = props.match.params.budgetNumber;
     let userList = await userService.getUsers();
-    let budgetNumber = this.props.match.params.budgetNumber;
-    let project = await userService.getProject(budgetNumber);
+    let projectData = await userService.getProject(budgetNumber);
     let teamMembersInOrder = [];
     let teamMembersNames = [];
     let originalMembers = [];
-    project.teamMembers.map((member) => {
-      let index;
+    projectData.teamMembers.map((member) => {
       switch (member.role) {
         case "Account":
           teamMembersInOrder[0] = member._id;
-          originalMembers[0] = member._id;
           teamMembersNames[0] = member.name;
           break;
         case "Scientific":
           teamMembersInOrder[1] = member._id;
-          originalMembers[1] = member._id;
           teamMembersNames[1] = member.name;
           break;
         case "Design":
           teamMembersInOrder[2] = member._id;
-          originalMembers[2] = member._id;
           teamMembersNames[2] = member.name;
           break;
         case "Developer":
           teamMembersInOrder[3] = member._id;
-          originalMembers[3] = member._id;
           teamMembersNames[3] = member.name;
           break;
         case "AV":
           teamMembersInOrder[4] = member._id;
-          originalMembers[4] = member._id;
           teamMembersNames[4] = member.name;
           break;
         case "Administration":
           teamMembersInOrder[5] = member._id;
-          originalMembers[5] = member._id;
           teamMembersNames[5] = member.name;
           break;
       }
     });
-    this.setState({
+    setProject({
+      ...project,
+      name: projectData.name,
+      type: projectData.type,
+      client: projectData.client,
+      description: projectData.description,
       userList: userList,
-      name: project.name,
-      budgetNumber: project.budgetNumber,
-      type: project.type,
-      client: project.client,
-      id: project._id,
-      description: project.description,
       teamMembers: teamMembersInOrder,
       teamNames: teamMembersNames,
       originalMembers: originalMembers,
+      id: projectData._id,
     });
-  };
+  }
+  anyName()
+  }, [])
+  
 
-  handleFormSubmit = (event) => {
+  const handleFormSubmit = (event) => {
     event.preventDefault();
     const {
       name,
@@ -82,7 +79,7 @@ class EditProject extends Component {
       teamMembers,
       originalMembers,
       id,
-    } = this.state;
+    } = project;
     userService
       .updateProject({
         name,
@@ -94,18 +91,14 @@ class EditProject extends Component {
         id,
       })
       .then(() =>
-        this.props.history.push(`/project/${this.state.budgetNumber}/details`)
-      );
-    this.props.updateApp();
+        props.history.push(`/project/${project.budgetNumber}/details`)
+      )
   };
 
-  handleChange = (event) => {
-    let { name, value } = event.target;
-    let teamMembers = this.state.teamMembers;
+  const handleUsers = (event) => {
+    const { name, value } = event.target;
     let index;
-    if (value === "") {
-      value = null;
-    }
+    let teamMembers = project.teamMembers
     switch (name) {
       case "Account":
         index = 0;
@@ -125,27 +118,42 @@ class EditProject extends Component {
       case "Administration":
         index = 5;
         break;
+      default:
+        index= 10;
+        break;
     }
+
     teamMembers[index] = value;
-    this.setState({
-      [name]: value,
+    setProject({
+      ...project,
       teamMembers: teamMembers,
     });
   };
 
-  render() {
-    const { name, budgetNumber, client, description } = this.state;
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setProject({
+      ...project,
+      [name]: value,
+    });
+  };
+
+
+
+
+    const { name, budgetNumber, client, description } = project;
     let member = [];
 
     for (let i = 0; i < 6; i++) {
-      if (this.state.teamMembers[i]) {
+      if (project.teamMembers[i]) {
         member[i] = (
           <option
-            defaultValue={this.state.teamMembers[i]}
+            defaultValue={project.teamMembers[i]}
             className="font-weight-bold"
             selected
           >
-            Currently: {this.state.teamNames[i]}
+            Currently: {project.teamNames[i]}
           </option>
         );
       } else {
@@ -155,9 +163,9 @@ class EditProject extends Component {
 
     return (
       <div className="mt-5 col-lg-6">
-        <h1>Edit project {this.state.budgetNumber}</h1>
+        <h1>Edit project {project.budgetNumber}</h1>
 
-        <form onSubmit={this.handleFormSubmit} className="d-flex flex-column">
+        <form onSubmit={handleFormSubmit} className="d-flex flex-column">
           <div className="row">
             <div className="col-12">
               <label className="mt-2 mb-0">Name:</label>
@@ -166,13 +174,13 @@ class EditProject extends Component {
                 type="text"
                 name="name"
                 value={name}
-                onChange={this.handleChange}
+                onChange={handleChange}
               />
             </div>
             <div className="col-4">
               <label className="mt-2 mb-0">Budget number</label>
               <p className="w-100 text-secondary font-italic">
-                {this.state.budgetNumber} - This value cannot be changed
+                {project.budgetNumber} - This value cannot be changed
               </p>
             </div>
             <div className="col-4">
@@ -182,7 +190,7 @@ class EditProject extends Component {
                 type="text"
                 name="client"
                 value={client}
-                onChange={this.handleChange}
+                onChange={handleChange}
                 required
               />
             </div>
@@ -191,11 +199,11 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="type"
-                onChange={this.handleChange}
+                onChange={handleChange}
                 required
               >
-                <option value={this.state.type} className="font-weight-bold">
-                  Currently: {this.state.type}
+                <option value={project.type} className="font-weight-bold">
+                  Currently: {project.type}
                 </option>
                 <option value="Leaflet">Leaflet</option>
                 <option value="Slidekit">Slidekit</option>
@@ -214,11 +222,11 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="Account"
-                onChange={this.handleChange}
+                onChange={handleUsers}
                 required
               >
                 {member[0]}
-                {this.state.userList.map((user) => {
+                {project.userList.map((user) => {
                   if (user.role === "Account") {
                     return (
                       <option key={user._id} value={user._id}>
@@ -235,10 +243,10 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="Scientific"
-                onChange={this.handleChange}
+                onChange={handleUsers}
               >
                 {member[1]}
-                {this.state.userList.map((user) => {
+                {project.userList.map((user) => {
                   if (user.role === "Scientific") {
                     return (
                       <option key={user._id} value={user._id}>
@@ -255,10 +263,10 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="Design"
-                onChange={this.handleChange}
+                onChange={handleUsers}
               >
                 {member[2]}
-                {this.state.userList.map((user) => {
+                {project.userList.map((user) => {
                   if (user.role === "Design") {
                     return (
                       <option key={user._id} value={user._id}>
@@ -275,10 +283,10 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="Developer"
-                onChange={this.handleChange}
+                onChange={handleUsers}
               >
                 {member[3]}
-                {this.state.userList.map((user) => {
+                {project.userList.map((user) => {
                   if (user.role === "Developer") {
                     return (
                       <option key={user._id} value={user._id}>
@@ -295,10 +303,10 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="AV"
-                onChange={this.handleChange}
+                onChange={handleUsers}
               >
                 {member[4]}
-                {this.state.userList.map((user) => {
+                {project.userList.map((user) => {
                   if (user.role === "AV") {
                     return (
                       <option key={user._id} value={user._id}>
@@ -315,10 +323,10 @@ class EditProject extends Component {
               <select
                 className="w-100 py-1"
                 name="Administration"
-                onChange={this.handleChange}
+                onChange={handleUsers}
               >
                 {member[5]}
-                {this.state.userList.map((user) => {
+                {project.userList.map((user) => {
                   if (user.role === "Administration") {
                     return (
                       <option key={user._id} value={user._id}>
@@ -336,8 +344,8 @@ class EditProject extends Component {
                 className="w-100"
                 type="text"
                 name="description"
-                onChange={this.handleChange}
-                value={this.state.description}
+                onChange={handleChange}
+                value={project.description}
                 required
               ></textarea>
             </div>
@@ -352,6 +360,6 @@ class EditProject extends Component {
       </div>
     );
   }
-}
 
 export default withAuth(EditProject);
+

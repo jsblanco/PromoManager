@@ -40,7 +40,8 @@ const NewProject = props => {
         type,
         teamMembers,
       })
-     history.push(`/project/${budgetNumber}/details`)
+      history.push(`/project/${budgetNumber}/details`);
+      props.updatePage();
   };
 
   const handleUsers = (event) => {
