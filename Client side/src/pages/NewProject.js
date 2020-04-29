@@ -19,8 +19,6 @@ const NewProject = props => {
     userService.getUsers()
     .then(userList=>setUserList(userList));
   },[]);
-
-  console.log(history)
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const {

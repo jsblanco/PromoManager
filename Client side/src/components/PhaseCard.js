@@ -10,7 +10,6 @@ const PhaseCard = props => {
   const [showResetHistory, setShowResetHistory] = useState(false);
 
   useEffect(() => {
-    console.log("Phase card")
     setPhase(props.phase);
     setIsUpdated(true)
   }, [props.phase, isUpdated])

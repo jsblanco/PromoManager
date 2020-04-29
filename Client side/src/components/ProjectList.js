@@ -85,9 +85,6 @@ const ProjectList = (props) => {
         break;
     }
 
-    //    console.log(dateText.charAt(9));
-    //    if (dateText.charAt(9) !== 0) { day += dateText.charAt(8); }
-
     switch (day) {
       case 1:
         day += "st";

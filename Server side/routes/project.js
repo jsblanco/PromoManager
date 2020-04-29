@@ -343,7 +343,7 @@ router.put("/:projectId/addcomment", (req, res, next) => {
       },
     },
   }).catch((error) => {
-    console.log(error);
+    next(error);
   });
 });
 

@@ -27,7 +27,6 @@ class Login extends Component {
       error="";
       break;
     case 401: 
-    console.log("hola")
       error=<p className="font-weight-bold m-0 text-danger w-100">Password doesn't match username</p>;
       break;
     case 404: 

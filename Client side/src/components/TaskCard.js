@@ -19,7 +19,6 @@ const TaskCard = props => {
     if (props.task.activeTask !== activeTask) {
         setActiveTask(props.task.activeTask);
     }
-    console.log("Task card")
   }, [task]);
 
   useEffect(() => {});
@@ -68,11 +67,9 @@ const TaskCard = props => {
 
   const handleAssignedUser = (event) => {
     let { name, value } = event.target;
-    console.log(name, value)
     let userName = props.teamMembers.filter((user) => user.role === value);
     let assignedUserName = `${value}: ${userName[0].name}`;
     let assignedUser = value;
-    console.log(assignedUserName, assignedUser)
     setTask({
       ...task,
       assignedUser: [assignedUser]});

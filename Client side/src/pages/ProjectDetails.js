@@ -7,55 +7,50 @@ import PhaseCard from "../components/PhaseCard";
 
 export const ProjectDetails = (props) => {
   const params = useParams();
-  const location = useLocation()
-  const [isUpdated, setIsUpdated] = useState(false)
-  const [comments, setComments] = useState("")
-  const [showPhaseCreator, setShowPhaseCreator] = useState(false)
-  const [project, setProject] = useState({teamMembers:[]})
-  const [commentArray, setCommentArray] = useState([])
+  const location = useLocation();
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [comments, setComments] = useState("");
+  const [showPhaseCreator, setShowPhaseCreator] = useState(false);
+  const [project, setProject] = useState({ teamMembers: [] });
+  const [commentArray, setCommentArray] = useState([]);
 
   useEffect(() => {
-      userService.getProject(params.budgetNumber)
-      .then(data => {setProject(data); setCommentArray(data.comments)})
-      setIsUpdated(true)
-      }, [isUpdated, location])
+    userService.getProject(params.budgetNumber).then((data) => {
+      setProject(data);
+      setCommentArray(data.comments);
+    });
+    setIsUpdated(true);
+  }, [isUpdated, location]);
 
-  useEffect(() => {
-}, [commentArray])
+  useEffect(() => {}, [commentArray]);
 
-  
-//Comentarios: a componente externo
+  //Comentarios: a componente externo
 
   const changeShowPhaseCreator = () => {
     let showPhaseCreatorValue = showPhaseCreator;
-      setShowPhaseCreator(!showPhaseCreatorValue);
-    console.log(showPhaseCreator)
+    setShowPhaseCreator(!showPhaseCreatorValue);
   };
 
-
-const updatePage=()=>{
-  setIsUpdated(false)
   props.updatePage();
-}
+  const updatePage = () => {
+    setIsUpdated(false);
+  };
 
+  const addCommentToProject = () => {
+    if (!!comments) {
+      const projectId = project._id;
+      let projectData = [...commentArray];
+      projectData.unshift({ comments: comments, user: props.user._id });
+      setCommentArray(projectData);
+      userService.postComments({ projectId, comments: comments });
+    }
+  };
 
-const addCommentToProject = () => {
-  if (!!comments)
-  {
-  const projectId = project._id;
-  let projectData = [...commentArray]
-  projectData.unshift({comments:comments, user: props.user._id});
-  setCommentArray(projectData);
-  userService.postComments({ projectId, comments:comments });}
-};
+  const setIsUpdatedToTrue = () => {
+    isUpdated ? setIsUpdated(false) : setIsUpdated(true);
+  };
 
-
-const setIsUpdatedToTrue = () => {
-  isUpdated ? setIsUpdated(false):setIsUpdated(true);
-};
-
-
- const closeProjectFunction = () => {
+  const closeProjectFunction = () => {
     const projectId = project._id;
     const teamMembers = project.teamMembers;
     userService.closeProject({ projectId, teamMembers });
@@ -78,248 +73,241 @@ const setIsUpdatedToTrue = () => {
     return `${totalHours}:${totalMinutes.toString().slice(-2)}`;
   };
 
-
-
-    let phases,
-      createPhaseForm,
-      phaseCreatorToggler,
-      createPhaseButton,
-      editProjectButton,
-      commentSection,
-      closeProject,
-      addComment;
-    let projectData = project;
-    if (projectData.phases) {
-      let activePhase = projectData.phases.findIndex(
-        (phase) => phase.isItOver === false
-      );
-      if (activePhase > -1) {
-        projectData.phases[activePhase].activePhase = true;
-      }
-      phases = projectData.phases.map((phase) => (
-        <PhaseCard
-          key={phase._id}
-          //position={projectData.phases.length - projectData.phases.indexOf(phase)}
-          phase={phase}
-          teamMembers={projectData.teamMembers}
-          projectId={projectData._id}
-          user={props.user}
-          isProjectOver={project.isItOver}
-         updatePage={updatePage}
-        />
-      ));
+  let phases,
+    createPhaseForm,
+    phaseCreatorToggler,
+    createPhaseButton,
+    editProjectButton,
+    commentSection,
+    closeProject,
+    addComment;
+  let projectData = project;
+  if (projectData.phases) {
+    let activePhase = projectData.phases.findIndex(
+      (phase) => phase.isItOver === false
+    );
+    if (activePhase > -1) {
+      projectData.phases[activePhase].activePhase = true;
     }
-    if (showPhaseCreator === true) {
-      createPhaseForm = (
-        <PhaseCreator
-          projectId={project._id}
-          updatePage={setIsUpdatedToTrue}
-          showPhaseCreator={changeShowPhaseCreator}
-        />
+    phases = projectData.phases.map((phase) => (
+      <PhaseCard
+        key={phase._id}
+        //position={projectData.phases.length - projectData.phases.indexOf(phase)}
+        phase={phase}
+        teamMembers={projectData.teamMembers}
+        projectId={projectData._id}
+        user={props.user}
+        isProjectOver={project.isItOver}
+        updatePage={updatePage}
+      />
+    ));
+  }
+  if (showPhaseCreator === true) {
+    createPhaseForm = (
+      <PhaseCreator
+        projectId={project._id}
+        updatePage={setIsUpdatedToTrue}
+        showPhaseCreator={changeShowPhaseCreator}
+      />
+    );
+    phaseCreatorToggler = "Discard new phase";
+  } else {
+    phaseCreatorToggler = "Add new phase";
+  }
+
+  if (!project.isItOver && props.user.role === "Account") {
+    createPhaseButton = (
+      <button
+        className="btn btn-primary my-2 w-100"
+        onClick={() => changeShowPhaseCreator()}
+      >
+        {phaseCreatorToggler}
+      </button>
+    );
+    editProjectButton = (
+      <Link
+        className="btn btn-info"
+        to={`/project/${project.budgetNumber}/edit`}
+      >
+        Edit project
+      </Link>
+    );
+  }
+
+  if (commentArray) {
+    if (commentArray.length > 0) {
+      commentSection = (
+        <div id="comment-section">
+          {commentArray.map((comment) => {
+            let userName;
+            let userOrNot;
+            if (props.user._id === comment.user) {
+              userName = "you";
+              userOrNot = "ml-5 bg-success your-comment";
+            } else {
+              userOrNot = "other-comment mr-5 bg-info";
+              project.teamMembers.map((member) => {
+                if (member._id === comment.user) {
+                  userName = `${member.name} (${member.role})`;
+                }
+              });
+            }
+            return (
+              <div
+                key={Math.random()}
+                className={`my-1 text-white px-4 py-3 my-4 ${userOrNot} p-2`}
+              >
+                <p className="font-weight-bold mt-2">{comment.comments}</p>
+                <p className="font-italic mb-1">By {userName}</p>
+              </div>
+            );
+          })}
+        </div>
       );
-      phaseCreatorToggler = "Discard new phase";
     } else {
-      phaseCreatorToggler = "Add new phase";
+      commentSection = (
+        <div
+          id="comment-section"
+          className="d-flex justify-content-center align-items-center"
+        >
+          <p className="text-muted font-italic">
+            Be the first to post a comment in this project
+          </p>
+        </div>
+      );
     }
+  }
 
-    if (!project.isItOver && props.user.role === "Account") {
-      createPhaseButton = (
-        <button
-          className="btn btn-primary my-2 w-100"
-          onClick={()=>changeShowPhaseCreator()}
-        >
-          {phaseCreatorToggler}
-        </button>
-      );
-      editProjectButton = (
-        <Link
-          className="btn btn-info"
-          to={`/project/${project.budgetNumber}/edit`}
-        >
-          Edit project
-        </Link>
-      );
-    }
-    
-    if (commentArray) {
-      if (commentArray.length > 0) {
-        commentSection = (
-          <div id="comment-section">
-            {commentArray.map((comment) => {
-              let userName;
-              let userOrNot;
-              if (props.user._id === comment.user) {
-                userName = "you";
-                userOrNot = "ml-5 bg-success your-comment";
-              } else {
-                userOrNot = "other-comment mr-5 bg-info";
-                project.teamMembers.map((member) => {
-                  if (member._id === comment.user) {
-                    userName = `${member.name} (${member.role})`;
-                  }
-                });
-              }
-              return (
-                <div
-                  key={Math.random()}
-                  className={`my-1 text-white px-4 py-3 my-4 ${userOrNot} p-2`}
-                >
-                  <p className="font-weight-bold mt-2">{comment.comments}</p>
-                  <p className="font-italic mb-1">By {userName}</p>
-                </div>
-              );
-            })}
-          </div>
-        );
-      } else {
-        commentSection = (
-          <div
-            id="comment-section"
-            className="d-flex justify-content-center align-items-center"
+  let isUserATeamMember = project.teamMembers.findIndex(
+    (i) => i._id === props.user._id
+  );
+
+  if (isUserATeamMember !== -1) {
+    addComment = (
+      <div>
+        <h4 className="mt-4">Add a comment</h4>
+        <div className="w-100">
+          <textarea
+            className="d-block w-100 border rounded-lg p-2 bg-light"
+            type="text"
+            name="comments"
+            value={comments}
+            onChange={(event) => {
+              setComments(event.target.value);
+            }}
+            placeholder="What's on your mind?"
+            required
+          ></textarea>
+          <button
+            type="submit"
+            className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center"
+            onClick={() => addCommentToProject()}
           >
-            <p className="text-muted font-italic">
-              Be the first to post a comment in this project
+            <i className="fas fa-comment text-light m-1 pr-3"></i>Comment{" "}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (
+    !project.isItOver &&
+    project.phases !== undefined &&
+    props.user.role === "Account"
+  ) {
+    if (
+      project.phases.length > 0 &&
+      project.phases[project.phases.length - 1].isItOver === true
+    ) {
+      closeProject = (
+        <form onSubmit={closeProjectFunction()} className="text-center my-2">
+          <div className="row w-100 text-center">
+            <h5 className="text-danger font-weight-bold w-100">
+              You are about to close this project
+            </h5>
+            <p className="w-100">
+              It will be marked as finished, and team members will not receive
+              further notifications.
             </p>
           </div>
-        );
-      }
+          <button type="submit" className="btn btn-danger">
+            Close project
+          </button>
+        </form>
+      );
     }
+  }
 
-    let isUserATeamMember = project.teamMembers.findIndex(
-      (i) => i._id === props.user._id
+  if (project.isItOver) {
+    closeProject = (
+      <div className="card shadow p-3 mb-3 mt-2 bg-white rounded text-center my-2">
+        <h5 className="text-danger font-weight-bold w-100">
+          This project is closed
+        </h5>
+      </div>
     );
+  }
 
-    if (isUserATeamMember !== -1) {
-      addComment = (
-        <div>
-          <h4 className="mt-4">Add a comment</h4>
-          <div className="w-100">
-            <textarea
-              className="d-block w-100 border rounded-lg p-2 bg-light"
-              type="text"
-              name="comments"
-              value={comments}
-              onChange={(event)=>{setComments(event.target.value)}}
-              placeholder="What's on your mind?"
-              required
-            ></textarea>
-            <button
-              type="submit"
-              className="btn btn-success mt-0 w-100 d-flex align-items-center justify-content-center"
-              onClick={()=>addCommentToProject()}
-            >
-              <i className="fas fa-comment text-light m-1 pr-3"></i>Comment{" "}
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    if (
-      !project.isItOver &&
-      project.phases !== undefined &&
-      props.user.role === "Account"
-    ) {
-      if (project.phases.length > 0 &&
-          project.phases[project.phases.length - 1]
-            .isItOver === true
-        ) {
-          closeProject = (
-            <form onSubmit={closeProjectFunction()} className="text-center my-2">
-              <div className="row w-100 text-center">
-                <h5 className="text-danger font-weight-bold w-100">
-                  You are about to close this project
-                </h5>
-                <p className="w-100">
-                  It will be marked as finished, and team members will not
-                  receive further notifications.
-                </p>
-              </div>
-              <button type="submit" className="btn btn-danger">
-                Close project
-              </button>
-            </form>
-          );
-        }
+  let Account = [];
+  let Scientific = [];
+  let Design = [];
+  let Developer = [];
+  let AV = [];
+  let Administration = [];
+  if (project.phases) {
+    [...project.phases].map((phase) => {
+      if (phase.tasks) {
+        phase.tasks.map((task) => {
+          switch (task.assignedUser[0]) {
+            case "Account":
+              Account.push(task.spentTime);
+              break;
+            case "Scientific":
+              Scientific.push(task.spentTime);
+              break;
+            case "Design":
+              Design.push(task.spentTime);
+              break;
+            case "Developer":
+              Developer.push(task.spentTime);
+              break;
+            case "AV":
+              AV.push(task.spentTime);
+              break;
+            case "Administration":
+              Administration.push(task.spentTime);
+              break;
+            default:
+              break;
+          }
+        });
       }
-    
-    if (project.isItOver) {
-      closeProject = (
-        <div className="card shadow p-3 mb-3 mt-2 bg-white rounded text-center my-2">
-          <h5 className="text-danger font-weight-bold w-100">
-            This project is closed
-          </h5>
-        </div>
-      );
-    }
-
-    let Account = [];
-    let Scientific = [];
-    let Design = [];
-    let Developer = [];
-    let AV = [];
-    let Administration = [];
-    if (project.phases) {
-      [...project.phases].map((phase) => {
-        if (phase.tasks) {
-          phase.tasks.map((task) => {
-            switch (task.assignedUser[0]) {
-              case "Account":
-                Account.push(task.spentTime);
-                break;
-              case "Scientific":
-                Scientific.push(task.spentTime);
-                break;
-              case "Design":
-                Design.push(task.spentTime);
-                break;
-              case "Developer":
-                Developer.push(task.spentTime);
-                break;
-              case "AV":
-                AV.push(task.spentTime);
-                break;
-              case "Administration":
-                Administration.push(task.spentTime);
-                break;
-              default:
-                break;
-            }
-          });
-        }
-      });
-      Account.length > 0 
-        ? (Account = Account.reduce(calculateTotalSpentTime))
-        : (Account = "00:00");
-      Scientific.length > 0
-        ? (Scientific = Scientific.reduce(calculateTotalSpentTime))
-        : (Scientific = "00:00");
-      Design.length > 0
-        ? (Design = Design.reduce(calculateTotalSpentTime))
-        : (Design = "00:00");
-      Developer.length > 0
-        ? (Developer = Developer.reduce(calculateTotalSpentTime))
-        : (Developer = "00:00");
-      AV.length > 0
-        ? (AV = AV.reduce(calculateTotalSpentTime))
-        : (AV = "00:00");
-      Administration.length > 0
-        ? (Administration = Administration.reduce(calculateTotalSpentTime))
-        : (Administration = "00:00");
-    }
-    const timeSpent = [
-      Account,
-      Scientific,
-      Design,
-      Developer,
-      AV,
-      Administration,
-    ];
-
-
-
-
-
+    });
+    Account.length > 0
+      ? (Account = Account.reduce(calculateTotalSpentTime))
+      : (Account = "00:00");
+    Scientific.length > 0
+      ? (Scientific = Scientific.reduce(calculateTotalSpentTime))
+      : (Scientific = "00:00");
+    Design.length > 0
+      ? (Design = Design.reduce(calculateTotalSpentTime))
+      : (Design = "00:00");
+    Developer.length > 0
+      ? (Developer = Developer.reduce(calculateTotalSpentTime))
+      : (Developer = "00:00");
+    AV.length > 0 ? (AV = AV.reduce(calculateTotalSpentTime)) : (AV = "00:00");
+    Administration.length > 0
+      ? (Administration = Administration.reduce(calculateTotalSpentTime))
+      : (Administration = "00:00");
+  }
+  const timeSpent = [
+    Account,
+    Scientific,
+    Design,
+    Developer,
+    AV,
+    Administration,
+  ];
 
   return (
     <div className="my-4 row w-100 d-flex flex-row justify-content-around">
@@ -385,7 +373,6 @@ const setIsUpdatedToTrue = () => {
       </div>
     </div>
   );
-}
-
+};
 
 export default withAuth(ProjectDetails);
