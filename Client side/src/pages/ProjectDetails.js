@@ -31,8 +31,8 @@ export const ProjectDetails = (props) => {
     setShowPhaseCreator(!showPhaseCreatorValue);
   };
 
-  props.updatePage();
   const updatePage = () => {
+    props.updatePage();
     setIsUpdated(false);
   };
 
