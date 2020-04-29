@@ -5,6 +5,7 @@ import { withAuth } from "../lib/AuthProvider";
 const TaskCard = props => {
 
   const [task, setTask]= useState(props.task)
+  const [message, setMessage]= useState(props.task.message)
   const [showButton, setShowButton]= useState(false)
   const [taskIsOk, setTaskIsOk]= useState(false)
   const [taskNotOk, setTaskNotOk]= useState(false)
@@ -147,7 +148,7 @@ const TaskCard = props => {
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
     setTaskNotOk(false);
-    const {spentTime, message}= task;
+    const {spentTime}= task;
     const {phaseId, projectId, index} = props;
     await userService.taskIsNotOk({
       phaseId,
@@ -421,7 +422,7 @@ const TaskCard = props => {
                 Reason:
               </label>
               <input
-                onChange={handleChange}
+                onChange={e=>setMessage(e.target.value)}
                 type="text"
                 name="message"
                 className="pt-1 pb-2 w-50"

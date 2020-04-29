@@ -17,8 +17,8 @@ export const ProjectDetails = (props) => {
   useEffect(() => {
       userService.getProject(params.budgetNumber)
       .then(data => {setProject(data); setCommentArray(data.comments)})
-      setIsUpdated(false)
-    }, [isUpdated, location])
+      setIsUpdated(true)
+      }, [isUpdated, location])
 
   useEffect(() => {
 }, [commentArray])
@@ -34,7 +34,7 @@ export const ProjectDetails = (props) => {
 
 
 const updatePage=()=>{
-  setIsUpdated(true)
+  setIsUpdated(false)
   props.updatePage();
 }
 

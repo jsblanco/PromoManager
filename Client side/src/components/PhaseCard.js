@@ -4,14 +4,21 @@ import TaskCard from "./TaskCard";
 
 const PhaseCard = props => {
   const [phase, setPhase] = useState(props.phase);
+  const [isUpdated, setIsUpdated] = useState(false)
   const [hideTasks, setHideTasks] = useState(phase.isItOver);
   const [addTaskToggler, setAddTaskToggler] = useState(false);
   const [showResetHistory, setShowResetHistory] = useState(false);
 
   useEffect(() => {
-    setPhase(props.phase);
     console.log("Phase card")
-  }, [props.phase]);
+    setPhase(props.phase);
+    setIsUpdated(true)
+  }, [props.phase, isUpdated])
+
+  const updatePage=()=>{
+    setIsUpdated(false)
+    props.updatePage();
+  }
 
   const toggleResetHistory = () => {
     setShowResetHistory(!showResetHistory);
@@ -76,7 +83,7 @@ const PhaseCard = props => {
             task={task}
             user={props.user}
             hideOldTasks={hideOldTasks}
-            updatePage={props.updatePage}
+            updatePage={updatePage}
           />
         );
       });
@@ -174,7 +181,7 @@ const PhaseCard = props => {
         teamMembers={props.teamMembers}
         projectId={props.projectId}
         showTaskCreator={showTaskCreator}
-        updatePage={props.updatePage}
+        updatePage={updatePage}
       />
     );
     taskCreatorToggler = "Discard new task";
