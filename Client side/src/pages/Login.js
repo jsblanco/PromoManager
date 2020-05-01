@@ -1,39 +1,47 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { withAuth } from "../lib/AuthProvider";
 
-class Login extends Component {
-  state = { email: "", password: "", error: false };
+ const Login = props => {
+  const [userInfo, setUserInfo] = useState({
+    email: "", 
+    password: "",
+  })
+  
+useEffect(() => {}, [props.error])
 
-  handleFormSubmit = async (event) => {
+  //NOTA!cuando pase a hooks, meter error en useEffect
+
+const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const { email, password } = this.state;
+    const { email, password } = userInfo;
     //console.log('Login -> form submit', { email, password });
-    await this.props.login({ email, password })
-    this.props.error && this.setState({error: this.props.error.login})
+    await props.login({ email, password })
   };
 
-  handleChange = (event) => {
+const  handleChange = (event) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+    setUserInfo({
+      ...userInfo,
+      [name]: value });
   };
+  
 
-  render() {
-    const { email, password } = this.state;
-    let error;
+    const { email, password } = userInfo;
+    let errorDisplay;
 
-    switch (this.state.error){
+    switch (props.error.login){
     case false:
-      error="";
+      errorDisplay="";
       break;
     case 401: 
-      error=<p className="font-weight-bold m-0 text-danger w-100">Password doesn't match username</p>;
+      errorDisplay=<p className="font-weight-bold m-0 text-danger w-100">Password doesn't match username</p>;
       break;
     case 404: 
-      error=<p className="font-weight-bold m-0 text-danger w-100">Username not registered in PromoManager</p>;
+      errorDisplay=<p className="font-weight-bold m-0 text-danger w-100">Username not registered in PromoManager</p>;
       break;
     default:
-      error=<p className="font-weight-bold m-0 text-danger w-100">Could not login with introduced credentials</p>;;
+      errorDisplay=<p className="font-weight-bold m-0 text-danger w-100">Could not login with introduced credentials</p>;;
       break;
   }
 
@@ -54,7 +62,7 @@ class Login extends Component {
             </p>
 
             <form
-              onSubmit={this.handleFormSubmit}
+              onSubmit={handleFormSubmit}
               className="d-flex flex-column justify-content-center"
             >
               <label className="mt-3 mb-0">Email:</label>
@@ -62,7 +70,7 @@ class Login extends Component {
                 type="text"
                 name="email"
                 value={email}
-                onChange={this.handleChange}
+                onChange={handleChange}
                 required
               />
 
@@ -72,11 +80,11 @@ class Login extends Component {
                 name="password"
                 className="mb-3"
                 value={password}
-                onChange={this.handleChange}
+                onChange={handleChange}
                 required
               />
 
-              {error}
+              {props.error && errorDisplay}
 
               <input
                 className="btn btn-success mt-3"
@@ -98,6 +106,7 @@ class Login extends Component {
       </div>
     );
   }
-}
+
 
 export default withAuth(Login);
+
