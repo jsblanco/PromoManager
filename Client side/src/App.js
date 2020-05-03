@@ -26,7 +26,7 @@ const App = (props) => {
   const [searchQuery, setsearchQuery] = useState("");
 
   useEffect(() => {
-    if (isUpdated === false) {
+    if (isUpdated === false || !props.isLoggedin) {
       loadUserData().then(() => {
         populateProjectSidebar();
         setIsUpdated(true);
