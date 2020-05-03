@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withAuth } from "../lib/AuthProvider";
+import { Link } from "react-router-dom";
 
 import TaskCard from "../components/TaskCard";
 
@@ -46,7 +47,13 @@ class Home extends Component {
                 key={project._id}
                 className="shadow p-3 mb-3 card bg-white rounded p-4 my-2"
               >
-                <h4>{project.name}</h4>
+                <Link
+                  className="text-decoration-none"
+                  to={`/project/${project.budgetNumber}/details`}
+                  activeClassName="active"
+                >
+                  <h4 className="text-dark">{project.name}</h4>
+                </Link>
                 <TaskCard
                   index={project.pendingTask.index}
                   projectId={project._id}

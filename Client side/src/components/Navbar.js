@@ -75,6 +75,11 @@ class Navbar extends Component {
         ) : (
           <>
             <div className="row">
+            <Link to="/about">
+                <button className="navbar-button btn btn-light px-3 mx-3 text-info font-weight-bold">
+                  What is PromoManager?
+                </button>
+              </Link>
               <Link to="/login">
                 <button className="navbar-button btn btn-light px-3 mx-3 text-info font-weight-bold">
                   Login

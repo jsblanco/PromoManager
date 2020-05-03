@@ -78,6 +78,7 @@ const TaskCard = props => {
 
   const updateTask = (event) => {
     event.preventDefault();
+    if (!!props.demonstrationPurposes){return};
     const {
       name,
       assignedUser,
@@ -103,6 +104,7 @@ const TaskCard = props => {
 
   const resetPhase = async (event) => {
     event.preventDefault();
+    if (!!props.demonstrationPurposes){return};
     const {spentTime, message} = task;
     const {phaseId, projectId} = props;
     await userService.resetPhase({ projectId, phaseId, spentTime, message });
@@ -129,6 +131,7 @@ const TaskCard = props => {
 
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
+    if (!!props.demonstrationPurposes){return};
     setPhaseCompleteVerification(false);
     const {spentTime}= task;
     const {phaseId, projectId, index} = props;
@@ -144,6 +147,7 @@ const TaskCard = props => {
 
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
+    if (!!props.demonstrationPurposes){return};
     setTaskNotOk(false);
     const {spentTime}= task;
     const {phaseId, projectId, index} = props;

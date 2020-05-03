@@ -16,6 +16,7 @@ import NewProject from "./pages/NewProject";
 import ProjectDetails from "./pages/ProjectDetails";
 import ProjectEdit from "./pages/ProjectEdit";
 import Home from "./pages/Home";
+import {AboutPromomanager} from "./pages/AboutPromomanager";
 
 const App = (props) => {
   const [userData, setUserData] = useState({ ongoingProjects: [] });
@@ -230,6 +231,7 @@ const App = (props) => {
           <Switch>
             <AnonRoute exact path="/signup" component={Signup} />
             <AnonRoute exact path="/login" component={Login} />
+            <AnonRoute exact path="/about" component={AboutPromomanager} />
             <PrivateRoute
               exact
               path="/project/new"

@@ -28,7 +28,9 @@ class Auth {
   }
 
   me() {
-    return this.auth.get("/auth/me").then(({ data }) => data);
+    return this.auth.get("/auth/me").then(({ data }) => data)
+   // .catch(e=>console.log("No user logged in: ",e))
+   ;
   }
 }
 
