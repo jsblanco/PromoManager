@@ -158,7 +158,7 @@ const App = (props) => {
 
   let projects, newProject, toggleProjects, searchInput;
   const { isLoggedin } = props;
-  if (loaded === true && isLoggedin) {
+  if (loaded === true && !!isLoggedin) {
     projects = populateProjectSidebar();
     if (
       isUpdated == true ||
@@ -180,7 +180,7 @@ const App = (props) => {
     }
   }
 
-  if (userData) {
+  if (!!isLoggedin) {
     toggleProjects = (
       <button
         className="list-group-item list-group-item-action bg-info text-light pl-5 justify-content-left d-flex align-items-center"
