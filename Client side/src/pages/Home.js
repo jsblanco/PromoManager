@@ -50,7 +50,6 @@ class Home extends Component {
                 <Link
                   className="text-decoration-none"
                   to={`/project/${project.budgetNumber}/details`}
-                  activeClassName="active"
                 >
                   <h4 className="text-dark">{project.name}</h4>
                 </Link>

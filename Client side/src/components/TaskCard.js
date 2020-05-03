@@ -256,7 +256,7 @@ const TaskCard = props => {
       </div>
     );
 
-    if (!props.isProjectOver && props.user.role === "Account") {
+    if (!props.isProjectOver && props.user.role === "Account" && !props.demonstrationPurposes) {
       button = (
         <button className="btn btn-info" onClick={showInput}>
           Edit task
@@ -348,7 +348,7 @@ const TaskCard = props => {
       );
     }
 
-    if (!props.task.firstTask) {
+    if (props.demonstrationPurposes || !props.task.firstTask) {
       issueDetected = (
         <button onClick={showMessageInput} className="btn btn-danger mx-2">
           Issue detected
@@ -379,6 +379,7 @@ const TaskCard = props => {
         </div>
       );
     } else if (
+      props.demonstrationPurposes && props.task.activeTask||
       props.user.role === props.task.assignedUser[0] &&
       props.task.activeTask
     ) {
@@ -395,7 +396,7 @@ const TaskCard = props => {
       );
     }
 
-    if (props.task.activeTask) {
+    if (props.demonstrationPurposes || props.task.activeTask) {
       activeMarker = (
         <p className="d-inline font-italic text-primary"> - Active task</p>
       );
@@ -465,7 +466,7 @@ const TaskCard = props => {
       );
     }
 
-    if (props.task.message && !task.isItOver && (task.assignedUser[0]=== props.user.role || props.user.role==="Account")) {
+    if (props.task.message.trim() && !task.isItOver && (task.assignedUser[0]=== props.user.role || props.user.role==="Account")) {
       messageInfo = (
         <div className="">
           <p className="font-weight-bold text-danger mb-0">

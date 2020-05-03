@@ -33,12 +33,14 @@ const App = (props) => {
         setIsUpdated(true);
       });
     }
-  }, [isUpdated]);
+  }, [isUpdated, searchQuery]);
+
+  useEffect(() => {}, [showFinishedProjects])
 
   const loadUserData = async () => {
     if (props.user) {
-      let userData = await userService.getUserData(props.user._id);
-      setUserData(userData);
+      let userInformation = await userService.getUserData(props.user._id);
+      setUserData(userInformation);
       setLoaded(true);
       setIsUpdated(false);
       setShowFinishedProjects(false);
@@ -50,9 +52,9 @@ const App = (props) => {
       let finishedProjects = await userService.getFinishedProjects(
         props.user._id
       );
-      let userData = userData;
-      userData.finishedProjects = finishedProjects.finishedProjects;
-      setUserData(userData);
+      let userInformation = userData;
+      userInformation.finishedProjects = finishedProjects.finishedProjects;
+      setUserData(userInformation);
       setpastProjectsFetched(true);
       setShowFinishedProjects(!showFinishedProjects);
     } else {
@@ -194,7 +196,7 @@ const App = (props) => {
     searchInput = (
       <input
         type="text"
-        onChange={(e) => setsearchQuery(e.value)}
+        onChange={(e) => setsearchQuery(e.target.value)}
         className="list-group-item list-group-item-action bg-white text-secondary pl-5 justify-content-left d-flex align-items-center"
         placeholder="Search for a project..."
         name="searchQuery"
