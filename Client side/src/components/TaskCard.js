@@ -106,9 +106,11 @@ const TaskCard = (props) => {
   const resetPhase = async (event) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
-      return;
+      props.updatePage("resetPhase", props.phaseId, props.index, task, message);
+      setResetPhaseVerification(false)
+      return setTaskNotOk(false)
     }
-    const { spentTime, message } = task;
+    const { spentTime } = task;
     const { phaseId, projectId } = props;
     await userService.resetPhase({ projectId, phaseId, spentTime, message });
     setResetPhaseVerification(false);
@@ -369,7 +371,7 @@ const TaskCard = (props) => {
   }
 
   if (
-    (!!props.user && props.user.role === props.task.assignedUser[0]) &&
+    ((!!props.user && props.user.role === props.task.assignedUser[0]) || !!props.task.demonstrationPurposes) &&
     props.task.activeTask &&
     props.task.lastTask
   ) {
@@ -518,7 +520,7 @@ const TaskCard = (props) => {
             Client feedback:
           </label>
           <textarea
-            onChange={handleChange}
+            onChange={(e) => setMessage(e.target.value)}
             name="message"
             className="pt-1 pb-2 w-50"
             placeholder="Describe the feedback from the client to the team"

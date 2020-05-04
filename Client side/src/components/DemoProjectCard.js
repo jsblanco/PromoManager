@@ -20,7 +20,17 @@ export const DemoProjectCard = (props) => {
     let updatedProject = {};
     switch (action) {
       case "resetPhase":
-        console.log(phaseId + ": " + action + " " + taskIndex);
+        console.log(action, phaseId, taskIndex, task, message)
+        updatedProject = project;
+        updatedProject.phases[phaseId].tasks[taskIndex] = {
+          ...updatedProject.phases[phaseId].tasks[taskIndex],
+          activeTask: false,
+          completedOn: now,
+          //spentTime: task.inputSpentTime,
+          isItOver: true,
+        };
+        updatedProject.phases[phaseId].tasks.push(...updatedProject.phases[phaseId].basicTasks)
+        setIsUpdated(false);
         break;
 
       case "submitTaskAsOk":
@@ -34,13 +44,11 @@ export const DemoProjectCard = (props) => {
         };
         if (updatedProject.phases[phaseId].length === +taskIndex + 1) {
           updatedProject.phases[phaseId].isItOver = true;
-          //setProject({            updatedProject,          });
           setIsUpdated(false);
         }
-        //console.log(phaseId + ": " + action + " " + taskIndex);
         break;
       case "submitTaskAsNotOk":
-        console.log(message)
+        console.log(message);
         updatedProject = project;
         updatedProject.phases[phaseId].tasks[taskIndex - 1] = {
           ...updatedProject.phases[phaseId].tasks[taskIndex - 1],
@@ -54,7 +62,6 @@ export const DemoProjectCard = (props) => {
           activeTask: false,
           spentTime: task.spentTime,
         };
-        //setProject({updatedProject});
         setIsUpdated(false);
         break;
       default:
