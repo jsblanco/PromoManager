@@ -14,7 +14,10 @@ const PhaseCard = props => {
     setIsUpdated(true)
   }, [props.phase, isUpdated])
 
-  const updatePage=()=>{
+  const updatePage=(action, phaseId, taskIndex)=>{
+    if (phase.demonstrationPurposes){
+      return props.updatePage(action, phaseId, taskIndex)
+    }
     setIsUpdated(false)
     props.updatePage();
   }
@@ -51,7 +54,7 @@ const PhaseCard = props => {
         let assignedUserIndex = props.teamMembers.findIndex(
           (member) => member.role == task.assignedUser[0]
         );
-        assignedUserName = `${props.teamMembers[assignedUserIndex].role}: ${props.teamMembers[assignedUserIndex].name}`;
+        assignedUserName = props.phase.demonstrationPurposes? "Guest user ": `${props.teamMembers[assignedUserIndex].role}: ${props.teamMembers[assignedUserIndex].name}`;
         let hideOldTasks = "";
         if (!showResetHistory) {
           if (
@@ -188,13 +191,15 @@ const PhaseCard = props => {
     taskCreatorToggler = "Add new task";
   }
 
-  if (props.user.role === "Account" && !phase.isItOver) {
+  if (!phase.demonstrationPurposes){
+    if (props.user.role === "Account" && !phase.isItOver) {
     createTaskButton = (
       <button className="btn btn-info py-1" onClick={showTaskCreator}>
         {taskCreatorToggler}
       </button>
     );
   }
+}
 
   return (
     <div className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">

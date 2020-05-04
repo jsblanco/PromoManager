@@ -1,33 +1,12 @@
 import React from "react";
-import TaskCard from "../components/TaskCard";
+import { DemoPhase } from "../components/DemoPhase";
+import { DemoProjectCard } from "../components/DemoProjectCard";
+
 
 export const AboutPromomanager = () => {
-  const teamMembers = [
-    {
-      name: "Marta ",
-      email: "marta@promo.com",
-      role: "Account",
-    },
-    {
-      name: "Jorge",
-      email: "jorge@promo.com",
-      role: "Scientific",
-    },
-    {
-      name: "Maria",
-      email: "maria@promo.com",
-      role: "Design",
-    },
-    {
-      name: "Josep",
-      email: "josep@promo.com",
-      role: "Developer",
-    },
-  ];
 
-  let tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
+ 
+/*
   let demoTask = {
     name: "Selección de mensajes clave",
     assignedUser: '["Account"]',
@@ -37,8 +16,11 @@ export const AboutPromomanager = () => {
     isItOver: false,
     completedOn: false,
     firstTask: false,
-    activeTask: true
+    activeTask: true,
   };
+
+*/
+
 
   return (
     <div className="row">
@@ -88,23 +70,24 @@ export const AboutPromomanager = () => {
         <p>
           Each phase is subsequently divided into tasks, which are assigned a
           user and a deadline. These tasks represent the inner workflow of the
-          company, preparing the project in order to show it to the client. Active tasks look like this:
+          company, preparing the project in order to show it to the client.
+          Active tasks look like this:
         </p>
 
-<div className="my-3">
-        <TaskCard
-          index={3}
-          projectId={"demoTask"}
-          phaseId={"demoTask"}
-          teamMembers={teamMembers}
-          assignedUserName={"Jorge Sb"}
-          isProjectOver={false}
-          isPhaseOver={false}
-          task={demoTask}
-          user={{ name: "Jorge Sb", role: "Account" }}
-          demonstrationPurposes={true}
-        />
-</div>
+          {/*<TaskCard
+            index={3}
+            projectId={"demoTask"}
+            phaseId={"demoTask"}
+            teamMembers={teamMembers}
+            assignedUserName={"Jorge Sb"}
+            isProjectOver={false}
+            isPhaseOver={false}
+            task={demoTask}
+            user={{ name: "Jorge Sb", role: "Account" }}
+          />*/}
+
+
+<DemoProjectCard />
 
         <p>
           Upon completing all tasks in a phase, the phase can be completed, if
