@@ -121,6 +121,7 @@ const TaskCard = (props) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("submitTaskAsOk", props.phaseId, props.index, task);
+      setPhaseCompleteVerification(false)
       return setTaskIsOk(false)
     }
     setPhaseCompleteVerification(false);

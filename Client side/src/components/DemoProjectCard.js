@@ -42,7 +42,8 @@ export const DemoProjectCard = (props) => {
           spentTime: task.spentTime,
           isItOver: true,
         };
-        if (updatedProject.phases[phaseId].length === +taskIndex + 1) {
+        if (!!task.lastTask) {
+          console.log("Completed!")
           updatedProject.phases[phaseId].isItOver = true;
           setIsUpdated(false);
         }
