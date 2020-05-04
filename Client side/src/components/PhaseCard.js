@@ -14,9 +14,10 @@ const PhaseCard = props => {
     setIsUpdated(true)
   }, [props.phase, isUpdated])
 
-  const updatePage=(action, phaseId, taskIndex)=>{
+  const updatePage=(action, phaseId, taskIndex, task, message)=>{
     if (phase.demonstrationPurposes){
-      return props.updatePage(action, phaseId, taskIndex)
+      props.updatePage(action, phaseId, taskIndex, task, message)
+      return setIsUpdated(false)
     }
     setIsUpdated(false)
     props.updatePage();
@@ -45,7 +46,11 @@ const PhaseCard = props => {
       if (phase.activePhase && phase.tasks) {
         let activeTaskIndex = phase.tasks.findIndex((task) => !task.isItOver);
         if (activeTaskIndex > -1) {
-          phase.tasks[activeTaskIndex].activeTask = true;
+          phase.tasks.map((task, index)=>{
+            activeTaskIndex === index
+            ? task.activeTask = true
+            : task.activeTask = false
+          })
         }
       }
 

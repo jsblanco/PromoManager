@@ -201,7 +201,7 @@ export const DemoProject = () => {
   ];
 
   let demoPhase1 = {
-    _id: "demoPhase1",
+    _id: "0",
     isItOver: false,
     tasks: tasks1,
     basicTasks: basicTasks1,
@@ -210,7 +210,7 @@ export const DemoProject = () => {
   };
 
   let demoPhase2 = {
-    _id: "demoPhase2",
+    _id: "1",
     isItOver: false,
     tasks: tasks2,
     basicTasks: basicTasks2,
@@ -220,7 +220,7 @@ export const DemoProject = () => {
 
   return ({
     isItOver: false,
-    teamMembers: [],
+    teamMembers: [{name:"Guest user", role: "Account"}],
     phases: [demoPhase1, demoPhase2],
     _id: "demoProject",
     name: "Demo project",

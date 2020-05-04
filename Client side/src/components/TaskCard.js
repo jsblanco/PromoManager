@@ -22,7 +22,7 @@ const TaskCard = (props) => {
     if (props.task.activeTask !== activeTask) {
       setActiveTask(props.task.activeTask);
     }
-  }, [task]);
+  }, [props.task]);
 
   useEffect(() => {});
 
@@ -118,7 +118,8 @@ const TaskCard = (props) => {
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
-      return props.updatePage("submitTaskAsOk", props.phaseId, props.index);
+      props.updatePage("submitTaskAsOk", props.phaseId, props.index, task);
+      return setTaskIsOk(false)
     }
     setPhaseCompleteVerification(false);
     const { spentTime } = task;
@@ -136,7 +137,12 @@ const TaskCard = (props) => {
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
-      return props.updatePage("submitTaskAsNotOk", props.phaseId, props.index);
+      props.updatePage("submitTaskAsNotOk", props.phaseId, props.index, task, message);
+      setTask({
+        ...task,
+        activeTask: false
+      })
+      return setTaskNotOk(false)
     }
     setTaskNotOk(false);
     const { spentTime } = task;
@@ -354,7 +360,7 @@ const TaskCard = (props) => {
     );
   }
 
-  if (props.task.demonstrationPurposes || !props.task.firstTask) {
+  if (!props.task.firstTask) {
     issueDetected = (
       <button onClick={showMessageInput} className="btn btn-danger mx-2">
         Issue detected
@@ -472,7 +478,7 @@ const TaskCard = (props) => {
   if (
     props.task.message.trim() &&
     !task.isItOver &&
-    (task.assignedUser[0] === props.user.role || props.user.role === "Account")
+    (!!task.demonstrationPurposes || (!!props.user && task.assignedUser[0] === props.user.role) || props.user.role === "Account")
   ) {
     messageInfo = (
       <div className="">
@@ -480,7 +486,7 @@ const TaskCard = (props) => {
           This task was returned.
         </p>
         <p className="font-weight-bold d-inline ml-3">Reason: </p>
-        <p className="d-inline font-italic">{task.message}</p>
+        <p className="d-inline font-italic">{props.task.message}</p>
       </div>
     );
   }

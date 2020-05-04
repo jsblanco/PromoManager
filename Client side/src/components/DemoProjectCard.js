@@ -4,28 +4,63 @@ import PhaseCard from "./PhaseCard";
 import DemoProject from "./DemoProject";
 
 export const DemoProjectCard = (props) => {
-  const location = useLocation();
   const [isUpdated, setIsUpdated] = useState(false);
   const [project, setProject] = useState(DemoProject);
+  const [totalTime, setTotaltime] = useState("09:15");
 
   useEffect(() => {
-    setIsUpdated(true);
-  }, [isUpdated, location]);
+    if (isUpdated === false) {
+      console.log("Updating");
+      setIsUpdated(true);
+    }
+  }, [project, isUpdated, totalTime]);
 
-  const updatePage = (action, phaseId, taskIndex) => {
+  const updatePage = (action, phaseId, taskIndex, task, message) => {
+    const now = new Date();
+    let updatedProject = {};
     switch (action) {
       case "resetPhase":
         console.log(phaseId + ": " + action + " " + taskIndex);
         break;
 
       case "submitTaskAsOk":
-        console.log(phaseId + ": " + action + " " + taskIndex);
+        updatedProject = project;
+        updatedProject.phases[phaseId].tasks[taskIndex] = {
+          ...updatedProject.phases[phaseId].tasks[taskIndex],
+          activeTask: false,
+          completedOn: now,
+          spentTime: task.spentTime,
+          isItOver: true,
+        };
+        if (updatedProject.phases[phaseId].length === +taskIndex + 1) {
+          updatedProject.phases[phaseId].isItOver = true;
+          //setProject({            updatedProject,          });
+          setIsUpdated(false);
+        }
+        //console.log(phaseId + ": " + action + " " + taskIndex);
         break;
       case "submitTaskAsNotOk":
-        console.log(phaseId + ": " + action + " " + taskIndex);
+        console.log(message)
+        updatedProject = project;
+        updatedProject.phases[phaseId].tasks[taskIndex - 1] = {
+          ...updatedProject.phases[phaseId].tasks[taskIndex - 1],
+          activeTask: true,
+          isItOver: false,
+          completedOn: "",
+          message: message,
+        };
+        updatedProject.phases[phaseId].tasks[taskIndex] = {
+          ...updatedProject.phases[phaseId].tasks[taskIndex],
+          activeTask: false,
+          spentTime: task.spentTime,
+        };
+        //setProject({updatedProject});
+        setIsUpdated(false);
         break;
       default:
-        console.log("Default action: "+phaseId + ": " + action + " " + taskIndex)
+        console.log(
+          "Default action: " + phaseId + ": " + action + " " + taskIndex
+        );
         return;
     }
   };
@@ -91,9 +126,7 @@ export const DemoProjectCard = (props) => {
       closeProject = (
         <form onSubmit={closeProjectFunction()} className="text-center my-2">
           <div className="row w-100 text-center">
-            <h5 className="text-danger font-weight-bold w-100">
-              You are about to close this project
-            </h5>
+            props.task.demonstrationPurposes ||
             <p className="w-100">
               It will be marked as finished, and team members will not receive
               further notifications.
@@ -117,7 +150,7 @@ export const DemoProjectCard = (props) => {
     );
   }
 
-  let timeSpent = [];
+  let timeSpent = ["00:00"];
   if (project.phases) {
     [...project.phases].map((phase) => {
       if (phase.tasks) {
@@ -127,9 +160,14 @@ export const DemoProjectCard = (props) => {
       }
     });
   }
-  timeSpent.length > 0
+
+  /* timeSpent.length > 0
     ? (timeSpent = timeSpent.reduce(calculateTotalSpentTime))
     : (timeSpent = "00:00");
+    console.log(timeSpent);
+    
+
+if (timeSpent !== totalTime){setTotaltime(timeSpent); setIsUpdated(false)};*/
 
   return (
     <div className="my-4 row w-100 d-flex flex-row justify-content-around card shadow m-3 rounded p-4 pt-5">
@@ -155,24 +193,14 @@ export const DemoProjectCard = (props) => {
           <section className="mx-2 px-3 my-4">
             <h3>Project team:</h3>
             <div className="d-flex flex-row row justify-content-center">
-              {project.teamMembers.map((user, index) => {
-                if (user) {
-                  return (
-                    <div
-                      key={user._id}
-                      className="card shadow col-lg-2 px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center"
-                    >
-                      <p className="mt-1 mb-1" key={user._id}>
-                        {user.role}
-                      </p>
-                      <h4>{user.name}</h4>
-                      <p className="font-italic">
-                        <b>Time spent:</b> {timeSpent[index]}h
-                      </p>
-                    </div>
-                  );
-                }
-              })}
+              <div className="card shadow col-md-4 px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center">
+                <p className="mt-1 mb-1">Team member role (i.e. "Designer")</p>
+                <h4>Guest user</h4>
+                <p className="font-italic">
+                  <b>Time spent:</b> {timeSpent.reduce(calculateTotalSpentTime)}
+                  h
+                </p>
+              </div>
             </div>
           </section>
         </header>
