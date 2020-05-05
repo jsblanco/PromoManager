@@ -129,21 +129,21 @@ const PhaseCard = props => {
   if (phase.activePhase) {
     isItOver = (
       <>
-        <p className="d-inline rounded-pill bg-warning px-2 mr-3  text-dark"></p>
-        <p className="d-inline font-italic">This phase is ongoing</p>
+        <p className="d-inline rounded-pill bg-warning pl-2 pr-3 mr-3 my-2"></p>
+        <p className="d-inline font-italic  my-2">This phase is ongoing</p>
       </>
     );
   } else if (phase.isItOver) {
     isItOver = (
       <>
-        <p className="d-inline rounded-pill bg-success px-2 mr-3  text-dark"></p>
-        <p className="d-inline font-weight-bold">This phase is over!</p>
+        <p className="d-inline rounded-pill bg-success pl-2 pr-3 mr-3 my-2"></p>
+        <p className="d-inline font-weight-bold my-2">This phase is over!</p>
       </>
     );
   } else {
     isItOver = (
       <>
-        <p className="d-inline font-italic">This phase has not started yet</p>
+        <p className="d-inline font-italic my-2">This phase has not started yet</p>
       </>
     );
   }
@@ -159,17 +159,19 @@ const PhaseCard = props => {
         break;
       case phase.tasks.length > phase.basicTasks.length:
         resetToggler = (
-          <div className="d-flex justify-content-left align-items-center font-italic text-secondary">
-            Current round:
-            <b className="text-dark ml-1 mr-2">
-              {phase.tasks.length / phase.basicTasks.length}
-            </b>
+          <div className="d-flex align-items-center">
             <button
-              className="ml-2 btn btn-outline-info"
+              className="btn btn-outline-info float-right"
               onClick={toggleResetHistory}
             >
               Show history
             </button>
+           <p className="font-italic text-secondary ml-3 my-2">
+            Current round:
+            <b className="text-dark ml-1 mr-2">
+              {phase.tasks.length / phase.basicTasks.length}
+            </b>
+           </p>
           </div>
         );
         break;
@@ -209,12 +211,12 @@ const PhaseCard = props => {
 
   return (
     <div className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
-      <div className="row pb-2">
-        <div className="col-md-6">
+      <div className="row pb-2 d-flex flex-row align-content-center ">
+        <div className="col-xl-12">
           <h4 className="d-inline">{phase.name}</h4>
         </div>
-        <div className="col-md-3">{resetToggler}</div>
-        <div className="col-md-3">{isItOver}</div>
+        <div className="col-lg-6 d-flex flex-row">{isItOver}</div>
+        <div  className="col-lg-6 d-flex flex-row align-content-center justify-content-end">{resetToggler}</div>
       </div>
       {tasks}
       {createTaskForm}

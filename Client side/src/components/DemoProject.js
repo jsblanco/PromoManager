@@ -65,7 +65,45 @@ export const DemoProject = () => {
   ];
   
   let tasks1 = [
+
     {
+      name: "Applying design",
+      assignedUser: '["Guest user"]',
+      message: "",
+      spentTime: "05:30",
+      deadline: yesterday,
+      isItOver: true,
+      message: "Graphs in page 4 are warped",
+      completedOn: beforeYesterday,
+      firstTask: true,
+      activeTask: false,
+      demonstrationPurposes: true,
+    },
+    {
+      name: "Design review",
+      assignedUser: '["Guest user"]',
+      message: "",
+      spentTime: "02:15",
+      deadline: yesterday,
+      isItOver: true,
+      completedOn: yesterday,
+      firstTask: false,
+      activeTask: false,
+      demonstrationPurposes: true,
+    },
+    {
+      name: "Client validation",
+      assignedUser: '["Guest user"]',
+      message: "",
+      spentTime: "00:20",
+      deadline: yesterday,
+      isItOver: true,
+      completedOn: today,
+      firstTask: false,
+      activeTask: false,
+      demonstrationPurposes: true,
+    },
+      {
       name: "Applying design",
       assignedUser: '["Guest user"]',
       message: "",
