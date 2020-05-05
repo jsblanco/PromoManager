@@ -264,10 +264,7 @@ const TaskCard = (props) => {
   assignedTo = <p className="font-weight-bold d-inline">{assignedUserName}</p>;
 
   deadlineInfo = (
-    <div className="d-flex align-content-center">
-      <label htmlFor="deadline" className="pr-3">
-        Deadline:
-      </label>
+
       <p className="font-weight-bold d-inline">
         {readableDeadline.toLocaleString("en-UK", {
           weekday: "long",
@@ -275,7 +272,6 @@ const TaskCard = (props) => {
           day: "numeric",
         })}
       </p>
-    </div>
   );
 
   if (
@@ -284,7 +280,7 @@ const TaskCard = (props) => {
       !!props.task.demonstrationPurposes)
   ) {
     button = (
-      <button className="btn btn-info float-right" onClick={showInput}>
+      <button className="btn btn-info float-right py-1 mb-2" onClick={showInput}>
         Edit task
       </button>
     );
@@ -310,7 +306,7 @@ const TaskCard = (props) => {
         </option>
         {props.teamMembers.map((user) => {
           return (
-            <option key={user._id} value={user.role}>
+            <option key={user._id+" "+props.index} value={user.role}>
               {user.role}: {user.name}
             </option>
           );
@@ -318,10 +314,6 @@ const TaskCard = (props) => {
       </select>
     );
     deadlineInfo = (
-      <div className="d-flex align-content-center">
-        <label htmlFor="deadline" className="pr-3">
-          Deadline:
-        </label>
         <input
           type="date"
           name="deadline"
@@ -329,10 +321,9 @@ const TaskCard = (props) => {
           value={task.deadline}
           required
         />
-      </div>
     );
     button = (
-      <button className="btn btn-warning" type="submit">
+      <button className="btn btn-warning float-right" type="submit">
         Update task
       </button>
     );
@@ -343,10 +334,6 @@ const TaskCard = (props) => {
     !taskUpdated
   ) {
     deadlineInfo = (
-      <div className="d-flex align-items-center">
-        <label htmlFor="deadline" className="pr-3 text-danger">
-          Assign a deadline:
-        </label>
         <input
           type="date"
           name="deadline"
@@ -354,7 +341,6 @@ const TaskCard = (props) => {
           value={task.deadline}
           required
         />
-      </div>
     );
     button = (
       <button className="btn btn-warning" type="submit">
@@ -363,12 +349,9 @@ const TaskCard = (props) => {
     );
   } else if (!task.deadline) {
     deadlineInfo = (
-      <div className="d-flex align-items-center">
-        <label className="pr-3">Deadline:</label>
         <p className="font-weight-bold font-italic d-inline">
           As soon as possible
         </p>
-      </div>
     );
   }
 
@@ -583,21 +566,33 @@ const TaskCard = (props) => {
   return (
     <div className={` card ${active} ${props.hideOldTasks} p-2`}>
       <form onSubmit={updateTask}>
+      <div className="row">
+
+        <div className="col-xl-6 col-md-12">
         <h5>
           <b>{taskName}</b>
           {activeMarker}
         </h5>
-        <div className="pt-1 d-flex justify-content-around">
-          <div className="d-flex align-content-center mx-0">
+        </div>
+          <div className="col-xl-6 d-flex align-items-center justify-content-end">
+            <label className="pr-3 font-italic text-secondary mb-0">Time spent:</label>
+            <p className="font-weight-bold d-inline font-italic mb-0">{task.spentTime} hours</p>
+          </div>
+      </div>
+        <div className="pt-1 row">
+          <div className="col-xl-5 col-lg-6 d-flex flex-column align-content-center mx-0 my-0">
             <label className="pr-3">Assigned to:</label>
             {assignedTo}
           </div>
+          <div className="col-xl-4 col-lg-7 d-flex flex-column align-content-center  my-0">
+          <label className="">
+        Deadline:
+      </label>
           {deadlineInfo}
-          <div className="d-flex align-content-center">
-            <label className="pr-3">Time spent:</label>
-            <p className="font-weight-bold d-inline">{task.spentTime} hours</p>
           </div>
+          <div className="col-xl-3 col-lg-3 d-flex align-items-center">
           {button}
+          </div>
         </div>
         {wasTheDeadlineMet}
         {messageInfo}

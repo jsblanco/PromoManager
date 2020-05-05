@@ -1,28 +1,28 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TaskCard from "./TaskCard";
 
-const PhaseCard = props => {
+const PhaseCard = (props) => {
   const [phase, setPhase] = useState(props.phase);
-  const [isUpdated, setIsUpdated] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false);
   const [hideTasks, setHideTasks] = useState(phase.isItOver);
   const [addTaskToggler, setAddTaskToggler] = useState(false);
   const [showResetHistory, setShowResetHistory] = useState(false);
 
   useEffect(() => {
     setPhase(props.phase);
-    setIsUpdated(true)
-    phase.isItOver && setAddTaskToggler(false)
-  }, [props.phase, isUpdated])
+    setIsUpdated(true);
+    phase.isItOver && setAddTaskToggler(false);
+  }, [props.phase, isUpdated]);
 
-  const updatePage=(action, phaseId, taskIndex, task, message)=>{
-    if (phase.demonstrationPurposes){
-      props.updatePage(action, phaseId, taskIndex, task, message)
-      return setIsUpdated(false)
+  const updatePage = (action, phaseId, taskIndex, task, message) => {
+    if (phase.demonstrationPurposes) {
+      props.updatePage(action, phaseId, taskIndex, task, message);
+      return setIsUpdated(false);
     }
-    setIsUpdated(false)
+    setIsUpdated(false);
     props.updatePage();
-  }
+  };
 
   const toggleResetHistory = () => {
     setShowResetHistory(!showResetHistory);
@@ -47,11 +47,11 @@ const PhaseCard = props => {
       if (phase.activePhase && phase.tasks) {
         let activeTaskIndex = phase.tasks.findIndex((task) => !task.isItOver);
         if (activeTaskIndex > -1) {
-          phase.tasks.map((task, index)=>{
+          phase.tasks.map((task, index) => {
             activeTaskIndex === index
-            ? task.activeTask = true
-            : task.activeTask = false
-          })
+              ? (task.activeTask = true)
+              : (task.activeTask = false);
+          });
         }
       }
 
@@ -60,7 +60,9 @@ const PhaseCard = props => {
         let assignedUserIndex = props.teamMembers.findIndex(
           (member) => member.role == task.assignedUser[0]
         );
-        assignedUserName = props.phase.demonstrationPurposes? "Guest user ": `${props.teamMembers[assignedUserIndex].role}: ${props.teamMembers[assignedUserIndex].name}`;
+        assignedUserName = props.phase.demonstrationPurposes
+          ? "Guest user "
+          : `${props.teamMembers[assignedUserIndex].role}: ${props.teamMembers[assignedUserIndex].name}`;
         let hideOldTasks = "";
         if (!showResetHistory) {
           if (
@@ -80,7 +82,7 @@ const PhaseCard = props => {
 
         return (
           <TaskCard
-            key={index}
+            key={phase._id+" "+index}
             index={index}
             projectId={props.projectId}
             phaseId={phase._id}
@@ -143,7 +145,9 @@ const PhaseCard = props => {
   } else {
     isItOver = (
       <>
-        <p className="d-inline font-italic my-2">This phase has not started yet</p>
+        <p className="d-inline font-italic my-2">
+          This phase has not started yet
+        </p>
       </>
     );
   }
@@ -166,12 +170,12 @@ const PhaseCard = props => {
             >
               Show history
             </button>
-           <p className="font-italic text-secondary ml-3 my-2">
-            Current round:
-            <b className="text-dark ml-1 mr-2">
-              {phase.tasks.length / phase.basicTasks.length}
-            </b>
-           </p>
+            <p className="font-italic text-secondary ml-3 my-2">
+              Current round:
+              <b className="text-dark ml-1 mr-2">
+                {phase.tasks.length / phase.basicTasks.length}
+              </b>
+            </p>
           </div>
         );
         break;
@@ -200,14 +204,17 @@ const PhaseCard = props => {
     taskCreatorToggler = "Add new task";
   }
 
-  if ((!!phase.demonstrationPurposes||(!!props.user && props.user.role === "Account")) && !phase.isItOver) {
+  if (
+    (!!phase.demonstrationPurposes ||
+      (!!props.user && props.user.role === "Account")) &&
+    !phase.isItOver
+  ) {
     createTaskButton = (
       <button className="btn btn-info py-1" onClick={showTaskCreator}>
         {taskCreatorToggler}
       </button>
     );
-  
-}
+  }
 
   return (
     <div className="shadow p-3 mb-3 card bg-white rounded p-4 my-2">
@@ -216,7 +223,9 @@ const PhaseCard = props => {
           <h4 className="d-inline">{phase.name}</h4>
         </div>
         <div className="col-lg-6 d-flex flex-row">{isItOver}</div>
-        <div  className="col-lg-6 d-flex flex-row align-content-center justify-content-end">{resetToggler}</div>
+        <div className="col-lg-6 d-flex flex-row align-content-center justify-content-end">
+          {resetToggler}
+        </div>
       </div>
       {tasks}
       {createTaskForm}
