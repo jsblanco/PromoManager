@@ -12,6 +12,11 @@ export default class TaskCreator extends Component {
 
   createNewTask = async (event) => {
     event.preventDefault()
+
+    if (!!this.props.demonstrationPurposes) {
+      this.props.updatePage("addTask", this.state.phaseId, this.props.index, this.state.name);
+      return this.props.showTaskCreator();
+    }
     const { phaseId, name, assignedUser, projectId } = this.state;
     await userService.createTask({ phaseId, name, assignedUser, projectId });
     this.props.showTaskCreator();

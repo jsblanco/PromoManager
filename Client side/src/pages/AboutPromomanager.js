@@ -5,21 +5,6 @@ import { DemoProjectCard } from "../components/DemoProjectCard";
 
 export const AboutPromomanager = () => {
 
- 
-/*
-  let demoTask = {
-    name: "Selección de mensajes clave",
-    assignedUser: '["Account"]',
-    message: "",
-    spentTime: "00:00",
-    deadline: `${tomorrow.getFullYear()}-${tomorrow.getMonth()}-${tomorrow.getDate()}`,
-    isItOver: false,
-    completedOn: false,
-    firstTask: false,
-    activeTask: true,
-  };
-
-*/
 
 
   return (
@@ -74,18 +59,8 @@ export const AboutPromomanager = () => {
           Active tasks look like this:
         </p>
 
-          {/*<TaskCard
-            index={3}
-            projectId={"demoTask"}
-            phaseId={"demoTask"}
-            teamMembers={teamMembers}
-            assignedUserName={"Jorge Sb"}
-            isProjectOver={false}
-            isPhaseOver={false}
-            task={demoTask}
-            user={{ name: "Jorge Sb", role: "Account" }}
-          />*/}
 
+<h3 className="mt-4">Project workflow demo</h3>
 
 <DemoProjectCard />
 

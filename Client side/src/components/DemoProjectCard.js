@@ -1,12 +1,14 @@
 import React, { /*Component,*/ useState, useEffect } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import PhaseCard from "./PhaseCard";
+import PhaseCreator from "./PhaseCreator";
 import DemoProject from "./DemoProject";
 
 export const DemoProjectCard = (props) => {
   const [isUpdated, setIsUpdated] = useState(false);
   const [project, setProject] = useState(DemoProject);
   const [totalTime, setTotaltime] = useState("09:15");
+  const [showPhaseCreator, setShowPhaseCreator] = useState(false);
 
   useEffect(() => {
     if (isUpdated === false) {
@@ -20,16 +22,19 @@ export const DemoProjectCard = (props) => {
     let updatedProject = {};
     switch (action) {
       case "resetPhase":
-        console.log(action, phaseId, taskIndex, task, message)
+        console.log(action, phaseId, taskIndex, task, message);
         updatedProject = project;
+        updatedProject.phases[phaseId].tasks.push(
+          ...updatedProject.phases[phaseId].basicTasks
+        );
         updatedProject.phases[phaseId].tasks[taskIndex] = {
           ...updatedProject.phases[phaseId].tasks[taskIndex],
           activeTask: false,
           completedOn: now,
-          //spentTime: task.inputSpentTime,
+          spentTime: task.inputSpentTime,
           isItOver: true,
         };
-        updatedProject.phases[phaseId].tasks.push(...updatedProject.phases[phaseId].basicTasks)
+        updatedProject.phases[phaseId].tasks[taskIndex + 1].message = message;
         setIsUpdated(false);
         break;
 
@@ -43,13 +48,11 @@ export const DemoProjectCard = (props) => {
           isItOver: true,
         };
         if (!!task.lastTask) {
-          console.log("Completed!")
           updatedProject.phases[phaseId].isItOver = true;
           setIsUpdated(false);
         }
         break;
       case "submitTaskAsNotOk":
-        console.log(message);
         updatedProject = project;
         updatedProject.phases[phaseId].tasks[taskIndex - 1] = {
           ...updatedProject.phases[phaseId].tasks[taskIndex - 1],
@@ -65,6 +68,51 @@ export const DemoProjectCard = (props) => {
         };
         setIsUpdated(false);
         break;
+      case "createPhase":
+        updatedProject = project;
+        console.log(phaseId);
+        let newPhase = {
+          _id: updatedProject.phases.length,
+          isItOver: false,
+          tasks: [],
+          basicTasks: [],
+          name: phaseId,
+          demonstrationPurposes: true,
+        };
+        updatedProject.phases.push(newPhase);
+        setIsUpdated(false);
+        break;
+      case "addTask":
+        updatedProject = project;
+        console.log(
+          "Phase " + phaseId + ": " + action + " " + task
+        );
+        let newTask=    [{
+          name: task,
+          assignedUser: '["Guest user"]',
+          message: "",
+          spentTime: "00:00",
+          deadline: "",
+          isItOver: false,
+          completedOn: false,
+          firstTask: false,
+          activeTask: false,
+          demonstrationPurposes: true,
+        }]
+       updatedProject.phases[phaseId].tasks[updatedProject.phases[phaseId].tasks.length-1].lastTask=false;
+       updatedProject.phases[phaseId].basicTasks.push(...newTask)
+       updatedProject.phases[phaseId].tasks.push(...newTask)
+        setIsUpdated(false);
+        break;
+      case "updateTask":
+          updatedProject = project;
+          updatedProject.phases[phaseId].tasks[taskIndex] = {
+            ...updatedProject.phases[phaseId].tasks[taskIndex],
+            name: task.name,
+            deadline: task.deadline,
+          };
+          setIsUpdated(false);
+          break;
       default:
         console.log(
           "Default action: " + phaseId + ": " + action + " " + taskIndex
@@ -103,7 +151,11 @@ export const DemoProjectCard = (props) => {
     return `${totalHours}:${totalMinutes.toString().slice(-2)}`;
   };
 
-  let phases, createPhaseForm, closeProject, createPhaseButton;
+  let phases,
+    createPhaseForm,
+    closeProject,
+    phaseCreatorToggler,
+    createPhaseButton;
 
   if (project.phases) {
     let activePhase = project.phases.findIndex(
@@ -154,7 +206,38 @@ export const DemoProjectCard = (props) => {
         <h5 className="text-danger font-weight-bold w-100">
           This project is closed
         </h5>
+        <button
+          className="btn btn-outline-info"
+          onClick={() => setProject(DemoProject)}
+        >
+          Click to re-start the demo
+        </button>
       </div>
+    );
+  }
+
+  if (showPhaseCreator === true) {
+    createPhaseForm = (
+      <PhaseCreator
+        projectId={project._id}
+        updatePage={updatePage}
+        showPhaseCreator={() => setShowPhaseCreator(!showPhaseCreator)}
+        demonstrationPurposes={true}
+      />
+    );
+    phaseCreatorToggler = "Discard new phase";
+  } else {
+    phaseCreatorToggler = "Add new phase";
+  }
+
+  if (!project.isItOver) {
+    createPhaseButton = (
+      <button
+        className="btn btn-primary my-2 w-100"
+        onClick={() => setShowPhaseCreator(!showPhaseCreator)}
+      >
+        {phaseCreatorToggler}
+      </button>
     );
   }
 
@@ -198,7 +281,7 @@ if (timeSpent !== totalTime){setTotaltime(timeSpent); setIsUpdated(false)};*/
               <p>{project.description}</p>
             </div>
           </div>
-          <section className="mx-2 px-3 my-4">
+          {/* <section className="mx-2 px-3 my-4">
             <h3>Project team:</h3>
             <div className="d-flex flex-row row justify-content-center">
               <div className="card shadow col-md-4 px-4 py-3 mb-3 mt-2 mx-4 bg-white rounded text-center">
@@ -210,7 +293,7 @@ if (timeSpent !== totalTime){setTotaltime(timeSpent); setIsUpdated(false)};*/
                 </p>
               </div>
             </div>
-          </section>
+          </section> */}
         </header>
 
         <section id="phases" className="mx-2 px-5">

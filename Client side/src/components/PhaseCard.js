@@ -12,6 +12,7 @@ const PhaseCard = props => {
   useEffect(() => {
     setPhase(props.phase);
     setIsUpdated(true)
+    phase.isItOver && setAddTaskToggler(false)
   }, [props.phase, isUpdated])
 
   const updatePage=(action, phaseId, taskIndex, task, message)=>{
@@ -189,6 +190,7 @@ const PhaseCard = props => {
         projectId={props.projectId}
         showTaskCreator={showTaskCreator}
         updatePage={updatePage}
+        demonstrationPurposes={phase.demonstrationPurposes}
       />
     );
     taskCreatorToggler = "Discard new task";
@@ -196,14 +198,13 @@ const PhaseCard = props => {
     taskCreatorToggler = "Add new task";
   }
 
-  if (!phase.demonstrationPurposes){
-    if (props.user.role === "Account" && !phase.isItOver) {
+  if ((!!phase.demonstrationPurposes||(!!props.user && props.user.role === "Account")) && !phase.isItOver) {
     createTaskButton = (
       <button className="btn btn-info py-1" onClick={showTaskCreator}>
         {taskCreatorToggler}
       </button>
     );
-  }
+  
 }
 
   return (

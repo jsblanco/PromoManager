@@ -83,7 +83,9 @@ const TaskCard = (props) => {
   const updateTask = (event) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
-      return;
+      setShowButton(false);
+      setTaskUpdated(true);
+      return props.updatePage("editTask", props.phaseId, props.index, task);
     }
     const { name, assignedUser, spentTime, deadline } = task;
 
@@ -107,8 +109,8 @@ const TaskCard = (props) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("resetPhase", props.phaseId, props.index, task, message);
-      setResetPhaseVerification(false)
-      return setTaskNotOk(false)
+      setResetPhaseVerification(false);
+      return setTaskNotOk(false);
     }
     const { spentTime } = task;
     const { phaseId, projectId } = props;
@@ -121,8 +123,8 @@ const TaskCard = (props) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("submitTaskAsOk", props.phaseId, props.index, task);
-      setPhaseCompleteVerification(false)
-      return setTaskIsOk(false)
+      setPhaseCompleteVerification(false);
+      return setTaskIsOk(false);
     }
     setPhaseCompleteVerification(false);
     const { spentTime } = task;
@@ -140,12 +142,18 @@ const TaskCard = (props) => {
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
     if (!!props.task.demonstrationPurposes) {
-      props.updatePage("submitTaskAsNotOk", props.phaseId, props.index, task, message);
+      props.updatePage(
+        "submitTaskAsNotOk",
+        props.phaseId,
+        props.index,
+        task,
+        message
+      );
       setTask({
         ...task,
-        activeTask: false
-      })
-      return setTaskNotOk(false)
+        activeTask: false,
+      });
+      return setTaskNotOk(false);
     }
     setTaskNotOk(false);
     const { spentTime } = task;
@@ -176,7 +184,6 @@ const TaskCard = (props) => {
     event.preventDefault();
     setShowButton(!showButton);
   };
-
 
   let button,
     taskName,
@@ -271,14 +278,16 @@ const TaskCard = (props) => {
     </div>
   );
 
-  if (!task.demonstrationPurposes) {
-    if (!props.isProjectOver && props.user.role === "Account") {
-      button = (
-        <button className="btn btn-info" onClick={showInput}>
-          Edit task
-        </button>
-      );
-    }
+  if (
+    !props.isProjectOver &&
+    ((!!props.user && props.user.role === "Account") ||
+      !!props.task.demonstrationPurposes)
+  ) {
+    button = (
+      <button className="btn btn-info float-right" onClick={showInput}>
+        Edit task
+      </button>
+    );
   }
 
   if (showButton) {
@@ -328,8 +337,8 @@ const TaskCard = (props) => {
       </button>
     );
   } else if (
-
-    (!!props.user && props.user.role ===  "Account" )&&
+    (!!props.task.demonstrationPurposes ||
+      (!!props.user && props.user.role === "Account")) &&
     !props.task.deadline &&
     !taskUpdated
   ) {
@@ -372,7 +381,8 @@ const TaskCard = (props) => {
   }
 
   if (
-    ((!!props.user && props.user.role === props.task.assignedUser[0]) || !!props.task.demonstrationPurposes) &&
+    ((!!props.user && props.user.role === props.task.assignedUser[0]) ||
+      !!props.task.demonstrationPurposes) &&
     props.task.activeTask &&
     props.task.lastTask
   ) {
@@ -395,8 +405,9 @@ const TaskCard = (props) => {
     );
   } else if (
     (props.task.demonstrationPurposes && props.task.activeTask) ||
-    (!!props.user && props.user.role === props.task.assignedUser[0]) &&
-    props.task.activeTask
+    (!!props.user &&
+      props.user.role === props.task.assignedUser[0] &&
+      props.task.activeTask)
   ) {
     completeTaskButtons = (
       <div className="row justify-content-center mb-2">
@@ -481,7 +492,9 @@ const TaskCard = (props) => {
   if (
     props.task.message.trim() &&
     !task.isItOver &&
-    (!!task.demonstrationPurposes || (!!props.user && task.assignedUser[0] === props.user.role) || props.user.role === "Account")
+    (!!task.demonstrationPurposes ||
+      (!!props.user && task.assignedUser[0] === props.user.role) ||
+      props.user.role === "Account")
   ) {
     messageInfo = (
       <div className="">

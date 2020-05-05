@@ -13,6 +13,10 @@ export default class PhaseCreator extends Component {
 
   createNewPhase = (event) => {
     event.preventDefault()
+    if (!!this.props.demonstrationPurposes) {
+      this.props.showPhaseCreator()
+      return this.props.updatePage("createPhase", this.state.name);
+    }
     const { projectId, name } = this.state;
     userService.createPhase({ projectId, name });
     this.props.showPhaseCreator();
