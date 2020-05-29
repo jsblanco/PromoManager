@@ -50,7 +50,7 @@ const TaskCard = (props) => {
 
   const calculateInputTime = (event, index) => {};
 
-  const calculateTotalSpentTime = () => {
+  const calculateTotalSpentTime = (reset) => {
     console.log("Entra en el calculate");
     let timeSpentSoFar = task.spentTime.split(":");
     let totalHours = parseInt(timeSpentSoFar[0]) + parseInt(inputHours);
@@ -72,6 +72,7 @@ const TaskCard = (props) => {
     console.log(task, totalSpentTime);
     setTask({
       ...task,
+      activeTask: !reset,
       spentTime: totalSpentTime,
     });
     console.log(task);
@@ -143,16 +144,20 @@ const TaskCard = (props) => {
 
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
+    
     setEmptyImputsWarning(false)
     if (!inputHours && !inputMinutes){
       return setEmptyImputsWarning(true)
     }
+
     calculateTotalSpentTime();
+    
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("submitTaskAsOk", props.phaseId, props.index, task);
       setPhaseCompleteVerification(false);
       return setTaskIsOk(false);
     }
+    
     setPhaseCompleteVerification(false);
     const { spentTime } = task;
     const { phaseId, projectId, index } = props;
@@ -168,12 +173,14 @@ const TaskCard = (props) => {
 
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
+   
     setEmptyImputsWarning(false)
     if ((!inputHours && !inputMinutes) || !message.trim()){
       return setEmptyImputsWarning(true)
     }
-    calculateTotalSpentTime();
-    console.log("Ha pasado el calculare...");
+    
+    calculateTotalSpentTime(true);
+    
     if (!!props.task.demonstrationPurposes) {
       props.updatePage(
         "submitTaskAsNotOk",
@@ -182,10 +189,10 @@ const TaskCard = (props) => {
         task,
         message
       );
-      setTask({
-        ...task,
-        activeTask: false,
-      });
+      // setTask({
+      //   ...task,
+      //   activeTask: false,
+      // });
       return setTaskNotOk(false);
     }
     setTaskNotOk(false);
