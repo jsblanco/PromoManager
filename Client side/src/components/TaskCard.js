@@ -14,6 +14,7 @@ const TaskCard = (props) => {
   const [assignedUserName, setAssignedUserName] = useState(
     props.assignedUserName
   );
+  const [emptyInputsWarning, setEmptyImputsWarning]= useState(false)
   const [inputHours, setInputHours] = useState(0);
   const [inputMinutes, setInputMinutes] = useState(0);
   const [resetPhaseVerification, setResetPhaseVerification] = useState(false);
@@ -50,7 +51,7 @@ const TaskCard = (props) => {
   const calculateInputTime = (event, index) => {};
 
   const calculateTotalSpentTime = () => {
-    console.log("Entra en el calculate")
+    console.log("Entra en el calculate");
     let timeSpentSoFar = task.spentTime.split(":");
     let totalHours = parseInt(timeSpentSoFar[0]) + parseInt(inputHours);
     let totalMinutes = parseInt(timeSpentSoFar[1]) + parseInt(inputMinutes);
@@ -64,16 +65,16 @@ const TaskCard = (props) => {
     if (totalHours.length > 2) {
       totalHours = totalHours.toString().slice(1);
     }
-    if (totalHours< 10) totalHours = "0" + totalHours;
-    if (totalMinutes<10) totalMinutes = "0" + totalMinutes;
-    let updatedTask = {...task}
+    if (totalHours < 10) totalHours = "0" + totalHours;
+    if (totalMinutes < 10) totalMinutes = "0" + totalMinutes;
+    let updatedTask = { ...task };
     const totalSpentTime = `${totalHours}:${totalMinutes}`;
-    console.log(task, totalSpentTime)
+    console.log(task, totalSpentTime);
     setTask({
       ...task,
       spentTime: totalSpentTime,
     });
-    console.log(task)
+    console.log(task);
   };
 
   const handleChange = (event) => {
@@ -123,6 +124,10 @@ const TaskCard = (props) => {
 
   const resetPhase = async (event) => {
     event.preventDefault();
+    setEmptyImputsWarning(false)
+    if ((!inputHours && !inputMinutes) || !message.trim()){
+      return setEmptyImputsWarning(true)
+    }
     calculateTotalSpentTime();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("resetPhase", props.phaseId, props.index, task, message);
@@ -138,6 +143,10 @@ const TaskCard = (props) => {
 
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
+    setEmptyImputsWarning(false)
+    if (!inputHours && !inputMinutes){
+      return setEmptyImputsWarning(true)
+    }
     calculateTotalSpentTime();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("submitTaskAsOk", props.phaseId, props.index, task);
@@ -159,8 +168,12 @@ const TaskCard = (props) => {
 
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
+    setEmptyImputsWarning(false)
+    if ((!inputHours && !inputMinutes) || !message.trim()){
+      return setEmptyImputsWarning(true)
+    }
     calculateTotalSpentTime();
-    console.log("Ha pasado el calculare...")
+    console.log("Ha pasado el calculare...");
     if (!!props.task.demonstrationPurposes) {
       props.updatePage(
         "submitTaskAsNotOk",
@@ -379,10 +392,17 @@ const TaskCard = (props) => {
 
   if (!props.task.firstTask) {
     issueDetected = (
-      <button onClick={
-        //showMessageInput
-        (e)=>{showMessageInput(e); setPhaseCompleteVerification(false); setResetPhaseVerification(false)}
-        } className="btn btn-danger mx-2">
+      <button
+        onClick={
+          //showMessageInput
+          (e) => {
+            showMessageInput(e);
+            setPhaseCompleteVerification(false);
+            setResetPhaseVerification(false);
+          }
+        }
+        className="btn btn-danger mx-2"
+      >
         Issue detected
       </button>
     );
@@ -440,32 +460,27 @@ const TaskCard = (props) => {
     messageInput = (
       <form onSubmit={submitTaskAsNotOk} className="text-center">
         <div className="w-100 mb-2 d-flex flex-column justify-content-around align-items-center">
-        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
-              <TimeInput
-                inputMinutes={inputMinutes}
-                inputHours={inputHours}
-                setInputMinutes={setInputMinutes}
-                setInputHours={setInputHours}
-                outline="danger"
-              />
-            </Row>
-          <Row  className="d-flex align-items-center justify-content-center w-100 px-2 mt-1">
-            <label htmlFor="message">
-            Reason:
-          </label>
+          <Row className="d-flex align-items-center justify-content-center w-100 px-2">
+            <TimeInput
+              inputMinutes={inputMinutes}
+              inputHours={inputHours}
+              setInputMinutes={setInputMinutes}
+              setInputHours={setInputHours}
+              outline="danger"
+            />
           </Row>
-          <Row  className="d-flex w-100 px-2 mb-1 mx-2">
-          <textarea
-            onChange={(e) => setMessage(e.target.value)}
-            name="message"
-            className="mx-3 w-100"
-            placeholder="Describe the feedback from the client to the team"
-            required
-          />
+          <Row className="d-flex align-items-center justify-content-center w-100 px-2 mt-1">
+            <label htmlFor="message">Reason:</label>
           </Row>
-
-
-
+          <Row className="d-flex w-100 px-2 mb-1 mx-2">
+            <textarea
+              onChange={(e) => setMessage(e.target.value)}
+              name="message"
+              className="mx-3 w-100"
+              placeholder="Describe your feedback to your partner"
+              required
+            />
+          </Row>
         </div>
         <Button type="submit" variant="danger">
           Return to previous user
@@ -482,20 +497,20 @@ const TaskCard = (props) => {
       >
         {warningMessage}
         <div className="w-100 px-1 d-flex flex-column justify-content-center align-items-center">
-        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
-          <TimeInput
-            inputMinutes={inputMinutes}
-            inputHours={inputHours}
-            setInputMinutes={setInputMinutes}
-            setInputHours={setInputHours}
-            outline="success"
-          />
-        </Row>
-        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
-          <Button type="submit" variant="success" className="my-2">
-            Complete task
-          </Button>
-        </Row>
+          <Row className="d-flex align-items-center justify-content-center w-100 px-2">
+            <TimeInput
+              inputMinutes={inputMinutes}
+              inputHours={inputHours}
+              setInputMinutes={setInputMinutes}
+              setInputHours={setInputHours}
+              outline="success"
+            />
+          </Row>
+          <Row className="d-flex align-items-center justify-content-center w-100 px-2">
+            <Button type="submit" variant="success" className="my-2">
+              Complete task
+            </Button>
+          </Row>
         </div>
       </form>
     );
@@ -522,21 +537,18 @@ const TaskCard = (props) => {
   if (resetPhaseVerification) {
     messageInput = (
       <form onSubmit={resetPhase} className="text-center my-2">
-        
         <Row className="w-100 px-2 mx-0">
           <h5 className="text-danger text-center px-2 font-weight-bold w-100">
-          You are about to reset this phase
+            You are about to reset this phase
           </h5>
           <p className="w-100 text-center px-2">
-          This step restarts <b>all tasks</b> in this phase, and should be
+            This step restarts <b>all tasks</b> in this phase, and should be
             taken when <b>client feedback</b> has been received.
           </p>
         </Row>
-        
 
-
-        <Row  className="d-flex align-items-center justify-content-center w-100 px-2 mb-1">
-        <TimeInput
+        <Row className="d-flex align-items-center justify-content-center w-100 px-2 mb-1">
+          <TimeInput
             inputMinutes={inputMinutes}
             inputHours={inputHours}
             setInputMinutes={setInputMinutes}
@@ -544,12 +556,10 @@ const TaskCard = (props) => {
             outline="warning"
           />
         </Row>
-          <Row  className="d-flex align-items-center justify-content-center w-100 px-2 mt-1">
-          <label htmlFor="message">
-            Client feedback:
-          </label>
-          </Row>
-          <Row  className="d-flex w-100 px-2 mb-1 mx-2">
+        <Row className="d-flex align-items-center justify-content-center w-100 px-2 mt-1">
+          <label htmlFor="message">Client feedback:</label>
+        </Row>
+        <Row className="d-flex w-100 px-2 mb-1 mx-2">
           <textarea
             onChange={(e) => setMessage(e.target.value)}
             name="message"
@@ -557,7 +567,7 @@ const TaskCard = (props) => {
             placeholder="Describe the feedback from the client to the team"
             required
           />
-          </Row>
+        </Row>
 
         <Button type="submit" variant="danger">
           Reset phase
@@ -578,10 +588,9 @@ const TaskCard = (props) => {
             continue to the next phase.
           </p>
         </Row>
-        
 
-        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
-        <TimeInput
+        <Row className="d-flex align-items-center justify-content-center w-100 px-2">
+          <TimeInput
             inputMinutes={inputMinutes}
             inputHours={inputHours}
             setInputMinutes={setInputMinutes}
@@ -590,12 +599,11 @@ const TaskCard = (props) => {
           />
         </Row>
 
-        <Row  className="d-flex align-items-center justify-content-center w-100 mt-2 px-2">
+        <Row className="d-flex align-items-center justify-content-center w-100 mt-2 px-2">
           <Button type="submit" variant="success">
             Complete task
           </Button>
-          </Row>
-
+        </Row>
       </form>
     );
   }
@@ -640,6 +648,7 @@ const TaskCard = (props) => {
         {completeTaskButtons}
       </div>
       {messageInput}
+      {!!emptyInputsWarning && <Row className="w-100 mx-0 mt-1 mb-2 px-2 font-weight-bold text-danger"><p className="w-100 text-center">Please fill all fields before submitting</p></Row>}
     </div>
   );
 };

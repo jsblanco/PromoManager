@@ -6,7 +6,7 @@ export default function TimeInput({ inputHours, setInputHours, inputMinutes, set
       <label className="pr-3 mb-0">Time spent:</label>
       <div className={`border border-${outline}`}>
         <input
-          onChange={(e) => setInputHours(e.target.value)}
+          onChange={(e) => setInputHours(parseInt(e.target.value))}
           type="number"
           min="0"
           max="99"
@@ -17,7 +17,7 @@ export default function TimeInput({ inputHours, setInputHours, inputMinutes, set
         />
         :
         <input
-          onChange={(e) => setInputMinutes(e.target.value)}
+          onChange={(e) => setInputMinutes(parseInt(e.target.value))}
           type="number"
           min="0"
           max="55"
