@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import userService from "../lib/user-service";
 import { withAuth } from "../lib/AuthProvider";
 import TimeInput from "./TimeInput";
-import {Row, Col, Button} from "react-bootstrap"
+import { Row, Col, Button } from "react-bootstrap";
 
 const TaskCard = (props) => {
   const [task, setTask] = useState(props.task);
@@ -32,40 +32,48 @@ const TaskCard = (props) => {
 
   const showResetPhaseVerification = () => {
     setPhaseCompleteVerification(false);
+    setTaskNotOk(false);
+    setInputMinutes(0);
+    setInputHours(0);
     setResetPhaseVerification(!resetPhaseVerification);
   };
 
   const showPhaseCompleteVerification = (event) => {
     setResetPhaseVerification(false);
+    setTaskNotOk(false);
+    setInputMinutes(0);
+    setInputHours(0);
     setPhaseCompleteVerification(!phaseCompleteVerification);
     showSpentTimeInput(event);
   };
 
-  const calculateInputTime = (event, index) =>{
-
-  }
+  const calculateInputTime = (event, index) => {};
 
   const calculateTotalSpentTime = () => {
-    let timeSpentSoFar = task.spentTime.split(":")
+    console.log("Entra en el calculate")
+    let timeSpentSoFar = task.spentTime.split(":");
     let totalHours = parseInt(timeSpentSoFar[0]) + parseInt(inputHours);
-    let totalMinutes =  parseInt(timeSpentSoFar[1]) + parseInt(inputMinutes)
+    let totalMinutes = parseInt(timeSpentSoFar[1]) + parseInt(inputMinutes);
     if (totalMinutes > 59) {
-      console.log(totalHours)
-      console.log(totalMinutes/60)
-      totalHours++
+      console.log(totalHours);
+      console.log(totalMinutes / 60);
+      totalHours++;
       totalMinutes -= 59;
     }
-    console.log(totalHours)
+    console.log(totalHours);
     if (totalHours.length > 2) {
       totalHours = totalHours.toString().slice(1);
     }
-    if (totalHours.length === 1) totalHours= "0"+totalHours;
-    if (totalMinutes.length === 1) totalMinutes= "0"+totalMinutes;
-    let spentTime = `${totalHours}:${totalMinutes}`;
+    if (totalHours< 10) totalHours = "0" + totalHours;
+    if (totalMinutes<10) totalMinutes = "0" + totalMinutes;
+    let updatedTask = {...task}
+    const totalSpentTime = `${totalHours}:${totalMinutes}`;
+    console.log(task, totalSpentTime)
     setTask({
       ...task,
-      spentTime,
+      spentTime: totalSpentTime,
     });
+    console.log(task)
   };
 
   const handleChange = (event) => {
@@ -115,7 +123,7 @@ const TaskCard = (props) => {
 
   const resetPhase = async (event) => {
     event.preventDefault();
-    calculateTotalSpentTime()
+    calculateTotalSpentTime();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("resetPhase", props.phaseId, props.index, task, message);
       setResetPhaseVerification(false);
@@ -152,6 +160,7 @@ const TaskCard = (props) => {
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
     calculateTotalSpentTime();
+    console.log("Ha pasado el calculare...")
     if (!!props.task.demonstrationPurposes) {
       props.updatePage(
         "submitTaskAsNotOk",
@@ -275,14 +284,13 @@ const TaskCard = (props) => {
   assignedTo = <p className="font-weight-bold d-inline">{assignedUserName}</p>;
 
   deadlineInfo = (
-
-      <p className="font-weight-bold d-inline">
-        {readableDeadline.toLocaleString("en-UK", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-        })}
-      </p>
+    <p className="font-weight-bold d-inline">
+      {readableDeadline.toLocaleString("en-UK", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      })}
+    </p>
   );
 
   if (
@@ -291,7 +299,10 @@ const TaskCard = (props) => {
       !!props.task.demonstrationPurposes)
   ) {
     button = (
-      <button className="btn btn-info float-right py-1 mb-2" onClick={showInput}>
+      <button
+        className="btn btn-info float-right py-1 mb-2"
+        onClick={showInput}
+      >
         Edit task
       </button>
     );
@@ -317,7 +328,7 @@ const TaskCard = (props) => {
         </option>
         {props.teamMembers.map((user) => {
           return (
-            <option key={user._id+" "+props.index} value={user.role}>
+            <option key={user._id + " " + props.index} value={user.role}>
               {user.role}: {user.name}
             </option>
           );
@@ -325,13 +336,13 @@ const TaskCard = (props) => {
       </select>
     );
     deadlineInfo = (
-        <input
-          type="date"
-          name="deadline"
-          onChange={handleChange}
-          value={task.deadline}
-          required
-        />
+      <input
+        type="date"
+        name="deadline"
+        onChange={handleChange}
+        value={task.deadline}
+        required
+      />
     );
     button = (
       <button className="btn btn-warning float-right" type="submit">
@@ -345,13 +356,13 @@ const TaskCard = (props) => {
     !taskUpdated
   ) {
     deadlineInfo = (
-        <input
-          type="date"
-          name="deadline"
-          onChange={handleChange}
-          value={task.deadline}
-          required
-        />
+      <input
+        type="date"
+        name="deadline"
+        onChange={handleChange}
+        value={task.deadline}
+        required
+      />
     );
     button = (
       <button className="btn btn-warning" type="submit">
@@ -360,15 +371,18 @@ const TaskCard = (props) => {
     );
   } else if (!task.deadline) {
     deadlineInfo = (
-        <p className="font-weight-bold font-italic d-inline">
-          As soon as possible
-        </p>
+      <p className="font-weight-bold font-italic d-inline">
+        As soon as possible
+      </p>
     );
   }
 
   if (!props.task.firstTask) {
     issueDetected = (
-      <button onClick={showMessageInput} className="btn btn-danger mx-2">
+      <button onClick={
+        //showMessageInput
+        (e)=>{showMessageInput(e); setPhaseCompleteVerification(false); setResetPhaseVerification(false)}
+        } className="btn btn-danger mx-2">
         Issue detected
       </button>
     );
@@ -425,24 +439,35 @@ const TaskCard = (props) => {
   if (taskNotOk === true) {
     messageInput = (
       <form onSubmit={submitTaskAsNotOk} className="text-center">
-        <div className="row mb-2 d-flex justify-content-around align-items-center">
-          <div className="w-100 d-flex justify-content-center align-items-center">
+        <div className="w-100 mb-2 d-flex flex-column justify-content-around align-items-center">
+        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
+              <TimeInput
+                inputMinutes={inputMinutes}
+                inputHours={inputHours}
+                setInputMinutes={setInputMinutes}
+                setInputHours={setInputHours}
+                outline="danger"
+              />
+            </Row>
+          <Row  className="d-flex align-items-center justify-content-center w-100 px-2 mt-1">
+            <label htmlFor="message">
+            Reason:
+          </label>
+          </Row>
+          <Row  className="d-flex w-100 px-2 mb-1 mx-2">
+          <textarea
+            onChange={(e) => setMessage(e.target.value)}
+            name="message"
+            className="mx-3 w-100"
+            placeholder="Describe the feedback from the client to the team"
+            required
+          />
+          </Row>
 
-            <TimeInput setInputMinutes={setInputMinutes} setInputHours={setInputHours} outline="danger"/>
-            <label htmlFor="message" className="pl-5 pr-3">
-              Reason:
-            </label>
-            <input
-              onChange={(e) => setMessage(e.target.value)}
-              type="text"
-              name="message"
-              className="pt-1 pb-2 w-50"
-              placeholder="Describe the problem to your colleague"
-              required
-            />
-          </div>
+
+
         </div>
-        <Button type="submit" variant="btn-danger">
+        <Button type="submit" variant="danger">
           Return to previous user
         </Button>
       </form>
@@ -456,11 +481,21 @@ const TaskCard = (props) => {
         className="my-2 d-flex justify-content-center align-items-center"
       >
         {warningMessage}
-        <div className="row d-flex justify-content-center align-items-center">
-          <TimeInput setInputMinutes={setInputMinutes} setInputHours={setInputHours} outline="success"/>
-          <Button type="submit" variant="success" className="ml-4">
+        <div className="w-100 px-1 d-flex flex-column justify-content-center align-items-center">
+        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
+          <TimeInput
+            inputMinutes={inputMinutes}
+            inputHours={inputHours}
+            setInputMinutes={setInputMinutes}
+            setInputHours={setInputHours}
+            outline="success"
+          />
+        </Row>
+        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
+          <Button type="submit" variant="success" className="my-2">
             Complete task
           </Button>
+        </Row>
         </div>
       </form>
     );
@@ -487,71 +522,80 @@ const TaskCard = (props) => {
   if (resetPhaseVerification) {
     messageInput = (
       <form onSubmit={resetPhase} className="text-center my-2">
-        <div className="row w-100 text-center">
-          <h5 className="text-danger font-weight-bold w-100">
-            You are about to reset this phase
+        
+        <Row className="w-100 px-2 mx-0">
+          <h5 className="text-danger text-center px-2 font-weight-bold w-100">
+          You are about to reset this phase
           </h5>
-          <p className="w-100">
-            This step restarts <b>all tasks</b> in this phase, and should be
+          <p className="w-100 text-center px-2">
+          This step restarts <b>all tasks</b> in this phase, and should be
             taken when <b>client feedback</b> has been received.
           </p>
-        </div>
-        <div className="row mb-2 w-100 d-flex justify-content-center align-items-center">
-          <label htmlFor="spentTime" className="pr-3">
-            Time spent:
-          </label>
-          <input
-            onChange={handleChange}
-            type="time"
-            name="inputSpentTime"
-            className="pt-1 pb-2 text-center"
-            required
+        </Row>
+        
+
+
+        <Row  className="d-flex align-items-center justify-content-center w-100 px-2 mb-1">
+        <TimeInput
+            inputMinutes={inputMinutes}
+            inputHours={inputHours}
+            setInputMinutes={setInputMinutes}
+            setInputHours={setInputHours}
+            outline="warning"
           />
-          <label htmlFor="message" className="pl-5 pr-3">
+        </Row>
+          <Row  className="d-flex align-items-center justify-content-center w-100 px-2 mt-1">
+          <label htmlFor="message">
             Client feedback:
           </label>
+          </Row>
+          <Row  className="d-flex w-100 px-2 mb-1 mx-2">
           <textarea
             onChange={(e) => setMessage(e.target.value)}
             name="message"
-            className="pt-1 pb-2 w-50"
+            className="mx-3 w-100"
             placeholder="Describe the feedback from the client to the team"
             required
           />
-        </div>
-        <button type="submit" className="btn btn-danger">
+          </Row>
+
+        <Button type="submit" variant="danger">
           Reset phase
-        </button>
+        </Button>
       </form>
     );
   }
 
   if (phaseCompleteVerification) {
     messageInput = (
-      <form onSubmit={submitTaskAsOk} className="my-2">
-        <div className="row w-100 text-center">
-          <h5 className="text-success font-weight-bold w-100">
+      <form onSubmit={submitTaskAsOk} className="my-2 w-100">
+        <Row className="w-100 px-2 mx-0">
+          <h5 className="text-success text-center px-2 font-weight-bold w-100">
             You are completing this phase
           </h5>
-          <p className="w-100">
+          <p className="w-100 text-center px-2">
             This step requires you to have gotten <b>client approval</b> to
             continue to the next phase.
           </p>
-        </div>
-        <div className="row d-flex justify-content-center align-items-center">
-          <label htmlFor="spentTime" className="pr-4">
-            Time spent:
-          </label>
-          <input
-            onChange={calculateTotalSpentTime}
-            type="time"
-            name="inputSpentTime"
-            className="pt-1 pb-2  mr-5 text-center"
-            required
+        </Row>
+        
+
+        <Row  className="d-flex align-items-center justify-content-center w-100 px-2">
+        <TimeInput
+            inputMinutes={inputMinutes}
+            inputHours={inputHours}
+            setInputMinutes={setInputMinutes}
+            setInputHours={setInputHours}
+            outline="success"
           />
-          <button type="submit" className="btn btn-success">
+        </Row>
+
+        <Row  className="d-flex align-items-center justify-content-center w-100 mt-2 px-2">
+          <Button type="submit" variant="success">
             Complete task
-          </button>
-        </div>
+          </Button>
+          </Row>
+
       </form>
     );
   }
@@ -560,32 +604,33 @@ const TaskCard = (props) => {
   return (
     <div className={` card ${active} ${props.hideOldTasks} p-2`}>
       <form onSubmit={updateTask}>
-      <div className="row">
-
-        <div className="col-xl-6 col-md-12">
-        <h5>
-          <b>{taskName}</b>
-          {activeMarker}
-        </h5>
-        </div>
-          <div className="col-xl-6 d-flex align-items-center justify-content-end">
-            <label className="pr-3 font-italic text-secondary mb-0">Time spent:</label>
-            <p className="font-weight-bold d-inline font-italic mb-0">{task.spentTime} hours</p>
+        <div className="row">
+          <div className="col-xl-6 col-md-12">
+            <h5>
+              <b>{taskName}</b>
+              {activeMarker}
+            </h5>
           </div>
-      </div>
+          <div className="col-xl-6 d-flex align-items-center justify-content-end">
+            <label className="pr-3 font-italic text-secondary mb-0">
+              Time spent:
+            </label>
+            <p className="font-weight-bold d-inline font-italic mb-0">
+              {task.spentTime} hours
+            </p>
+          </div>
+        </div>
         <div className="pt-1 row">
           <div className="col-xl-5 col-lg-6 d-flex flex-column align-content-center mx-0 my-0">
             <label className="pr-3">Assigned to:</label>
             {assignedTo}
           </div>
           <div className="col-xl-4 col-lg-7 d-flex flex-column align-content-center  my-0">
-          <label className="">
-        Deadline:
-      </label>
-          {deadlineInfo}
+            <label className="">Deadline:</label>
+            {deadlineInfo}
           </div>
           <div className="col-xl-3 col-lg-3 d-flex align-items-center">
-          {button}
+            {button}
           </div>
         </div>
         {wasTheDeadlineMet}
@@ -594,7 +639,6 @@ const TaskCard = (props) => {
       <div className="row d-flex justify-content-center">
         {completeTaskButtons}
       </div>
-<Button variant="primary" onClick={calculateTotalSpentTime}>Calculate</Button>
       {messageInput}
     </div>
   );
