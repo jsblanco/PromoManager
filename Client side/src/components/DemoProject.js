@@ -103,11 +103,12 @@ export const DemoProject = () => {
       activeTask: false,
       demonstrationPurposes: true,
     },
+    //AQUI!!
       {
       name: "Applying design",
       assignedUser: '["Guest user"]',
       message: "",
-      spentTime: "00:00",
+      spentTime: "01:30",
       deadline: yesterday,
       isItOver: false,
       completedOn: false,

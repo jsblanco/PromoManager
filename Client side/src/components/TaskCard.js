@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import userService from "../lib/user-service";
 import { withAuth } from "../lib/AuthProvider";
+import TimeInput from "./TimeInput";
+import {Row, Col, Button} from "react-bootstrap"
 
 const TaskCard = (props) => {
   const [task, setTask] = useState(props.task);
@@ -12,6 +14,8 @@ const TaskCard = (props) => {
   const [assignedUserName, setAssignedUserName] = useState(
     props.assignedUserName
   );
+  const [inputHours, setInputHours] = useState(0);
+  const [inputMinutes, setInputMinutes] = useState(0);
   const [resetPhaseVerification, setResetPhaseVerification] = useState(false);
   const [phaseCompleteVerification, setPhaseCompleteVerification] = useState(
     false
@@ -37,23 +41,27 @@ const TaskCard = (props) => {
     showSpentTimeInput(event);
   };
 
-  const calculateTotalSpentTime = (event) => {
-    let { value } = event.target;
-    let totalHours =
-      "0" + (parseFloat(props.task.spentTime) + parseFloat(value));
-    let totalMinutes =
-      "0" +
-      parseFloat(
-        parseFloat(props.task.spentTime.slice(-2)) + parseFloat(value.slice(-2))
-      );
-    if (totalMinutes > 60) {
-      totalHours++;
-      totalMinutes -= 60;
+  const calculateInputTime = (event, index) =>{
+
+  }
+
+  const calculateTotalSpentTime = () => {
+    let timeSpentSoFar = task.spentTime.split(":")
+    let totalHours = parseInt(timeSpentSoFar[0]) + parseInt(inputHours);
+    let totalMinutes =  parseInt(timeSpentSoFar[1]) + parseInt(inputMinutes)
+    if (totalMinutes > 59) {
+      console.log(totalHours)
+      console.log(totalMinutes/60)
+      totalHours++
+      totalMinutes -= 59;
     }
+    console.log(totalHours)
     if (totalHours.length > 2) {
       totalHours = totalHours.toString().slice(1);
     }
-    let spentTime = `${totalHours}:${totalMinutes.toString().slice(-2)}`;
+    if (totalHours.length === 1) totalHours= "0"+totalHours;
+    if (totalMinutes.length === 1) totalMinutes= "0"+totalMinutes;
+    let spentTime = `${totalHours}:${totalMinutes}`;
     setTask({
       ...task,
       spentTime,
@@ -107,6 +115,7 @@ const TaskCard = (props) => {
 
   const resetPhase = async (event) => {
     event.preventDefault();
+    calculateTotalSpentTime()
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("resetPhase", props.phaseId, props.index, task, message);
       setResetPhaseVerification(false);
@@ -121,6 +130,7 @@ const TaskCard = (props) => {
 
   const submitTaskAsOk = async (event) => {
     event.preventDefault();
+    calculateTotalSpentTime();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage("submitTaskAsOk", props.phaseId, props.index, task);
       setPhaseCompleteVerification(false);
@@ -141,6 +151,7 @@ const TaskCard = (props) => {
 
   const submitTaskAsNotOk = async (event) => {
     event.preventDefault();
+    calculateTotalSpentTime();
     if (!!props.task.demonstrationPurposes) {
       props.updatePage(
         "submitTaskAsNotOk",
@@ -416,16 +427,8 @@ const TaskCard = (props) => {
       <form onSubmit={submitTaskAsNotOk} className="text-center">
         <div className="row mb-2 d-flex justify-content-around align-items-center">
           <div className="w-100 d-flex justify-content-center align-items-center">
-            <label htmlFor="spentTime" className="pr-3">
-              Time spent:
-            </label>
-            <input
-              onChange={calculateTotalSpentTime}
-              type="time"
-              name="inputSpentTime"
-              className="pt-1 pb-2 text-center"
-              required
-            />
+
+            <TimeInput setInputMinutes={setInputMinutes} setInputHours={setInputHours} outline="danger"/>
             <label htmlFor="message" className="pl-5 pr-3">
               Reason:
             </label>
@@ -439,9 +442,9 @@ const TaskCard = (props) => {
             />
           </div>
         </div>
-        <button type="submit" className="btn btn-danger">
+        <Button type="submit" variant="btn-danger">
           Return to previous user
-        </button>
+        </Button>
       </form>
     );
   }
@@ -454,19 +457,10 @@ const TaskCard = (props) => {
       >
         {warningMessage}
         <div className="row d-flex justify-content-center align-items-center">
-          <label htmlFor="spentTime" className="pr-4">
-            Time spent:
-          </label>
-          <input
-            onChange={calculateTotalSpentTime}
-            type="time"
-            name="inputSpentTime"
-            className="pt-1 pb-2  mr-5 text-center"
-            required
-          />
-          <button type="submit" className="btn btn-success">
+          <TimeInput setInputMinutes={setInputMinutes} setInputHours={setInputHours} outline="success"/>
+          <Button type="submit" variant="success" className="ml-4">
             Complete task
-          </button>
+          </Button>
         </div>
       </form>
     );
@@ -600,6 +594,7 @@ const TaskCard = (props) => {
       <div className="row d-flex justify-content-center">
         {completeTaskButtons}
       </div>
+<Button variant="primary" onClick={calculateTotalSpentTime}>Calculate</Button>
       {messageInput}
     </div>
   );
