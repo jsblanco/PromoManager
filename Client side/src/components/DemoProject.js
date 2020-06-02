@@ -10,6 +10,12 @@ export const DemoProject = () => {
   let beforeYesterday = new Date();
   beforeYesterday.setDate(beforeYesterday.getDate() - 2);
 
+  today= `${today.getFullYear()}-${("0"+(today.getMonth()+1)).slice(-2)}-${("0"+(today.getDate())).slice(-2)}`
+  tomorrow= `${tomorrow.getFullYear()}-${("0"+(tomorrow.getMonth()+1)).slice(-2)}-${("0"+(tomorrow.getDate())).slice(-2)}`
+  yesterday= `${yesterday.getFullYear()}-${("0"+(yesterday.getMonth()+1)).slice(-2)}-${("0"+(yesterday.getDate())).slice(-2)}`
+  beforeYesterday= `${beforeYesterday.getFullYear()}-${("0"+(beforeYesterday.getMonth()+1)).slice(-2)}-${("0"+(beforeYesterday.getDate())).slice(-2)}`
+
+
   let tasks0 = [
     {
       name: "Content creation",
@@ -108,7 +114,7 @@ export const DemoProject = () => {
       name: "Applying design",
       assignedUser: '["Guest user"]',
       message: "",
-      spentTime: "01:30",
+      spentTime: "00:00",
       deadline: yesterday,
       isItOver: false,
       completedOn: false,
