@@ -109,7 +109,6 @@ export const DemoProject = () => {
       activeTask: false,
       demonstrationPurposes: true,
     },
-    //AQUI!!
       {
       name: "Applying design",
       assignedUser: '["Guest user"]',

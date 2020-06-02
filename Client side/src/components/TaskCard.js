@@ -34,16 +34,12 @@ const TaskCard = (props) => {
   const showResetPhaseVerification = () => {
     setPhaseCompleteVerification(false);
     setTaskNotOk(false);
-    setInputMinutes(0);
-    setInputHours(0);
     setResetPhaseVerification(!resetPhaseVerification);
   };
 
   const showPhaseCompleteVerification = (event) => {
     setResetPhaseVerification(false);
     setTaskNotOk(false);
-    setInputMinutes(0);
-    setInputHours(0);
     setPhaseCompleteVerification(!phaseCompleteVerification);
     showSpentTimeInput(event);
   };
@@ -359,7 +355,7 @@ const TaskCard = (props) => {
       <input
         type="date"
         name="deadline"
-        onChange={handleChange}
+        onChange={(e)=>setTask({...task, deadline: e.target.value})}
         value={task.deadline}
         required
       />

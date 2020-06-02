@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import TaskCreator from "./TaskCreator";
 import TaskCard from "./TaskCard";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLightbulb } from '@fortawesome/free-solid-svg-icons'
+
 
 const PhaseCard = (props) => {
   const [phase, setPhase] = useState(props.phase);
@@ -131,20 +134,21 @@ const PhaseCard = (props) => {
   if (phase.activePhase) {
     isItOver = (
       <>
-        <p className="d-inline rounded-pill bg-warning pl-2 pr-3 mr-3 my-2"></p>
+      <FontAwesomeIcon icon={faLightbulb} size="2x" className="text-warning mr-3" />
         <p className="d-inline font-italic  my-2">This phase is ongoing</p>
       </>
     );
   } else if (phase.isItOver) {
     isItOver = (
       <>
-        <p className="d-inline rounded-pill bg-success pl-2 pr-3 mr-3 my-2"></p>
+       <FontAwesomeIcon icon={faLightbulb} size="2x" className="text-success mr-3" />
         <p className="d-inline font-weight-bold my-2">This phase is over!</p>
       </>
     );
   } else {
     isItOver = (
       <>
+      <FontAwesomeIcon icon={faLightbulb} size="2x" color="gray" className="mr-3" />
         <p className="d-inline font-italic my-2">
           This phase has not started yet
         </p>
