@@ -1,4 +1,4 @@
-# Project- PALCONY - Social interaction amidst a quarantine 
+# Project- PROMOMANAGER - Manage your projects. Meet your deadlines. Keep track of your time. All of this, in one place.
 
 
 

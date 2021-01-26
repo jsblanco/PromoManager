@@ -86,7 +86,11 @@
 }
 
 
-input:invalid, {
+input:invalid {
     border-color:hsl(0, 50%, 50%);
     background:hsl(0, 50%, 90%);
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  line-height: 1.5 !important;
 }
